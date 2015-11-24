@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  	<head>
+    	<title>reading file</title>
+    	<script src=http://code.jquery.com/jquery-1.7.1.min.js></script>
+    	<script type="text/javascript">
+    		
+    		function draw(data) {
+
+    			// read json file with art information
+    			$.getJSON('body.json', draw)
+
+    			// set up canvas
+    			var canvas = document.getElementById("canvas");
+				var ctx = canvas.getContext("2d");
+
+				// // line/fill properties
+				ctx.fillStyle="rgb(255,255,255)";
+				ctx.lineStyle="rgb(0,0,0)";
+				ctx.lineWidth=1;
+
+    			// draw line elements
+    			dy = 575;
+    			for (i=0; i<data[0].length; i++) {
+    				d = data[0][i];
+    				if (d.line) {
+    					v = d.line;
+    					ctx.moveTo(v[0], dy+v[1]);
+    					ctx.lineTo(v[2], dy+v[3]);
+    				}
+    				else if (d.bezier) {
+    					v = d.bezier;
+    					ctx.moveTo(v[0], dy+v[1]);
+    					ctx.bezierCurveTo(v[2], dy+v[3], v[4], dy+v[5], v[6], dy+v[7]);
+    				}
+    				else {
+    					console.log('unknown');
+    				}
+    			}
+    			ctx.stroke();
+    			ctx.fill();
+    		}
+
+		</script>
+	</head>
+
+	<body onload='draw();'>
+		<canvas id="canvas" width="700" height="600"></canvas>
+		<div id="main"></div>
+	</body>
+</html>
