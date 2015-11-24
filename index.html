@@ -5,10 +5,12 @@
     	<script src=http://code.jquery.com/jquery-1.7.1.min.js></script>
     	<script type="text/javascript">
     		
-    		function draw(data) {
+    		function init() {
+                // read json file with art information
+                $.getJSON('body.json', draw)
+            }
 
-    			// read json file with art information
-    			$.getJSON('body.json', draw)
+            function draw(data) {
 
     			// set up canvas
     			var canvas = document.getElementById("canvas");
@@ -44,7 +46,7 @@
 		</script>
 	</head>
 
-	<body onload='draw();'>
+	<body onload='init();'>
 		<canvas id="canvas" width="700" height="600"></canvas>
 		<div id="main"></div>
 	</body>
