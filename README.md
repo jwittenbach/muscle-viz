@@ -10,8 +10,10 @@ replace or be used as an adjunct to the traditional two column format when
 presenting muscle weakness. Such a visualization tool will allow the 
 presenter to quickly and easily display their findings to others involved 
 in patient care. The format may also be useful to provide plots for case 
-reports, thus providing the reader to easily see patterns of weakness 
-across patients.
+reports; it will provide the reader an easy method to see patterns of weakness 
+across patients with similar conditions. The tool could also be useful 
+if saved in the patient's chart, thus allowing for a time series of 
+weakness.
 
 
 
