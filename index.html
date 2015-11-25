@@ -2,12 +2,22 @@
 <html>
   	<head>
     	<title>reading file</title>
-    	<script src=http://code.jquery.com/jquery-1.7.1.min.js></script>
     	<script type="text/javascript">
     		
     		function init() {
                 // read json file with art information
-                $.getJSON('body.json', draw)
+                var xmlhttp = new XMLHttpRequest();
+                var url = "body.json";
+
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var myArr = JSON.parse(xmlhttp.responseText);
+                        draw(myArr);
+                    }
+                }
+
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
             }
 
             function draw(data) {
@@ -47,7 +57,7 @@
 	</head>
 
 	<body onload='init();'>
-		<canvas id="canvas" width="700" height="600"></canvas>
+        <canvas id="canvas" width="700" height="600"></canvas>
 		<div id="main"></div>
 	</body>
 </html>
