@@ -4,15 +4,19 @@
     	<title>reading file</title>
     	<script type="text/javascript">
     		
-    		function init() {
+    		var init = function() {
                 // read json file with art information
+                loadAndDraw("body.json");
+                loadAndDraw("muscles.json");
+            }
+
+            var loadAndDraw = function(url) {
                 var xmlhttp = new XMLHttpRequest();
-                var url = "body.json";
 
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                         var myArr = JSON.parse(xmlhttp.responseText);
-                        draw(myArr);
+                        drawShapes(myArr);
                     }
                 }
 
@@ -20,33 +24,38 @@
                 xmlhttp.send();
             }
 
-            function draw(data) {
+            var drawShapes = function(arr) {
 
-    			// set up canvas
+                for (var i=0; i<arr.length; i++) {
+                    drawShape(arr[i]);
+                }
+            }
+
+            var drawShape = function(data) {
+
+                // set up canvas
     			var canvas = document.getElementById("canvas");
 				var ctx = canvas.getContext("2d");
 
 				// // line/fill properties
 				ctx.fillStyle="rgb(255,255,255)";
 				ctx.lineStyle="rgb(0,0,0)";
-				ctx.lineWidth=1;
+				ctx.lineWidth=2;
 
     			// draw line elements
-    			dy = 575;
-    			for (i=0; i<data[0].length; i++) {
-    				d = data[0][i];
+    			dx = -375;
+                dy = 575;
+    			for (var i=0; i<data.length; i++) {
+    				d = data[i];
     				if (d.line) {
     					v = d.line;
-    					ctx.moveTo(v[0], dy+v[1]);
-    					ctx.lineTo(v[2], dy+v[3]);
+    					ctx.moveTo(dx+v[0], dy+v[1]);
+    					ctx.lineTo(dx+v[2], dy+v[3]);
     				}
     				else if (d.bezier) {
     					v = d.bezier;
-    					ctx.moveTo(v[0], dy+v[1]);
-    					ctx.bezierCurveTo(v[2], dy+v[3], v[4], dy+v[5], v[6], dy+v[7]);
-    				}
-    				else {
-    					console.log('unknown');
+    					ctx.moveTo(dx+v[0], dy+v[1]);
+    					ctx.bezierCurveTo(dx+v[2], dy+v[3], dx+v[4], dy+v[5], dx+v[6], dy+v[7]);
     				}
     			}
     			ctx.stroke();
@@ -57,7 +66,7 @@
 	</head>
 
 	<body onload='init();'>
-        <canvas id="canvas" width="700" height="600"></canvas>
+        <canvas id="canvas" width="225" height="600" style="border: 1px solid"></canvas>
 		<div id="main"></div>
 	</body>
 </html>
