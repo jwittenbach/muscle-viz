@@ -4,24 +4,30 @@
     	<title>reading file</title>
     	<script type="text/javascript">
     		
-    		var bodyShapes;
-            var muscleShapes;
+            // globals
+            var ctx;
+            var shapes;
 
             var nMuscles = 6;
-            var nColors = 2;
+            var nShapes = nMuscles+1;
 
-            var colors = new Array(nMuscles);
-            for (var i=0; i<nMuscles; i++) {
+            var nColors = 2;
+            var colorMap = ['rgb(255,255,255)', 'rgb(0,0,255)', 'rgb(255,0,0)'];
+
+            var colors = new Array(nShapes);
+            for (var i=0; i<colors.length; i++) {
                 colors[i] = 0;
             }
 
             var init = function() {
+                // set up the canvas context
+                ctx = document.getElementById("canvas").getContext("2d");
+
                 // generate buttons
                 makeButtons();
 
                 // read json file with art information
-                loadAndDraw("body.json", bodyShapes);
-                loadAndDraw("muscles.json", muscleShapes);
+                loadAndDraw();
                 
                 // testing
                 document.getElementById("test-text").innerHTML = colors;
@@ -29,7 +35,8 @@
 
             var updateColors = function(that) {
                 muscle = parseInt(that.id.substring(6, that.id.length));
-                colors[muscle] = that.value;
+                colors[muscle+1] = that.value;
+                drawShapes();
                 
                 // testing
                 document.getElementById("test-text").innerHTML = colors;
@@ -52,57 +59,65 @@
                 buttonString += '</ul>\n';
 
                 document.getElementById('buttons').innerHTML = buttonString;
-                console.log(buttonString);
             }
 
-            var loadAndDraw = function(url, shapes) {
+            var loadAndDraw = function() {
                 var xmlhttp = new XMLHttpRequest();
 
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                         shapes = JSON.parse(xmlhttp.responseText);
-                        drawShapes(shapes);
+                        drawShapes();
                     }
                 }
 
-                xmlhttp.open("GET", url, true);
+                xmlhttp.open("GET", 'shapes.json', true);
                 xmlhttp.send();
             }
 
-            var drawShapes = function(arr) {
+            var drawShapes = function() {
 
-                for (var i=0; i<arr.length; i++) {
-                    drawShape(arr[i]);
+                // clear the canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // draw all shapes
+                for (var i=0; i<shapes.length; i++) {
+                    drawShape(shapes[i], colorMap[colors[i]]);
                 }
             }
 
-            var drawShape = function(data) {
+            var drawShape = function(shape, color) {
 
-                // set up canvas
-    			var canvas = document.getElementById("canvas");
-				var ctx = canvas.getContext("2d");
-
-				// // line/fill properties
-				ctx.fillStyle="rgb(255,255,255)";
+				// line/fill properties
+				ctx.fillStyle=color;
 				ctx.lineStyle="rgb(0,0,0)";
 				ctx.lineWidth=2;
 
     			// draw line elements
     			dx = -375;
                 dy = 575;
-    			for (var i=0; i<data.length; i++) {
-    				d = data[i];
-    				if (d.line) {
-    					v = d.line;
-    					ctx.moveTo(dx+v[0], dy+v[1]);
+                ctx.beginPath();
+                var first = true;
+    			for (var i=0; i<shape.length; i++) {
+    				l = shape[i];
+    				if (l.line) {
+    					v = l.line;
+    					if (first) {
+                            ctx.moveTo(dx+v[0], dy+v[1]);
+                            first = false;
+                        }
     					ctx.lineTo(dx+v[2], dy+v[3]);
     				}
-    				else if (d.bezier) {
-    					v = d.bezier;
-    					ctx.moveTo(dx+v[0], dy+v[1]);
+    				else if (l.bezier) {
+    					v = l.bezier;
+    					if (first) {
+                            ctx.moveTo(dx+v[0], dy+v[1]);
+                            first = false;
+                        }
     					ctx.bezierCurveTo(dx+v[2], dy+v[3], dx+v[4], dy+v[5], dx+v[6], dy+v[7]);
     				}
     			}
+                ctx.closePath();
     			ctx.stroke();
     			ctx.fill();
     		}
@@ -118,9 +133,9 @@
             <div style="float:center;">
                 <canvas id="canvas" width="225" height="600"></canvas>
             </div>
-            <div id="test-text" style="float:right;">
-                example text
-            </div>
+        </div>
+        <div id="test-text">
+            example text
         </div>
 	</body>
 </html>
