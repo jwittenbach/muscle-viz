@@ -36,6 +36,8 @@
 
                 // draw the legend
                 drawLegend();
+
+                document.getElementById("num").setAttribute("value", nColors);
             }
 
             var updateColors = function(that) {
@@ -181,7 +183,7 @@
 
                 for (var i=0; i<num; i++) {
                     for (var j=0; j<3; j++) {
-                        c[i][j] = c1[j] + i*d[j];
+                        c[i][j] = parseInt(c1[j] + i*d[j]);
                     }
                 }
 
@@ -192,7 +194,15 @@
                 }
 
                 colorMap = newColors;
-                console.log(newColors);
+                
+                if (nColors != num) {
+                    nColors = num;
+                    for (var i=0; i<nMuscles+1; i++) {
+                        colors[i] = 0;
+                        makeButtons();
+                    }
+                }
+
                 drawShapes();
                 drawLegend();
             }
@@ -215,7 +225,7 @@
                     G <input type="text" id="G2" size="3">
                     B <input type="text" id="B2" size="3">
                     <br><br>
-                    # colors <input type="text" id="num" size=2>
+                    # colors <input type="text" id="num" size="2">
                     <br><br>
                     <button onclick="setColorMap()">Submit</button>
                 </div>
