@@ -53,7 +53,8 @@
                     buttonString += '<option value="0"></option>\n';
                     for (var j=0; j<nColors; j++) {
                         option = j+1;
-                        buttonString += '<option value="' + option + '">' + option + '</option>\n';
+                        label = j;
+                        buttonString += '<option value="' + option + '">' + label + '</option>\n';
                     }
                     buttonString += '</li>\n';
                     buttonString += '</select>\n';
