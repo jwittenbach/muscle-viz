@@ -1,1 +1,15 @@
-["leonardo", "michaelangelo", "donatello", "rafael", "splinter", "krang", "shredder", "rocksteady", "bebop"]
+[
+	"trapezius",
+	"sternocleidomastoid",
+	"deltoid",
+	"biceps",
+	"triceps",
+	"forearm extensors",
+	"forearm flexors",
+	"gluteus",
+	"iliopsoas",
+	"hamstrings",
+	"quadriceps",
+	"gastrocnemius/soleus",
+	"tibialis anterior"
+ ]

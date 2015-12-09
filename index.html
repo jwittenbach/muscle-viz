@@ -10,7 +10,7 @@
             var shapes;
             var names;
 
-            var nMuscles = 30;
+            var nMuscles = 26;
             var nShapes = nMuscles+1;
 
             var nColors = 10;
@@ -53,7 +53,8 @@
                 buttonString += '<ul style="list-style-type: none">\n';
                 for (var i=startId; i<startId+nButtons; i++) {
                     if (element==='lbuttons') {
-                        name = names[i] + "   ";
+                        name = names[i];
+                        console.log(name);
                     }
                     else {
                         name = names[i-nMuscles/2];
