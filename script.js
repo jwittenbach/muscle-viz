@@ -1,3 +1,4 @@
+console.log("hello?");
 // globals
 var canvasMain; var canvasLegend;
 var ctxMain; var ctxLegend
