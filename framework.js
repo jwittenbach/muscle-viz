@@ -87,18 +87,15 @@ var framework = (function() {
 
     // Drawable: Holds data/functions needed to draw an element to the canvas
     // ----------------------------------------------------------------------
-    function Drawable(name, x, y, active) {
+    function Drawable(x, y, active) {
         this.x = x;
         this.y = y;
-        this.imgIdx = imageStore.registerImage(name);
         this.active = active;
 
         renderer.add(this);
     }
 
-    Drawable.prototype.draw = function() {
-        ctx.drawImage(imageStore.images[this.imgIdx], this.x, this.y);
-    };
+    Drawable.prototype.draw = function() {};
 
     Drawable.prototype.activate = function() {
         this.active = true;
@@ -108,6 +105,19 @@ var framework = (function() {
     Drawable.prototype.deactivate = function() {
         this.active = false;
         renderer.draw();
+    };
+
+    // Picture: Drawable that draws an image
+    // -----------------------------------
+    function Picture(name, x, y, active) {
+        Picture.parent.constructor.call(this, x, y, active)
+        this.imgIdx = imageStore.registerImage(name);
+    }
+
+    extend(Picture, Drawable);
+
+    Picture.prototype.draw = function() {
+        ctx.drawImage(imageStore.images[this.imgIdx], this.x, this.y);
     };
 
     // Event Handler: Holds all Interactables for event handling
@@ -165,26 +175,26 @@ var framework = (function() {
 
     // Button: A simple clickable button
     // --------------------------
-    function Button(x, y, image, active) {
+    function Button(x, y, imgName, active) {
         // Button is an Interactable
         Button.parent.constructor.call(this, x, y, -1, -1, active);
         eventHandler.add(this);
 
         // Button has a Drawable
-        this.drawable = new Drawable(image, this.x, this.y, this.active);
-        renderer.add(this.drawable);
+        this.picture = new Picture(imgName, this.x, this.y, this.active);
+        renderer.add(this.image);
     }
 
     extend(Button, Interactable);
 
     Button.prototype.activate = function() {
         Button.parent.activate();
-        this.drawable.activate();
+        this.picture.activate();
     };
 
     Button.prototype.deactivate = function() {
         Button.parent.deactivate();
-        this.drawable.deactivate();
+        this.picture.deactivate();
     };
 
     // Two-State Button: Button with two images for mousedown and mouseup
@@ -195,11 +205,11 @@ var framework = (function() {
         eventHandler.add(this);
 
         // Button has two Drawables
-        this.drawable1 = new Drawable(image1, this.x, this.y, this.active);
-        this.drawable2 = new Drawable(image2, this.x, this.y, false);
+        this.picture1 = new Picture(image1, this.x, this.y, this.active);
+        this.picture2 = new Picture(image2, this.x, this.y, false);
 
         // for inferring Interactable size
-        this.drawable = this.drawable1;
+        this.picture = this.picture1;
 
         // keep track of state of the button, on/off
         this.state = false;
@@ -209,14 +219,14 @@ var framework = (function() {
 
     Button2.prototype.handleClick = function() {
         if (this.state) {
-            this.drawable1.activate();
-            this.drawable2.deactivate();
+            this.picture1.activate();
+            this.picture2.deactivate();
             this.onDeactivate();
             renderer.draw();
         }
         else {
-            this.drawable1.deactivate();
-            this.drawable2.activate();
+            this.picture1.deactivate();
+            this.picture2.activate();
             this.onActivate();
             renderer.draw();
         }
@@ -248,8 +258,8 @@ var framework = (function() {
             // set button boundaries from image sizes
             for (var i=0; i<eventHandler.interactables.length; i++) {
                 interactable = eventHandler.interactables[i];
-                if (interactable.hasOwnProperty("drawable")) {
-                    idx = interactable.drawable.imgIdx;
+                if (interactable.hasOwnProperty("picture")) {
+                    idx = interactable.picture.imgIdx;
                     img = imageStore.images[idx];
                     interactable.w = img.width;
                     interactable.h = img.height;
@@ -266,6 +276,7 @@ var framework = (function() {
     return {
         init: init,
         loadAndDraw: loadAndDraw,
+        Picture: Picture,
         Button: Button,
         Button2: Button2,
 
