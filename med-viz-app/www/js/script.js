@@ -7,9 +7,11 @@ var names;
 var nMuscles = 26;
 var nShapes = nMuscles+1;
 
-var nColors = 6;
+var nLevels = 6
+var nColors = nLevels + 1;
 var colorMap = ['rgb(240,240,240)','rgb(165,0,38)','rgb(244,109,67)','rgb(254,224,144)',
                 'rgb(224,243,248)','rgb(116,173,209)','rgb(49,54,149)'];
+var levels = ['0', '1', '2', '3', '4', '5']
 
 var colors = new Array(nShapes);
 for (var i=0; i<nShapes; i++) {
@@ -17,6 +19,7 @@ for (var i=0; i<nShapes; i++) {
 }
 
 var init = function() {
+
     // set up the canvases/contexts
     canvasMain = document.getElementById("canvas-main");
     canvasLegend = document.getElementById("canvas-legend");
@@ -51,10 +54,10 @@ var makeButtonPanel = function(element, startId, nButtons) {
         else {
             name = names[i-nMuscles/2];
         }
-        buttonString += '<li>' + name;
+        buttonString += '<li style="overflow: hidden">' + name;
         buttonString += '<select id=muscle' + i + ' onchange="updateColors(this)" style="float: right">';
         buttonString += '<option value="0"></option>\n';
-        for (var j=0; j<nColors; j++) {
+        for (var j=0; j<nLevels; j++) {
             option = j+1;
             label = j;
             buttonString += '<option value="' + option + '">' + label + '</option>';
@@ -76,7 +79,7 @@ var loadAndButtons = function() {
     var xmlhttp = new XMLHttpRequest();
 
     xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState ==4 && xmlhttp.status == 200) {
+        if (xmlhttp.readyState == 4 && (xmlhttp.status == 200 || xmlhttp.status == 0)) {
             names = JSON.parse(xmlhttp.responseText);
             makeButtons();
         }
@@ -90,7 +93,7 @@ var loadAndDraw = function() {
     var xmlhttp = new XMLHttpRequest();
 
     xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 || xmlhttp.status == 0) {
             shapes = JSON.parse(xmlhttp.responseText);
             drawShapes();
         }
@@ -160,7 +163,7 @@ var drawLegend = function() {
 
     ctxLegend.font = "17px Arial";
 
-    for (var i=0; i<nColors; i++) {
+    for (var i=0; i<nLevels; i++) {
 
         ctxLegend.fillStyle = colorMap[i+1];
         ctxLegend.fillRect(boxX, i*boxHeight, boxWidth, boxHeight);
@@ -173,9 +176,9 @@ var drawLegend = function() {
 var fullStrength = function() {
 
     for (var i=0; i<nMuscles; i++) {
-        colors[i+1] = nColors;
+        colors[i+1] = nLevels;
         var button = document.getElementById("muscle" + i);
-        button.value = nColors;
+        button.value = nLevels;
     }
 
     drawShapes();
