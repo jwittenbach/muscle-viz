@@ -241,24 +241,51 @@ var framework = (function() {
 
     extend(Button2, Interactable);
 
-    Button2.prototype.handleClick = function() {
-        if (this.state) {
-            this.picture1.activate();
-            this.picture2.deactivate();
-            this.onDeactivate();
-            renderer.draw();
-        }
-        else {
-            this.picture1.deactivate();
-            this.picture2.activate();
-            this.onActivate();
-            renderer.draw();
-        }
-        this.state = !this.state;
+    Button2.prototype.activate = function() {
+        Button.parent.deactivate();
+        this.picture1.deactivate();
+        this.picture2.deactivate();
+        this.state = false;
     };
 
-    Button2.prototype.onActivate = function() {};
-    Button2.prototype.onDeactivate = function() {};
+    Button2.prototype.deactivate = function() {
+        Button.parent.deactivate();
+        this.picture1.activate();
+        this.picture2.deactivate();
+        this.state = false;
+    };
+
+    Button2.prototype.select = function() {
+        if(!this.state) {
+            this.state = true;
+            this.picture1.deactivate();
+            this.picture2.activate();
+            renderer.draw();
+        }
+    };
+
+    Button2.prototype.deselect = function() {
+        if(this.state) {
+            this.state = false;
+            this.picture1.activate();
+            this.picture2.deactivate();
+            renderer.draw();
+        }
+    };
+
+    Button2.prototype.handleClick = function() {
+        if (this.state) {
+            this.deselect();
+            this.onDeselect();
+        }
+        else {
+            this.select();
+            this.onSelect();
+        }
+    };
+
+    Button2.prototype.onSelect = function() {};
+    Button2.prototype.onDeselect = function() {};
 
     Button2.prototype.postLoad = function() {
         if (this.w == undefined) this.w = this.picture1.w;
@@ -276,15 +303,41 @@ var framework = (function() {
 
         this.n = images1.length
         this.active = active;
+        this.selected = -1;
 
         // array of Button2 elements
         this.buttons = new Array(this.n);
+
+        var that = this;
+        function handler() {
+            that.change(this.buttonID);
+        }
         for (var i=0; i<this.n; i++) {
             this.buttons[i] = new Button2(x, y, w, h, images1[i], images2[i], active);
+            this.buttons[i].buttonID = i;
+            this.buttons[i].onSelect = handler;
+            this.buttons[i].onDeselect = handler;
         }
     }
 
     extend(ButtonPanel, Interactable);
+
+    ButtonPanel.prototype.change = function(buttonID) {
+        preID = this.selected;
+        postID = buttonID;
+
+        if (postID == preID) {
+            this.buttons[postID].deselect();
+            this.selected = -1;
+        }
+        else {
+            if (this.selected != -1) this.buttons[preID].deselect();
+            this.buttons[postID].select();
+            this.selected = postID;
+        }
+
+        this.onChange();
+    };
 
     ButtonPanel.prototype.activate = function() {
         for (var i=0; i<this.n; i++) {
@@ -292,11 +345,13 @@ var framework = (function() {
         }
     };
 
-    ButtonPanel.prototype.activate = function() {
+    ButtonPanel.prototype.deactivate = function() {
         for (var i=0; i<this.n; i++) {
             this.buttons[i].deactivate();
         }
     };
+
+    ButtonPanel.prototype.onChange = function() {};
 
     ButtonPanel.prototype.postLoad = function() {
         if (this.w == undefined) this.w = this.buttons[0].picture1.w;
