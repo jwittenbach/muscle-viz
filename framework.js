@@ -31,7 +31,7 @@ var framework = (function() {
     };
 
     imageStore.checkLoaded = function(name) {
-        // check if the images has already been loaded
+        // check if the images have already been loaded
         for (var i=0; i<this.names.length; i++) {
             if (this.names[i] == name) {
                 return i;
@@ -87,15 +87,15 @@ var framework = (function() {
 
     // Drawable: Holds data/functions needed to draw an element to the canvas
     // ----------------------------------------------------------------------
-    function Drawable(x, y, active) {
+    function Drawable(x, y, w, h, active) {
         this.x = x;
         this.y = y;
         this.active = active;
+        this.w = w;
+        this.h = h;
 
         renderer.add(this);
     }
-
-    Drawable.prototype.draw = function() {};
 
     Drawable.prototype.activate = function() {
         this.active = true;
@@ -107,17 +107,37 @@ var framework = (function() {
         renderer.draw();
     };
 
+    // over-ride these functions in children
+    Drawable.prototype.draw = function() {};
+    Drawable.prototype.postLoad = function() {};
+
     // Picture: Drawable that draws an image
     // -----------------------------------
-    function Picture(name, x, y, active) {
-        Picture.parent.constructor.call(this, x, y, active)
+    function Picture(name, x, y, w, h, active) {
+        Picture.parent.constructor.call(this, x, y, w, h, active)
         this.imgIdx = imageStore.registerImage(name);
     }
 
     extend(Picture, Drawable);
 
     Picture.prototype.draw = function() {
-        ctx.drawImage(imageStore.images[this.imgIdx], this.x, this.y);
+        ctx.drawImage(imageStore.images[this.imgIdx], this.x, this.y, this.w, this.h);
+    };
+
+    Picture.prototype.postLoad = function() {
+        if (this.w == undefined || this.h == undefined) {
+            img = imageStore.images[this.imgIdx];
+            if (this.w == undefined && this.h == undefined) {
+                this.w = img.width;
+                this.h = img.height;
+            }
+            else if (this.w == undefined) {
+                this.w = (1.0*img.width/img.height)*this.h;
+            }
+            else {
+                this.h = (1.0*img.height/img.width)*this.w;
+            }
+        }
     };
 
     // Event Handler: Holds all Interactables for event handling
@@ -173,15 +193,17 @@ var framework = (function() {
         this.active = false;
     };
 
+    Interactable.prototype.postLoad = function() {};
+
     // Button: A simple clickable button
     // --------------------------
-    function Button(x, y, imgName, active) {
+    function Button(x, y, w, h, imgName, active) {
         // Button is an Interactable
-        Button.parent.constructor.call(this, x, y, -1, -1, active);
+        Button.parent.constructor.call(this, x, y, w, h, active);
         eventHandler.add(this);
 
         // Button has a Drawable
-        this.picture = new Picture(imgName, this.x, this.y, this.active);
+        this.picture = new Picture(imgName, this.x, this.y, this.w, this.h, this.active);
         renderer.add(this.image);
     }
 
@@ -197,19 +219,21 @@ var framework = (function() {
         this.picture.deactivate();
     };
 
+    Button.prototype.postLoad = function() {
+        if (this.w == undefined) this.w = this.picture.w;
+        if (this.h == undefined) this.h = this.picture.h;
+    };
+
     // Two-State Button: Button with two images for mousedown and mouseup
     // ------------------------------------------------------------------
-    function Button2(x, y, image1, image2, active) {
+    function Button2(x, y, w, h, image1, image2, active) {
         // Button2 is Interactable
-        Button2.parent.constructor.call(this, x, y, -1, -1, active);
+        Button2.parent.constructor.call(this, x, y, w, h, active);
         eventHandler.add(this);
 
         // Button has two Drawables
-        this.picture1 = new Picture(image1, this.x, this.y, this.active);
-        this.picture2 = new Picture(image2, this.x, this.y, false);
-
-        // for inferring Interactable size
-        this.picture = this.picture1;
+        this.picture1 = new Picture(image1, this.x, this.y, this.w, this.h, this.active);
+        this.picture2 = new Picture(image2, this.x, this.y, this.w, this.h, false);
 
         // keep track of state of the button, on/off
         this.state = false;
@@ -236,6 +260,55 @@ var framework = (function() {
     Button2.prototype.onActivate = function() {};
     Button2.prototype.onDeactivate = function() {};
 
+    Button2.prototype.postLoad = function() {
+        if (this.w == undefined) this.w = this.picture1.w;
+        if (this.h == undefined) this.h = this.picture1.h;
+    };
+
+    // Button Panel: A horizontal panel of Button2 elements
+    // ----------------------------------------------------
+    function ButtonPanel(x, y, w, h, images1, images2, active, dw) {
+        // ButtonPanel is Interactable, but never active
+        ButtonPanel.parent.constructor.call(this, x, y, undefined, undefined, false);
+        eventHandler.add(this);
+
+        dw == undefined ? this.dw = 0 : this.dw = dw
+
+        this.n = images1.length
+        this.active = active;
+
+        // array of Button2 elements
+        this.buttons = new Array(this.n);
+        for (var i=0; i<this.n; i++) {
+            this.buttons[i] = new Button2(x, y, w, h, images1[i], images2[i], active);
+        }
+    }
+
+    extend(ButtonPanel, Interactable);
+
+    ButtonPanel.prototype.activate = function() {
+        for (var i=0; i<this.n; i++) {
+            this.buttons[i].activate();
+        }
+    };
+
+    ButtonPanel.prototype.activate = function() {
+        for (var i=0; i<this.n; i++) {
+            this.buttons[i].deactivate();
+        }
+    };
+
+    ButtonPanel.prototype.postLoad = function() {
+        if (this.w == undefined) this.w = this.buttons[0].picture1.w;
+        if (this.h == undefined) this.h = this.buttons[0].picture1.h;
+        for (var i=0; i<this.n; i++) {
+            var x = this.x + i*(this.w + this.dw);
+            this.buttons[i].x = x;
+            this.buttons[i].picture1.x = x;
+            this.buttons[i].picture2.x = x;
+        }
+    };
+
     // Helper functions
     // ----------------
     function inherit(proto) {
@@ -255,15 +328,16 @@ var framework = (function() {
 
         imageStore.loadImages(function () {
 
-            // set button boundaries from image sizes
+            // infer unset Drawable dimensions from loaded objects
+            for (var i=0; i<renderer.drawables.length; i++) {
+//                drawable = renderer.drawables[i];
+//                drawable.postLoad.bind(drawable)();
+                renderer.drawables[i].postLoad();
+            }
+
+            // infer unset Interactable dimensions from loaded objects
             for (var i=0; i<eventHandler.interactables.length; i++) {
-                interactable = eventHandler.interactables[i];
-                if (interactable.hasOwnProperty("picture")) {
-                    idx = interactable.picture.imgIdx;
-                    img = imageStore.images[idx];
-                    interactable.w = img.width;
-                    interactable.h = img.height;
-                }
+                eventHandler.interactables[i].postLoad();
             }
 
             // initial draw
@@ -279,6 +353,7 @@ var framework = (function() {
         Picture: Picture,
         Button: Button,
         Button2: Button2,
+        ButtonPanel: ButtonPanel,
 
         Drawable: Drawable,
         Interactable: Interactable,
