@@ -22,51 +22,84 @@ var framework = (function() {
         ctx = canvas.getContext("2d");
     }
 
-    // Image Store: holds all loaded images for rendering
-    // --------------------------------------------------
-    var imageStore = {
-        images: new Array,
-        names: new Array,
-        loaded: 0
-    };
+    // Store: an object to hold data to be loaded
+    // ------------------------------------------
+    function Store(type) {
+        this.type = type;
 
-    imageStore.checkLoaded = function(name) {
-        // check if the images have already been loaded
+        this.data = new Array;
+        this.names = new Array;
+        this.loaded = 0;
+    }
+
+    Store.prototype.checkLoaded = function(name) {
         for (var i=0; i<this.names.length; i++) {
-            if (this.names[i] == name) {
-                return i;
-            }
+            if (this.names[i] == name) return i;
         }
         return -1;
     };
 
-    imageStore.registerImage = function(name) {
-        // register an image for loading and subsequent use
+    Store.prototype.registerFile = function(name) {
+        // register a file for loading and subsequent use
 
-        // if image has already been registered, simply return index
+        // if file has already been registered, simply return index
         var idx = this.checkLoaded(name);
         if (idx != -1) return idx;
 
-        // if image not registered, append name and return index
+        // if file not registered, append name and return index
         this.names.push(name);
         return this.names.length - 1;
     };
 
-    imageStore.loadImages = function(onComplete) {
-        nImages = this.names.length;
+    Store.prototype.loadFiles = function(onComplete) {
+        if (this.type == 'image') this.loadImages(onComplete);
+        if (this.type == 'json') this.loadJSON(onComplete);
+    }
+
+    Store.prototype.loadImages = function(onComplete) {
+        var nFiles = this.names.length;
+        if (nFiles == 0) onComplete();
 
         var that = this;
-        function onLoad() {
+        function onLoadImage() {
             that.loaded++;
-            if (that.loaded == nImages) onComplete();
+            if (that.loaded == nFiles) onComplete();
         }
 
         for (var i=0; i<this.names.length; i++) {
-            this.images.push(new Image);
-            this.images[i].onload = onLoad;
-            this.images[i].src = this.names[i];
+            this.data.push(new Image);
+            this.data[i].onload = onLoadImage;
+            this.data[i].src = this.names[i];
         }
     };
+
+    Store.prototype.loadJSON = function(onComplete) {
+        var nFiles = this.names.length;
+        if (nFiles == 0) onComplete();
+        var requests = Array(nFiles);
+
+        var that = this;
+        function onLoadJSON() {
+            if (this.readyState == 4 && this.status == 200) {
+                that.data[this.idx] = JSON.parse(this.responseText)
+                that.loaded++;
+                if (that.loaded == nFiles) onComplete();
+            }
+        }
+
+        for (var i=0; i<this.names.length; i++) {
+            requests[i] = new XMLHttpRequest;
+            requests[i].idx = i;
+            requests[i].onreadystatechange = onLoadJSON;
+            requests[i].open("GET", this.names[i], true);
+            requests[i].send();
+        }
+    }
+
+    // Stores for holing Images to and JSON shapes for drawing
+    // -------------------------------------------------------
+    var imageStore = new Store("image");
+    var jsonStore = new Store("json");
 
     // Renderer: Holds all Drawables for rendering
     // -------------------------------------------
@@ -112,21 +145,21 @@ var framework = (function() {
     Drawable.prototype.postLoad = function() {};
 
     // Picture: Drawable that draws an image
-    // -----------------------------------
+    // -------------------------------------
     function Picture(name, x, y, w, h, active) {
         Picture.parent.constructor.call(this, x, y, w, h, active)
-        this.imgIdx = imageStore.registerImage(name);
+        this.imgIdx = imageStore.registerFile(name);
     }
 
     extend(Picture, Drawable);
 
     Picture.prototype.draw = function() {
-        ctx.drawImage(imageStore.images[this.imgIdx], this.x, this.y, this.w, this.h);
+        ctx.drawImage(imageStore.data[this.imgIdx], this.x, this.y, this.w, this.h);
     };
 
     Picture.prototype.postLoad = function() {
         if (this.w == undefined || this.h == undefined) {
-            img = imageStore.images[this.imgIdx];
+            img = imageStore.data[this.imgIdx];
             if (this.w == undefined && this.h == undefined) {
                 this.w = img.width;
                 this.h = img.height;
@@ -138,6 +171,54 @@ var framework = (function() {
                 this.h = (1.0*img.height/img.width)*this.w;
             }
         }
+    };
+
+    // BShape: Drawable that draws a shape defined by a Bezier curve
+    // -------------------------------------------------------------
+    function BShape(name, idx, x, y, w, h, color, lineWidth, active, dx, dy) {
+        BShape.parent.constructor.call(this, x, y, w, h, active);
+        this.jsonIdx = jsonStore.registerFile(name);
+        this.idx = idx;
+        this.color = color;
+        this.lineWidth = lineWidth;
+        dx == undefined ? this.dx = 0 : this.dx = dx;
+        dy == undefined ? this.dy = 0 : this.dy = dy;
+    }
+
+    extend(BShape, Drawable);
+
+    BShape.prototype.draw = function() {
+        var shape = jsonStore.data[this.jsonIdx][this.idx];
+
+        ctx.fillStyle = this.color;
+        ctx.lineStyle = "rgb(0,0,0)";
+        ctx.lineWidth = this.lineWidth;
+
+
+        ctx.beginPath();
+        var first = true;
+        for (var i=0; i<shape.length; i++) {
+            l = shape[i];
+            if (l.line) {
+                v = l.line;
+                if (first) {
+                    ctx.moveTo(this.dx+v[0], this.dy+v[1]);
+                    first = false;
+                }
+                ctx.lineTo(this.dx+v[2], this.dy+v[3]);
+            }
+            else if (l.bezier) {
+                v = l.bezier;
+                if (first) {
+                    ctx.moveTo(this.dx+v[0], this.dy+v[1]);
+                    first = false;
+                }
+                ctx.bezierCurveTo(this.dx+v[2], this.dy+v[3], this.dx+v[4], this.dy+v[5], this.dx+v[6], this.dy+v[7]);
+            }
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
     };
 
     // Event Handler: Holds all Interactables for event handling
@@ -196,7 +277,7 @@ var framework = (function() {
     Interactable.prototype.postLoad = function() {};
 
     // Button: A simple clickable button
-    // --------------------------
+    // ---------------------------------
     function Button(x, y, w, h, imgName, active) {
         // Button is an Interactable
         Button.parent.constructor.call(this, x, y, w, h, active);
@@ -379,14 +460,10 @@ var framework = (function() {
     }
 
     function loadAndDraw() {
-        // load images and then set button sizes and draw
-
-        imageStore.loadImages(function () {
-
+        // after all loading is finished
+        var final = function () {
             // infer unset Drawable dimensions from loaded objects
             for (var i=0; i<renderer.drawables.length; i++) {
-//                drawable = renderer.drawables[i];
-//                drawable.postLoad.bind(drawable)();
                 renderer.drawables[i].postLoad();
             }
 
@@ -397,7 +474,14 @@ var framework = (function() {
 
             // initial draw
             renderer.draw.bind(renderer)();
-        })
+        };
+
+        var that = this;
+        var afterJSON = function() {
+            imageStore.loadFiles(final);
+        }
+
+        jsonStore.loadFiles(afterJSON);
     }
 
     // Expose elements of the framework by returning them
@@ -406,6 +490,7 @@ var framework = (function() {
         init: init,
         loadAndDraw: loadAndDraw,
         Picture: Picture,
+        BShape: BShape,
         Button: Button,
         Button2: Button2,
         ButtonPanel: ButtonPanel,
@@ -413,6 +498,7 @@ var framework = (function() {
         Drawable: Drawable,
         Interactable: Interactable,
         imageStore: imageStore,
+        jsonStore: jsonStore,
         renderer: renderer,
         eventHandler: eventHandler,
         canvas: canvas,
