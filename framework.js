@@ -7,6 +7,7 @@ var framework = (function() {
     // ------------------------------------------------------
     function init(width, height, element) {
 
+        var a = 1;
         canvas = document.createElement("canvas")
 
         // canvas size and look
@@ -172,6 +173,25 @@ var framework = (function() {
             }
         }
     };
+
+    // Text: Renderable text
+    // ---------------------
+    function Text(text, x, y, w, h, font, active, align) {
+        Text.parent.constructor.call(this, x, y, w, h, active);
+        this.text = text;
+        this.font = font;
+        align == undefined ? this.align = "left" : this.align = align;
+    }
+
+    extend(Text, Drawable);
+
+    Text.prototype.draw = function() {
+        ctx.fillStyle = 'rgb(0,0,0)';
+        ctx.font = this.font;
+        ctx.textAlign = this.align;
+        ctx.fillText(this.text, this.x, this.y);
+    };
+
 
     // BShape: Drawable that draws a shape defined by a Bezier curve
     // -------------------------------------------------------------
@@ -447,6 +467,10 @@ var framework = (function() {
 
     // Helper functions
     // ----------------
+    function getCtx() {
+        return ctx;
+    }
+
     function inherit(proto) {
         function F() {}
         F.prototype = proto
@@ -487,13 +511,16 @@ var framework = (function() {
     // Expose elements of the framework by returning them
     // --------------------------------------------------
     return {
+
         init: init,
         loadAndDraw: loadAndDraw,
         Picture: Picture,
+        Text: Text,
         BShape: BShape,
         Button: Button,
         Button2: Button2,
         ButtonPanel: ButtonPanel,
+        getCtx: getCtx,
 
         Drawable: Drawable,
         Interactable: Interactable,

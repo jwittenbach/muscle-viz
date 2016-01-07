@@ -24,5 +24,7 @@ buttons.onChange = function() {
     framework.renderer.draw()
 };
 
+var text = new framework.Text("color", 362, 85, undefined, undefined, "30px Arial", true, "center");
+
 // load assets and initial draw
 framework.loadAndDraw();
