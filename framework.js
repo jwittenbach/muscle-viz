@@ -7,12 +7,14 @@ var framework = (function() {
     // ------------------------------------------------------
     function init(width, height, element) {
 
+        var a = 1;
         canvas = document.createElement("canvas")
 
         // canvas size and look
         canvas.setAttribute("width", width);
         canvas.setAttribute("height", height);
-        canvas.setAttribute("style", "border: 2px solid")
+        //canvas.setAttribute("style", "border: 2px solid")
+        //console.log(window.devicePixelRatio);
 
         // event handling
         canvas.onclick = eventHandler.handle.bind(eventHandler);
@@ -20,6 +22,7 @@ var framework = (function() {
         element.appendChild(canvas);
 
         ctx = canvas.getContext("2d");
+        ctx.translate(0.5, 0.5);
     }
 
     // Store: an object to hold data to be loaded
@@ -173,16 +176,34 @@ var framework = (function() {
         }
     };
 
+    // Text: Renderable text
+    // ---------------------
+    function Text(name, idx, x, y, w, h, font, active, align) {
+        Text.parent.constructor.call(this, x, y, w, h, active);
+        this.jsonIdx = jsonStore.registerFile(name);
+        this.idx = idx;
+        this.font = font;
+        align == undefined ? this.align = "left" : this.align = align;
+    }
+
+    extend(Text, Drawable);
+
+    Text.prototype.draw = function() {
+        ctx.fillStyle = 'rgb(0,0,0)';
+        ctx.font = this.font;
+        ctx.textAlign = this.align;
+        ctx.fillText(jsonStore.data[this.jsonIdx][this.idx], this.x, this.y);
+    };
+
+
     // BShape: Drawable that draws a shape defined by a Bezier curve
     // -------------------------------------------------------------
-    function BShape(name, idx, x, y, w, h, color, lineWidth, active, dx, dy) {
+    function BShape(name, idx, x, y, w, h, color, lineWidth, active) {
         BShape.parent.constructor.call(this, x, y, w, h, active);
         this.jsonIdx = jsonStore.registerFile(name);
         this.idx = idx;
         this.color = color;
         this.lineWidth = lineWidth;
-        dx == undefined ? this.dx = 0 : this.dx = dx;
-        dy == undefined ? this.dy = 0 : this.dy = dy;
     }
 
     extend(BShape, Drawable);
@@ -202,18 +223,18 @@ var framework = (function() {
             if (l.line) {
                 v = l.line;
                 if (first) {
-                    ctx.moveTo(this.dx+v[0], this.dy+v[1]);
+                    ctx.moveTo(this.x+v[0], this.y+v[1]);
                     first = false;
                 }
-                ctx.lineTo(this.dx+v[2], this.dy+v[3]);
+                ctx.lineTo(this.x+v[2], this.y+v[3]);
             }
             else if (l.bezier) {
                 v = l.bezier;
                 if (first) {
-                    ctx.moveTo(this.dx+v[0], this.dy+v[1]);
+                    ctx.moveTo(this.x+v[0], this.y+v[1]);
                     first = false;
                 }
-                ctx.bezierCurveTo(this.dx+v[2], this.dy+v[3], this.dx+v[4], this.dy+v[5], this.dx+v[6], this.dy+v[7]);
+                ctx.bezierCurveTo(this.x+v[2], this.y+v[3], this.x+v[4], this.y+v[5], this.x+v[6], this.y+v[7]);
             }
         }
         ctx.closePath();
@@ -447,6 +468,10 @@ var framework = (function() {
 
     // Helper functions
     // ----------------
+    function getCtx() {
+        return ctx;
+    }
+
     function inherit(proto) {
         function F() {}
         F.prototype = proto
@@ -487,13 +512,17 @@ var framework = (function() {
     // Expose elements of the framework by returning them
     // --------------------------------------------------
     return {
+
         init: init,
         loadAndDraw: loadAndDraw,
+        Store, Store,
         Picture: Picture,
+        Text: Text,
         BShape: BShape,
         Button: Button,
         Button2: Button2,
         ButtonPanel: ButtonPanel,
+        getCtx: getCtx,
 
         Drawable: Drawable,
         Interactable: Interactable,
