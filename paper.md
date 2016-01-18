@@ -23,7 +23,8 @@ Jeremy, you can add your cases here. We want cases that broadly represent neurol
 Here we present free, open-source software for visualizing muscle weakness distribution. 
 
 
-References:
+
+##References:
 [Saguil, A. "Evaluation of the patient with muscle weakness." American family physician 71.7 (2005): 1327-1336.](http://www.aafp.org/afp/2005/0401/p1327.html) This article is a nice general overview of weakness from a primary care perspective
 
 [Pieterse, A. J., Voermans, N. C., Tuinenga, H. S., & Van Engelen, B. G. (2008). Computer-aided visualization of muscle weakness distribution. Journal of neurology, 255(11), 1670-1678.](http://link.springer.com/article/10.1007/s00415-008-0959-7#/page-1)
