@@ -15,5 +15,9 @@ Software rationale: Jason can write this part — what is the software built on,
 ##Results:
 Give use cases, convince the audience that distributions are simple to appreciate.
 
+
+Jeremy, you can add your cases here. We want cases that broadly represent neurology and clear weakness differential diagnoses. Also I would like a mix of pediatric and adult conditions, if possible.
+
+
 ##Discussion:
 Here we present free, open-source software for visualizing muscle weakness distribution. 
