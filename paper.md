@@ -35,4 +35,6 @@ An article describing and validating the MRC weakness scale
 
 [Medical Research Council. Aids to examination of the peripheral nervous system. Memorandum no. 45. London: Her Majesty’s Stationary Office; 1976.](http://www.sciencedirect.com/science/article/pii/0022510X77902052) This is the MRC scale reference. But the link is to a book review of the actual work.
 
+[Hough, C. L., Lieu, B. K., & Caldwell, E. S. (2011). Manual muscle strength testing of critically ill patients: feasibility and interobserver agreement. Crit Care, 15(1), R43.](http://link.springer.com/article/10.1186%2Fcc10005?LI=true) This article uses a modifited sum-score. Jason, perhaps this could be useful to look at to develop (or use their method) to get a summary statistic for weakness. It would be nice to have a metric that tells proximal-ness and distal-ness.
+
 
