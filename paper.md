@@ -17,6 +17,12 @@ Give use cases, convince the audience that distributions are simple to appreciat
 
 
 Jeremy, you can add your cases here. We want cases that broadly represent neurology and clear weakness differential diagnoses. Also I would like a mix of pediatric and adult conditions, if possible.
+As it turns out, finding data from published case reports is essentially impossible. We will move forward with simulated cases.
+Will include:
+- stroke patient examples -- can do time series showing weakness that improves over time
+- disease with proximal > distal weakness
+- disease with distal > proximal weakness
+- sma patient, because I like sma
 
 
 ##Discussion:
