@@ -1,7 +1,7 @@
-var height = 700;
 var width = 1000;
+var height = 700;
 
-framework.init(width, height, document.body);
+framework.init(width, height);
 
 // colors
 var colorMap = ['rgb(240,240,240)','rgb(165,0,38)','rgb(244,109,67)','rgb(254,224,144)',
@@ -13,11 +13,11 @@ var nMuscles = 26;
 var dx = -375, dy = 560;
 var x = 315, y = 25;
 
-var body = new framework.BShape(file, 0, x+dx, y+dy, undefined, undefined, colorMap[0], 2, true);
+var body = new framework.BShape(x+dx, y+dy, file, 0, {color: colorMap[0], lineWidth: 2});
 
 var muscles = new Array(nMuscles);
 for (var i=0; i<nMuscles; i++) {
-	muscles[i] = new framework.BShape(file, i+1, x+dx, y+dy, undefined, undefined, colorMap[0], 2, true);
+	muscles[i] = new framework.BShape(x+dx, y+dy,file, i+1, {color: colorMap[0], lineWidth: 2});
 }
 
 // muscle names setup
@@ -39,7 +39,7 @@ for (var i=0; i<nMuscles; i++) {
 		x = xright;
 		var j = i - nMuscles/2;
 	}
-	names[i] = new framework.Text(file, j, x, y + j*spacing*size, undefined, undefined, type, true);
+	names[i] = new framework.Text(x, y + j*spacing*size, file, j, {font: type});
 }
 
 // buttons
@@ -61,14 +61,12 @@ var buttons = new Array(nMuscles);
 for (var i=0; i<nMuscles; i++) {
 	x = names[i].x + xoffset;
 	y = names[i].y - size;
-	buttons[i] = new framework.ButtonPanel(x, y, 20, undefined, imagesOff, imagesOn, true, -1);
+	buttons[i] = new framework.ButtonPanel(x, y, imagesOff, imagesOn, {h: 20, dw: -1});
 	buttons[i].muscle = i;
 	buttons[i].onChange = function() {
 		muscles[this.muscle].color = colorMap[this.selected+1];
 		framework.renderer.draw();
 	}
 }
-
-
 
 framework.loadAndDraw();
