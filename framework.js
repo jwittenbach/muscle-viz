@@ -31,10 +31,16 @@ var framework = (function() {
       ctx.translate(0.5, 0.5);
    }
 
-   // classes for storing assets
-   // ------------------------
+   // function to call after all entities have been defined
+   // -----------------------------------------------------
+   function finalize() {
+      Entity.postLoad();
+      Drawable.render();
+   }
+
+   // base class for storing assets
+   // -----------------------------
    function Asset(filename) {
-      console.log('in Asset constructor');
       this.filename = filename;
       this.data = null;
       this.loadData(filename);
@@ -50,7 +56,7 @@ var framework = (function() {
    Asset.prototype.onLoad = function() {
       Asset.nLoaded += 1;
       if (Asset.nLoaded == Asset.nAssets) {
-         console.log('all loaded');
+         finalize();
       }
    };
 
@@ -91,6 +97,146 @@ var framework = (function() {
       request.send(null);
    }
 
+   // Base class for objects
+   // ----------------------
+   function Entity(kwargs) {
+      kwargs = kwargs || {};
+      this.attached = !!kwargs.attached; // default value is false
+      Entity.items.push(this);
+   }
+
+   Entity.items = new Array;
+
+   Entity.postLoad = function() {
+      Entity.items.forEach(function(entity) {
+         if (!entity.attached) {
+            entity.postLoad();
+         }
+      });
+   };
+
+
+   Entity.prototype.postLoad = function() {};
+
+   // Base class for objects that have a graphical representation
+   // -----------------------------------------------------------
+   function Drawable(x, y, kwargs) {
+      Drawable.parent.constructor.call(this, kwargs);
+      this.x = x;
+      this.y = y;
+
+      kwargs = kwargs || {};
+      this.w = kwargs.width || kwargs.w;
+      this.h = kwargs.height || kwargs.h;
+      this.active = kwargs.active !== false; // default value is true
+
+      Drawable.items.push(this);
+   }
+
+   extend(Drawable, Entity);
+
+   Drawable.items = new Array;
+
+   Drawable.render = function() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      Drawable.items.forEach(function(item) {
+         if (item.active) item.draw();
+      });
+   };
+
+   Drawable.prototype.draw = function() {};
+
+   Drawable.prototype.activate = function() {
+      if (!this.active) {
+         this.active = true;
+      }
+   };
+
+   Drawable.prototype.deactivate = function() {
+      if (this.active) {
+         this.active = false;
+      }
+   }
+
+   // Drawable images
+   // ---------------
+   function Picture(x, y, img, kwargs) {
+      Picture.parent.constructor.call(this, x, y, kwargs);
+      this.img = img;
+   }
+
+   extend(Picture, Drawable);
+
+   Picture.prototype.draw = function() {
+      ctx.drawImage(this.img.data, this.x, this.y, this.w, this.h);
+   };
+
+   Picture.prototype.postLoad = function() {
+      if (this.w == undefined || this.h == undefined) {
+         var h = this.img.data.width;
+         var w = this.img.data.height;
+         if (this.w == undefined && this.h == undefined) {
+            this.w = w;
+            this.h = h;
+         }
+         else if (this.w == undefined) {
+            this.w = (1.0*w/h)*this.h;
+         }
+         else {
+            this.h = (1.0*h/w)*this.w;
+         }
+      }
+   };
+
+   // Base class for renderable text
+   // ------------------------------
+   function BaseText(x, y, kwargs) {
+      BaseText.parent.constructor.call(this, x, y, kwargs);
+      kwargs = kwargs || {};
+      this.font = kwargs.font || "Arial";
+      this.size = kwargs.size || 20;
+      this.align = kwargs.align || "left";
+      this.text = undefined;
+   }
+
+   extend(BaseText, Drawable);
+
+   BaseText.prototype.draw = function() {
+      ctx.fillStyle = 'rgb(0,0,0)';
+      ctx.font = this.size.toString() + 'px' + ' ' + this.font;
+      ctx.textAlign = this.align;
+      ctx.fillText(this.text, this.x, this.y + this.size);
+   };
+
+   // Simple text
+   // -----------
+   function Text(x, y, text, kwargs) {
+      Text.parent.constructor.call(this, x, y, kwargs);
+      this.text = text;
+   }
+
+   extend(Text, BaseText);
+
+   // Text loaded from JSON file
+   function TextFromJSON(x, y, json, idx, kwargs) {
+      Text.parent.constructor.call(this, x, y, kwargs);
+      this.idx = idx;
+      this.json = json;
+   }
+
+   extend(TextFromJSON, BaseText);
+
+   TextFromJSON.prototype.postLoad = function() {
+      if (typeof(this.idx) == "number" || typeof(this.idx) == "string") {
+         this.idx = [this.idx];
+      }
+      var result = this.json.data;
+      this.idx.forEach(function(idx) {
+         result = result[idx];
+      });
+      this.text = result;
+   };
+
    // OOP functions
    // -------------
    function inherit(proto) {
@@ -109,8 +255,12 @@ var framework = (function() {
    // -----------------------
    return {
       init: init,
-      Asset: Asset, // debug
+      getCtx: getCtx,
+      Asset: Asset,  // debug
       ImageAsset: ImageAsset,
-      JSONAsset: JSONAsset
+      JSONAsset: JSONAsset,
+      Picture: Picture,
+      Text: Text,
+      TextFromJSON, TextFromJSON
    }
 })();
