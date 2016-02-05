@@ -23,7 +23,7 @@ var framework = (function() {
       canvas.setAttribute("height", height);
 
       // event handling
-      //canvas.onclick = eventHandler.handle.bind(eventHandler);
+      canvas.onclick = Interactable.handleEvent.bind(Interactable);
 
       element.appendChild(canvas);
 
@@ -237,6 +237,169 @@ var framework = (function() {
       this.text = result;
    };
 
+   // Collection of Bezier curves
+   // ---------------------------
+   function Curves(x, y, json, kwargs) {
+      Curves.parent.constructor.call(this, x, y, kwargs);
+      this.json = json;
+      kwargs = kwargs || {};
+      this.colors = kwargs.colors || "rgb(255, 255, 255)";
+      this.lineWidth = kwargs.lineWidth || 2;
+      this.dx = kwargs.dx || 0;
+      this.dy = kwargs.dy || 0;
+      this.lineWidth = kwargs.lineWidth || 2;
+   }
+
+   extend(Curves, Drawable);
+
+   Curves.prototype.draw = function() {
+      for(var i=0; i<this.nshapes; i++) {
+         ctx.fillStyle = this.colors[i];
+         ctx.lineStyle = 'rgb(0,0,0)';
+         ctx.lineWidth = this.lineWidth;
+
+         var shape = this.json.data[i];
+
+         ctx.beginPath();
+         var first = true;
+         for (var i=0; i<shape.length; i++) {
+            l = shape[i];
+            if (l.line) {
+               v = l.line;
+               if (first) {
+                  ctx.moveTo(this.x+v[0], this.y+v[1]);
+                  first = false;
+               }
+               ctx.lineTo(this.x+v[2], this.y+v[3]);
+            }
+            else if (l.bezier) {
+               v = l.bezier;
+               if (first) {
+                  ctx.moveTo(this.x+v[0], this.y+v[1]);
+                  first = false;
+               }
+               ctx.bezierCurveTo(this.x+v[2], this.y+v[3], this.x+v[4], this.y+v[5], this.x+v[6], this.y+v[7]);
+            }
+         }
+         ctx.closePath();
+         ctx.stroke();
+         ctx.fill();
+      }
+   };
+
+   Curves.prototype.setColor = function(i, color) {
+      this.colors[i] = color;
+   };
+
+   Curves.prototype.postLoad = function() {
+      // handle colors
+      this.nshapes = this.json.data.length;
+      if (typeof(this.colors) === "string") {
+         var array = new Array(this.nShapes);
+         for(var i=0; i<this.nshapes; i++) {
+            array[i] = this.colors;
+         }
+         this.colors = array;
+      }
+
+      // handle dimensions
+      if (this.w !== undefined || this.h !== undefined || this.dx != 0 || this.dy != 0) {
+         var maxVals = new Array(2);
+         var offsets = [this.dx, this.dy];
+
+         // first pass applies offsets and computes maximum values
+         this.json.data.forEach(function(strokes) {
+            strokes.forEach(function(stroke) {
+               if (stroke.hasOwnProperty('line')) var type = 'line';
+               else if (stroke.hasOwnProperty('bezier')) var type = 'bezier';
+               else return;
+               for (var i=0; i<stroke[type].length; i++) {
+                  var idx = i%2;
+                  stroke[type][i] += offsets[idx];
+                  var val = stroke[type][i];
+                  if (val > maxVals[idx] || maxVals[idx] === undefined) maxVals[idx] = val;
+               }
+            });
+         });
+      }
+
+      // set height and width
+      if (this.w === undefined && this.h === undefined) {
+         this.w = maxVals[0];
+         this.h = maxVals[1];
+         return;
+      }
+      else {
+         if (!(this.w !== undefined && this.h !== undefined)) {
+            if (this.h === undefined) {
+               this.h = (1.0*maxVals[1]/maxVals[0])*this.w;
+            }
+            else {
+               this.w = (1.0*maxVals[0]/maxVals[1])*this.h;
+            }
+         }
+
+         // potential second pass scales values
+         var scales = [1.0*this.w/maxVals[0], 1.0*this.h/maxVals[1]];
+         this.json.data.forEach(function(strokes) {
+            strokes.forEach(function(stroke) {
+               if (stroke.hasOwnProperty('line')) var type = 'line';
+               else if (stroke.hasOwnProperty('bezier')) var type = 'bezier';
+               else return;
+               for (var i=0; i<stroke[type].length; i++) {
+                  var idx = i%2
+                  stroke[type][i] *= scales[idx];
+               }
+            });
+         });
+      }
+   };
+
+   // Base class for entities that can be interacted with
+   // ---------------------------------------------------
+   function Interactable(x, y, kwargs) {
+      Interactable.parent.constructor.call(this, kwargs);
+      this.x = x;
+      this.y = y;
+      kwargs = kwargs || {};
+      this.w = kwargs.width || kwargs.w;
+      this.h = kwargs.height || kwargs.h;
+
+      Interactable.items.push(this);
+   }
+
+   extend(Interactable, Entity);
+
+   Interactable.items = new Array;
+
+   Interactable.map = {
+      // maps event types to event handler names
+      "click": "handleClick",
+   };
+
+   Interactable.handleEvent = function(event) {
+      var handler = Interactable.map[event.type];
+      if (handler) {
+         Interactable.items.forEach(function(interactable) {
+            if Interactable.checkHit(event, interactable) {
+               interactable[handler](event)
+            }
+         });
+   };
+
+   Interactable.checkHit = function(event, interactable) {
+      var x = event.pageX - canvas.offsetLeft;
+      var y = event.pageY - canvas.offsetTop;
+      var checkX = x > interactable.x && x < (interactable.x + interactable.w);
+      var checkY = y > interactable.y && y < (interactable.y + interactable.h);
+      return checkX && checkY;
+   };
+
+   Interactable.prototype.handleClick = function(event) {};
+
+   // Simple stateless button
+   // -----------------------
+
    // OOP functions
    // -------------
    function inherit(proto) {
@@ -261,6 +424,8 @@ var framework = (function() {
       JSONAsset: JSONAsset,
       Picture: Picture,
       Text: Text,
-      TextFromJSON, TextFromJSON
+      TextFromJSON, TextFromJSON,
+      Curves, Curves,
+      Interactable: Interactable // debug
    }
 })();
