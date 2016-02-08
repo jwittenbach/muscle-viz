@@ -115,7 +115,6 @@ var framework = (function() {
       });
    };
 
-
    Entity.prototype.postLoad = function() {};
 
    // Base class for objects that have a graphical representation
@@ -381,10 +380,11 @@ var framework = (function() {
       var handler = Interactable.map[event.type];
       if (handler) {
          Interactable.items.forEach(function(interactable) {
-            if Interactable.checkHit(event, interactable) {
+            if (Interactable.checkHit(event, interactable)) {
                interactable[handler](event)
             }
          });
+      }
    };
 
    Interactable.checkHit = function(event, interactable) {
@@ -396,6 +396,51 @@ var framework = (function() {
    };
 
    Interactable.prototype.handleClick = function(event) {};
+
+   // Two-state button
+   function Button2(x, y, img0, img1, kwargs) {
+      Button2.parent.constructor.call(this, x, y, kwargs);
+      this.pic0 = new Picture(x, y, img0, {attached:true, active:true});
+      this.pic1 = new Picture(x, y, img1, {attached:true, active:false});
+
+      this.state = 0;
+   }
+
+   extend(Button2, Interactable);
+
+   Button2.prototype.postLoad = function() {
+
+      this.pic0.postLoad();
+      this.pic1.postLoad();
+
+      if (this.w === undefined || this.h === undefined) {
+         if (this.w === undefined && this.h === undefined) {
+            this.w = this.pic0.w;
+            this.h = this.pic0.h;
+         }
+         else if (this.w === undefined) {
+            this.h = (1.0*this.pic0.h/this.pic0.w)*this.w;
+         }
+         else if (this.h === undefined) {
+            this.w = (1.0*this.pic0.w/this.pic0.h)*this.h;
+         }
+      }
+   };
+
+   Button2.prototype.handleClick = function(event) {
+      if (this.state) {
+         this.pic0.activate();
+         this.pic1.deactivate();
+         this.state = 0;
+         Drawable.render();
+      }
+      else {
+         this.pic0.deactivate();
+         this.pic1.activate();
+         this.state = 1;
+         Drawable.render();
+      }
+   };
 
    // Simple stateless button
    // -----------------------
@@ -426,6 +471,8 @@ var framework = (function() {
       Text: Text,
       TextFromJSON, TextFromJSON,
       Curves, Curves,
-      Interactable: Interactable // debug
+      Interactable: Interactable, // debug
+      Button2: Button2,
+      Entity: Entity // debug
    }
 })();
