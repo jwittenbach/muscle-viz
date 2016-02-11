@@ -398,10 +398,11 @@ var framework = (function() {
    Interactable.prototype.handleClick = function(event) {};
 
    // Two-state button
+   // ----------------
    function Button2(x, y, img0, img1, kwargs) {
       Button2.parent.constructor.call(this, x, y, kwargs);
-      this.pic0 = new Picture(x, y, img0, {attached:true, active:true});
-      this.pic1 = new Picture(x, y, img1, {attached:true, active:false});
+      this.img0 = img0;
+      this.img1 = img1;
 
       this.state = 0;
    }
@@ -409,6 +410,9 @@ var framework = (function() {
    extend(Button2, Interactable);
 
    Button2.prototype.postLoad = function() {
+
+      this.pic0 = new Picture(this.x, this.y, this.img0, {attached:true, active:true});
+      this.pic1 = new Picture(this.x, this.y, this.img1, {attached:true, active:false});
 
       this.pic0.postLoad();
       this.pic1.postLoad();
@@ -425,6 +429,11 @@ var framework = (function() {
             this.w = (1.0*this.pic0.w/this.pic0.h)*this.h;
          }
       }
+
+      this.pic0.h = this.h;
+      this.pic0.w = this.w;
+      this.pic1.h = this.h;
+      this.pic1.w = this.w;
    };
 
    Button2.prototype.handleClick = function(event) {
@@ -432,15 +441,119 @@ var framework = (function() {
          this.pic0.activate();
          this.pic1.deactivate();
          this.state = 0;
+         this.onSelect();
          Drawable.render();
       }
       else {
          this.pic0.deactivate();
          this.pic1.activate();
          this.state = 1;
+         this.onDeselect();
          Drawable.render();
       }
    };
+
+   Button2.prototype.select = function() {
+      if(!this.state) {
+           this.state = true;
+           this.pic0.deactivate();
+           this.pic1.activate();
+           Drawable.render();
+      }
+   };
+
+   Button2.prototype.deselect = function() {
+      if(this.state) {
+           this.state = false;
+           this.pic0.activate();
+           this.pic1.deactivate();
+           Drawable.render();
+      }
+   };
+
+   Button2.prototype.onSelect = function() {};
+   Button2.prototype.onDeselect = function() {};
+
+   // Panel of buttons
+   // ----------------
+   function ButtonPanel(x, y, images0, images1, kwargs) {
+      ButtonPanel.parent.constructor.call(this, kwargs);
+
+      this.x = x;
+      this.y = y;
+      this.images0 = images0;
+      this.images1 = images1;
+
+      kwargs = kwargs || {};
+      this.w = kwargs.width || kwargs.w;
+      this.h = kwargs.height || kwargs.h;
+      this.dw = kwargs.dw || 0;
+
+      this.n = images0.length
+      this.selected = -1;
+
+      this.buttons = new Array(this.n);
+      for (var i=0; i<this.n; i++) {
+
+      }
+   }
+
+   extend(ButtonPanel, Entity);
+
+   ButtonPanel.prototype.postLoad = function() {
+
+      var w0;
+      var img = this.images0[0].data
+
+      if (this.w === undefined) {
+         if (this.h === undefined) {
+            w0 = img.width;
+            this.h = img.height;
+         }
+         else {
+            w0 = (1.0*img.width/img.height)*this.h;
+         }
+      }
+      else{
+         w0 = 1.0*(this.w - (this.n - 1)*this.dw)/this.n;
+         if (this.h === undefined) {
+            this.h = (1.0*img.height/img.width)*w0;
+         }
+      }
+
+      var that = this;
+      function handler() {
+          that.change(this.buttonID);
+      }
+
+      for (var i=0; i<this.n; i++) {
+         var x = this.x + i*(w0 + this.dw);
+         console.log(images0[i].data)
+         this.buttons[i] = new Button2(x, this.y, images0[i], images1[i], {w:w0, h:this.h, attached:true});
+         this.buttons[i].buttonID = i;
+         this.buttons[i].onSelect = handler;
+         this.buttons[i].onDeselect = handler;
+         this.buttons[i].postLoad();
+      }
+   };
+
+   ButtonPanel.prototype.change = function(buttonID) {
+      preID = this.selected;
+      postID = buttonID;
+
+      if (postID == preID) {
+           this.buttons[postID].deselect();
+           this.selected = -1;
+      }
+      else {
+           if (this.selected != -1) this.buttons[preID].deselect();
+           this.buttons[postID].select();
+           this.selected = postID;
+      }
+
+      this.onChange();
+   };
+
 
    // Simple stateless button
    // -----------------------
@@ -473,6 +586,7 @@ var framework = (function() {
       Curves, Curves,
       Interactable: Interactable, // debug
       Button2: Button2,
-      Entity: Entity // debug
+      Entity: Entity, // debug
+      ButtonPanel: ButtonPanel
    }
 })();

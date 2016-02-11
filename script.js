@@ -1,4 +1,4 @@
-framework.init(750, 750);
+framework.init(1500, 750);
 
 var button = new framework.ImageAsset('buttons-01.png');
 var text = new framework.JSONAsset('muscles.json');
@@ -16,4 +16,21 @@ var clickable = new framework.Interactable(300, 100, {w:200, h:200});
 
 var img0 = new framework.ImageAsset('buttons-06.png');
 var img1 = new framework.ImageAsset('buttons-07.png');
-var button2 = new framework.Button2(400, 400, img0, img1);
+var button2 = new framework.Button2(400, 400, img0, img1, {height:200, width:100});
+
+var nLevels = 5;
+var images0 = new Array(nLevels);
+var images1 = new Array(nLevels);
+function leadingZeros(integer, nDigits) {
+	s = integer.toString();
+	return "0".repeat(nDigits-s.length) + s;
+}
+for (var i=0; i<nLevels; i++) {
+	images0[i] = new framework.ImageAsset("buttons-" + leadingZeros(i+1, 2) + ".png");
+	images1[i] = new framework.ImageAsset("buttons-" + leadingZeros(nLevels+i+1, 2) + ".png");
+}
+
+var panel = new framework.ButtonPanel(500, 100, images0, images1, {h:30, dw:-2});
+panel.onChange = function() {
+   console.log(this.selected);
+};
