@@ -19,8 +19,13 @@ var framework = (function() {
       canvas = document.createElement("canvas")
 
       // canvas size and look
-      canvas.setAttribute("width", width);
-      canvas.setAttribute("height", height);
+      width = 1500;
+      height = 750;
+      var r = window.devicePixelRatio;
+      canvas.width = r*width;
+      canvas.height = r*height;
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
 
       // event handling
       canvas.onclick = Interactable.handleEvent.bind(Interactable);
@@ -28,7 +33,7 @@ var framework = (function() {
       element.appendChild(canvas);
 
       ctx = canvas.getContext("2d");
-      ctx.translate(0.5, 0.5);
+      ctx.setTransform(r, 0, 0, r, 0, 0);
    }
 
    // function to call after all entities have been defined
@@ -261,8 +266,8 @@ var framework = (function() {
 
          ctx.beginPath();
          var first = true;
-         for (var i=0; i<shape.length; i++) {
-            l = shape[i];
+         for (var j=0; j<shape.length; j++) {
+            l = shape[j];
             if (l.line) {
                v = l.line;
                if (first) {
@@ -288,6 +293,7 @@ var framework = (function() {
 
    Curves.prototype.setColor = function(i, color) {
       this.colors[i] = color;
+      Drawable.render();
    };
 
    Curves.prototype.postLoad = function() {
@@ -396,6 +402,40 @@ var framework = (function() {
    };
 
    Interactable.prototype.handleClick = function(event) {};
+
+   // One-state button
+   // ----------------
+   function Button1(x, y, img, kwargs) {
+      Button.parent.constructor.call(this, x, y, kwargs);
+
+      this.img = img;
+   }
+
+   extend(Button1, Interactable);
+
+   Button1.prototype.postLoad = function() {
+
+      this.pic = new Picture(this.x, this.y, this.img, {attached:true});
+      this.pic.postLoad();
+
+      if (this.w === undefined || this.h === undefined) {
+         if (this.w === undefined && this.h === undefined) {
+            this.w = this.pic.w;
+            this.h = this.pic.h;
+         }
+         else if (this.w === undefined) {
+            this.h = (1.0*this.pic.h/this.pic.w)*this.w;
+         }
+         else if (this.h === undefined) {
+            this.w = (1.0*this.pic.w/this.pic.h)*this.h;
+         }
+      }
+
+      this.pic.h = this.h;
+      this.pic.w = this.w;
+
+   };
+
 
    // Two-state button
    // ----------------
@@ -528,8 +568,7 @@ var framework = (function() {
 
       for (var i=0; i<this.n; i++) {
          var x = this.x + i*(w0 + this.dw);
-         console.log(images0[i].data)
-         this.buttons[i] = new Button2(x, this.y, images0[i], images1[i], {w:w0, h:this.h, attached:true});
+         this.buttons[i] = new Button2(x, this.y, this.images0[i], this.images1[i], {w:w0, h:this.h, attached:true});
          this.buttons[i].buttonID = i;
          this.buttons[i].onSelect = handler;
          this.buttons[i].onDeselect = handler;
@@ -553,6 +592,8 @@ var framework = (function() {
 
       this.onChange();
    };
+
+   ButtonPanel.prototype.onChange = function() {};
 
 
    // Simple stateless button
@@ -585,6 +626,7 @@ var framework = (function() {
       TextFromJSON, TextFromJSON,
       Curves, Curves,
       Interactable: Interactable, // debug
+      Button1: Button1,
       Button2: Button2,
       Entity: Entity, // debug
       ButtonPanel: ButtonPanel

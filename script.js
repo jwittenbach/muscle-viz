@@ -1,36 +1,72 @@
+// initialize framework
 framework.init(1500, 750);
 
-var button = new framework.ImageAsset('buttons-01.png');
-var text = new framework.JSONAsset('muscles.json');
+// numbers of various elements
+var nLevels = 5;
+var nMuscles = 26;
+var nShape = nMuscles + 1;
+
+// spacing/sizing
+var xTextLeft = 10;
+var xButtonsLeft = 210;
+var xBody = 330;
+var xTextRight = 730;
+var xButtonsRight = 600;
+var yBody = 10;
+var dyButtons = 30;
+var hButtons = 30;
+var hBody = 700;
+
+// color map
+var colorMap = ['rgb(240,240,240)','rgb(165,0,38)','rgb(244,109,67)','rgb(254,224,144)',
+                'rgb(224,243,248)','rgb(116,173,209)','rgb(49,54,149)'];
+
+// load assets -- images
+var imgsOff = new Array(nLevels);
+var imgsOn = new Array(nLevels);
+for (var i=0; i<2*nLevels; i++) {
+	// handle zero-padding
+	if (i<9) var filename = 'buttons-0' + (i+1) + '.png';
+	else var filename = 'buttons-' + (i+1) + '.png';
+	// first half of images are for off, second half for on
+	if (i < nLevels) imgsOff[i] = new framework.ImageAsset(filename);
+	else imgsOn[i-nLevels] = new framework.ImageAsset(filename);
+}
+
+// load assets -- text
+var muscleNames = new framework.JSONAsset('muscles.json');
+
+// load assets -- shapes
 var shapes = new framework.JSONAsset('shapes.json');
 
-var pic = new framework.Picture(200, 100, button, {w:30, h:30});
+// create objects -- curves
+var curves = new framework.Curves(xBody, yBody, shapes, {dx:-375, dy:560,
+											 h:hBody, lineWidth:3, colors:colorMap[0]});
 
-var text1 = new framework.Text(100, 500, "Hello", {"size":40});
-var text2 = new framework.TextFromJSON(100, 100, text, 3, {"size":30})
-
-var curves = new framework.Curves(300, 100, shapes, {dx:-375, dy:560, w:200, h:200, lineWidth:10});
-
-var clickable = new framework.Interactable(300, 100, {w:200, h:200});
-
-
-var img0 = new framework.ImageAsset('buttons-06.png');
-var img1 = new framework.ImageAsset('buttons-07.png');
-var button2 = new framework.Button2(400, 400, img0, img1, {height:200, width:100});
-
-var nLevels = 5;
-var images0 = new Array(nLevels);
-var images1 = new Array(nLevels);
-function leadingZeros(integer, nDigits) {
-	s = integer.toString();
-	return "0".repeat(nDigits-s.length) + s;
+// create objects -- buttons and labels
+var labels = new Array(nMuscles);
+var buttons = new Array(nMuscles);
+var y0 = yBody;
+var dy = dyButtons;
+for (var i=0; i<nMuscles; i++) {
+	// left side
+	if (i < nMuscles/2) {
+		var x1 = xTextLeft;
+		var x2 = xButtonsLeft;
+		var j = i;
+		var align = "left";
+	}
+	// right side
+	else {
+		var x1 = xTextRight;
+		var x2 = xButtonsRight;
+		var j = i - nMuscles/2;
+		var align = "left";
+	}
+	labels[i] = new framework.TextFromJSON(x1, y0 + dy*j, muscleNames, j, {align:align});
+	buttons[i] = new framework.ButtonPanel(x2, y0 + dy*j, imgsOff, imgsOn, {h:25, dw:-1.5});
+	buttons[i].muscle = i+1;
+	buttons[i].onChange = function() {
+		curves.setColor(this.muscle, colorMap[this.selected+1]);
+	};
 }
-for (var i=0; i<nLevels; i++) {
-	images0[i] = new framework.ImageAsset("buttons-" + leadingZeros(i+1, 2) + ".png");
-	images1[i] = new framework.ImageAsset("buttons-" + leadingZeros(nLevels+i+1, 2) + ".png");
-}
-
-var panel = new framework.ButtonPanel(500, 100, images0, images1, {h:30, dw:-2});
-panel.onChange = function() {
-   console.log(this.selected);
-};
