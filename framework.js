@@ -160,7 +160,7 @@ var framework = (function() {
       if (this.active) {
          this.active = false;
       }
-   }
+   };
 
    // Drawable images
    // ---------------
@@ -241,6 +241,29 @@ var framework = (function() {
       this.text = result;
    };
 
+   // Drawable rectangle
+   // ------------------
+   function Rectangle(x, y, w, h, kwargs) {
+      Rectangle.parent.constructor.call(this, x, y, kwargs);
+      this.w = w;
+      this.h = h;
+      kwargs = kwargs || {};
+      this.color = kwargs.color || kwargs.c || "rgb(255, 255, 255)";
+      this.lineWidth = defaultValue(kwargs, ["lineWidth", "lw"], 2);
+   }
+
+   extend(Rectangle, Drawable);
+
+   Rectangle.prototype.draw = function() {
+      ctx.fillStyle = this.color;
+      ctx.lineStyle = 'rbg(0,0,0)';
+      ctx.lineWidth = this.lineWidth;
+      ctx.fillRect(this.x, this.y, this.w, this.h);
+      if (this.lineWidth !== 0) {
+         ctx.strokeRect(this.x, this.y, this.w, this.h);
+      }
+   };
+
    // Collection of Bezier curves
    // ---------------------------
    function Curves(x, y, json, kwargs) {
@@ -248,10 +271,9 @@ var framework = (function() {
       this.json = json;
       kwargs = kwargs || {};
       this.colors = kwargs.colors || "rgb(255, 255, 255)";
-      this.lineWidth = kwargs.lineWidth || 2;
       this.dx = kwargs.dx || 0;
       this.dy = kwargs.dy || 0;
-      this.lineWidth = kwargs.lineWidth || 2;
+      this.lineWidth = kwargs.lineWidth || kwargs.lw || 2;
    }
 
    extend(Curves, Drawable);
@@ -595,22 +617,59 @@ var framework = (function() {
 
    ButtonPanel.prototype.onChange = function() {};
 
+   // Panel of colored squares
+   // ------------------------
+   function ColorPanel(x, y, w, h, colors, kwargs) {
+      ColorPanel.parent.constructor.call(this, kwargs);
+      this.x = x;
+      this.y = y;
+      this.w = w;
+      this.h = h;
+      this.colors = colors;
+      kwargs = kwargs || {};
+      this.labels = kwargs.labels;
 
-   // Simple stateless button
-   // -----------------------
+      this.n = colors.length;
+
+      this.rects = new Array(this.n);
+      for (var i=0; i<this.n; i++) {
+         this.rects[i] = new Rectangle(x+i*w, y, w, h, {c:colors[i], lw:0});
+      }
+
+      if (this.labels !== undefined) {
+         this.texts = new Array(this.n);
+         for (var i=0; i<this.n; i++) {
+            this.texts[i] = new Text((x+w/2)+i*w, y+1.3*h, labels[i], {align:"center"});
+         }
+      }
+   }
+
+   extend(ColorPanel, Entity);
+
 
    // OOP functions
    // -------------
    function inherit(proto) {
-      function F() {}
-      F.prototype = proto
-      return new F
+      function F() {};
+      F.prototype = proto;
+      return new F;
    }
 
    function extend(Child, Parent) {
-     Child.prototype = inherit(Parent.prototype)
-     Child.prototype.constructor = Child
-     Child.parent = Parent.prototype
+     Child.prototype = inherit(Parent.prototype);
+     Child.prototype.constructor = Child;
+     Child.parent = Parent.prototype;
+   }
+
+   // Utility functions
+   // -----------------
+   function defaultValue(kwargs, names, defaultVal) {
+      var result;
+      names.forEach(function(name) {
+         if (kwargs[name] !== undefined) result = kwargs[name];
+      });
+      if (result === undefined) return defaultVal;
+      else return result;
    }
 
    // expose desired elements
@@ -621,6 +680,7 @@ var framework = (function() {
       Asset: Asset,  // debug
       ImageAsset: ImageAsset,
       JSONAsset: JSONAsset,
+      Rectangle: Rectangle,
       Picture: Picture,
       Text: Text,
       TextFromJSON, TextFromJSON,
@@ -629,6 +689,7 @@ var framework = (function() {
       Button1: Button1,
       Button2: Button2,
       Entity: Entity, // debug
-      ButtonPanel: ButtonPanel
+      ButtonPanel: ButtonPanel,
+      ColorPanel: ColorPanel
    }
 })();

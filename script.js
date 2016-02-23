@@ -43,7 +43,7 @@ var shapes = new framework.JSONAsset('shapes.json');
 var curves = new framework.Curves(xBody, yBody, shapes, {dx:-375, dy:560,
 											 h:hBody, lineWidth:3, colors:colorMap[0]});
 
-// create objects -- buttons and labels
+// create objects -- button panels and labels
 var labels = new Array(nMuscles);
 var buttons = new Array(nMuscles);
 var y0 = yBody;
@@ -70,3 +70,12 @@ for (var i=0; i<nMuscles; i++) {
 		curves.setColor(this.muscle, colorMap[this.selected+1]);
 	};
 }
+
+// create objects -- full-strength button
+
+// create objects -- legend
+var labels = new Array(nLevels)
+for (var i=0; i<nLevels+1; i++) {
+   labels[i] = i;
+}
+var rect = new framework.ColorPanel(600, 450, 50, 50, colorMap.slice(1), {labels:labels});
