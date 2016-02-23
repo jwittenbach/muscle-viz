@@ -2,16 +2,16 @@
 framework.init(1500, 750);
 
 // numbers of various elements
-var nLevels = 5;
+var nLevels = 6;
 var nMuscles = 26;
 var nShape = nMuscles + 1;
 
 // spacing/sizing
 var xTextLeft = 10;
 var xButtonsLeft = 210;
-var xBody = 330;
-var xTextRight = 730;
-var xButtonsRight = 600;
+var xBody = 350;
+var xButtonsRight = 610;
+var xTextRight = 760;
 var yBody = 10;
 var dyButtons = 30;
 var hButtons = 30;
@@ -75,7 +75,7 @@ for (var i=0; i<nMuscles; i++) {
 
 // create objects -- legend
 var labels = new Array(nLevels)
-for (var i=0; i<nLevels+1; i++) {
+for (var i=0; i<nLevels; i++) {
    labels[i] = i;
 }
-var rect = new framework.ColorPanel(600, 450, 50, 50, colorMap.slice(1), {labels:labels});
+var rect = new framework.ColorPanel(xButtonsRight, 450, 50, 50, colorMap.slice(1), {labels:labels});
