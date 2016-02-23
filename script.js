@@ -32,6 +32,7 @@ for (var i=0; i<2*nLevels; i++) {
 	if (i < nLevels) imgsOff[i] = new framework.ImageAsset(filename);
 	else imgsOn[i-nLevels] = new framework.ImageAsset(filename);
 }
+var fullStrImg = new framework.ImageAsset('fullstrength.png');
 
 // load assets -- text
 var muscleNames = new framework.JSONAsset('muscles.json');
@@ -72,6 +73,14 @@ for (var i=0; i<nMuscles; i++) {
 }
 
 // create objects -- full-strength button
+var fullStrButton = new framework.Button1(100, 450, fullStrImg, {w:125});
+fullStrButton.handleClick = function() {
+	for (var i=0; i<nMuscles; i++) {
+		if (buttons[i].selected === -1) {
+			buttons[i].buttons[nLevels-1].handleClick();
+		}
+	};
+}
 
 // create objects -- legend
 var labels = new Array(nLevels)
