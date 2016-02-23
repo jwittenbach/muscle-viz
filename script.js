@@ -76,10 +76,10 @@ for (var i=0; i<nMuscles; i++) {
 var fullStrButton = new framework.Button1(100, 450, fullStrImg, {w:125});
 fullStrButton.handleClick = function() {
 	for (var i=0; i<nMuscles; i++) {
-		if (buttons[i].selected === -1) {
-			buttons[i].buttons[nLevels-1].handleClick();
-		}
-	};
+ 		if (buttons[i].selected === -1) {
+ 			buttons[i].buttons[nLevels-1].handleClick();
+ 		}
+ 	};
 }
 
 // create objects -- legend
