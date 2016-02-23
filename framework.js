@@ -1,537 +1,695 @@
 var framework = (function() {
 
-    var canvas;
-    var ctx;
+   // global variables + accessor functions
+   // -------------------------------------
+   var canvas;
+   var ctx;
 
-    // Initialization Function: set up canvas and interaction
-    // ------------------------------------------------------
-    function init(width, height, element) {
+   function getCtx() {
+      return ctx;
+   }
 
-        var a = 1;
-        canvas = document.createElement("canvas")
+   // initialize framework
+   // --------------------
+   function init(width, height, kwargs) {
+      kwargs = kwargs || {};
+      var element = kwargs.element || document.body;
 
-        // canvas size and look
-        canvas.setAttribute("width", width);
-        canvas.setAttribute("height", height);
-        //canvas.setAttribute("style", "border: 2px solid")
-        //console.log(window.devicePixelRatio);
+      var a = 1;
+      canvas = document.createElement("canvas")
 
-        // event handling
-        canvas.onclick = eventHandler.handle.bind(eventHandler);
+      // canvas size and look
+      width = 1500;
+      height = 750;
+      var r = window.devicePixelRatio;
+      canvas.width = r*width;
+      canvas.height = r*height;
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
 
-        element.appendChild(canvas);
+      // event handling
+      canvas.onclick = Interactable.handleEvent.bind(Interactable);
 
-        ctx = canvas.getContext("2d");
-        ctx.translate(0.5, 0.5);
-    }
+      element.appendChild(canvas);
 
-    // Store: an object to hold data to be loaded
-    // ------------------------------------------
-    function Store(type) {
-        this.type = type;
+      ctx = canvas.getContext("2d");
+      ctx.setTransform(r, 0, 0, r, 0, 0);
+   }
 
-        this.data = new Array;
-        this.names = new Array;
-        this.loaded = 0;
-    }
+   // function to call after all entities have been defined
+   // -----------------------------------------------------
+   function finalize() {
+      Entity.postLoad();
+      Drawable.render();
+   }
 
-    Store.prototype.checkLoaded = function(name) {
-        for (var i=0; i<this.names.length; i++) {
-            if (this.names[i] == name) return i;
-        }
-        return -1;
-    };
+   // base class for storing assets
+   // -----------------------------
+   function Asset(filename) {
+      this.filename = filename;
+      this.data = null;
+      this.loadData(filename);
+   }
 
-    Store.prototype.registerFile = function(name) {
-        // register a file for loading and subsequent use
+   Asset.nAssets = 0;
+   Asset.nLoaded = 0;
 
-        // if file has already been registered, simply return index
-        var idx = this.checkLoaded(name);
-        if (idx != -1) return idx;
+   Asset.prototype.loadData = function() {
+      Asset.nAssets += 1;
+   };
 
-        // if file not registered, append name and return index
-        this.names.push(name);
-        return this.names.length - 1;
-    };
+   Asset.prototype.onLoad = function() {
+      Asset.nLoaded += 1;
+      if (Asset.nLoaded == Asset.nAssets) {
+         finalize();
+      }
+   };
 
-    Store.prototype.loadFiles = function(onComplete) {
-        if (this.type == 'image') this.loadImages(onComplete);
-        if (this.type == 'json') this.loadJSON(onComplete);
-    }
+   // image assets
+   // ------------
+   function ImageAsset(filename) {
+      ImageAsset.parent.constructor.call(this, filename);
+   }
 
-    Store.prototype.loadImages = function(onComplete) {
-        var nFiles = this.names.length;
-        if (nFiles == 0) onComplete();
+   extend(ImageAsset, Asset);
 
-        var that = this;
-        function onLoadImage() {
-            that.loaded++;
-            if (that.loaded == nFiles) onComplete();
-        }
+   ImageAsset.prototype.loadData = function(filename) {
+      ImageAsset.parent.loadData.call(this);
+      this.data = new Image;
+      this.data.onload = this.onLoad;
+      this.data.src = this.filename;
+   }
 
-        for (var i=0; i<this.names.length; i++) {
-            this.data.push(new Image);
-            this.data[i].onload = onLoadImage;
-            this.data[i].src = this.names[i];
-        }
-    };
+   // JSON assets
+   // -----------
+   function JSONAsset(filename) {
+      JSONAsset.parent.constructor.call(this, filename);
+   }
 
-    Store.prototype.loadJSON = function(onComplete) {
-        var nFiles = this.names.length;
-        if (nFiles == 0) onComplete();
-        var requests = Array(nFiles);
+   extend(JSONAsset, Asset);
 
-        var that = this;
-        function onLoadJSON() {
-            if (this.readyState == 4 && this.status == 200) {
-                that.data[this.idx] = JSON.parse(this.responseText)
-                that.loaded++;
-                if (that.loaded == nFiles) onComplete();
-            }
-        }
+   JSONAsset.prototype.loadData = function(filename) {
+      JSONAsset.parent.loadData.call(this);
+      var request = new XMLHttpRequest;
+      request.open('GET', filename, true);
+      var that = this;
+      request.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 200) {
+             that.data = JSON.parse(this.responseText)
+             that.onLoad();
+         }
+      }
+      request.send(null);
+   }
 
-        for (var i=0; i<this.names.length; i++) {
-            requests[i] = new XMLHttpRequest;
-            requests[i].idx = i;
-            requests[i].onreadystatechange = onLoadJSON;
-            requests[i].open("GET", this.names[i], true);
-            requests[i].send();
-        }
-    }
+   // Base class for objects
+   // ----------------------
+   function Entity(kwargs) {
+      kwargs = kwargs || {};
+      this.attached = !!kwargs.attached; // default value is false
+      Entity.items.push(this);
+   }
 
-    // Stores for holing Images to and JSON shapes for drawing
-    // -------------------------------------------------------
-    var imageStore = new Store("image");
-    var jsonStore = new Store("json");
+   Entity.items = new Array;
 
-    // Renderer: Holds all Drawables for rendering
-    // -------------------------------------------
-    var renderer = {
-        drawables: new Array
-    };
+   Entity.postLoad = function() {
+      Entity.items.forEach(function(entity) {
+         if (!entity.attached) {
+            entity.postLoad();
+         }
+      });
+   };
 
-    renderer.add = function(drawable) {
-        this.drawables.push(drawable);
-    };
+   Entity.prototype.postLoad = function() {};
 
-    renderer.draw = function() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i=0; i<this.drawables.length; i++) {
-            if (this.drawables[i].active) this.drawables[i].draw();
-        }
-    };
+   // Base class for objects that have a graphical representation
+   // -----------------------------------------------------------
+   function Drawable(x, y, kwargs) {
+      Drawable.parent.constructor.call(this, kwargs);
+      this.x = x;
+      this.y = y;
 
-    // Drawable: Holds data/functions needed to draw an element to the canvas
-    // ----------------------------------------------------------------------
-    function Drawable(x, y, w, h, active) {
-        this.x = x;
-        this.y = y;
-        this.active = active;
-        this.w = w;
-        this.h = h;
+      kwargs = kwargs || {};
+      this.w = kwargs.width || kwargs.w;
+      this.h = kwargs.height || kwargs.h;
+      this.active = kwargs.active !== false; // default value is true
 
-        renderer.add(this);
-    }
+      Drawable.items.push(this);
+   }
 
-    Drawable.prototype.activate = function() {
-        this.active = true;
-        renderer.draw();
-    };
+   extend(Drawable, Entity);
 
-    Drawable.prototype.deactivate = function() {
-        this.active = false;
-        renderer.draw();
-    };
+   Drawable.items = new Array;
 
-    // over-ride these functions in children
-    Drawable.prototype.draw = function() {};
-    Drawable.prototype.postLoad = function() {};
+   Drawable.render = function() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      Drawable.items.forEach(function(item) {
+         if (item.active) item.draw();
+      });
+   };
 
-    // Picture: Drawable that draws an image
-    // -------------------------------------
-    function Picture(name, x, y, w, h, active) {
-        Picture.parent.constructor.call(this, x, y, w, h, active)
-        this.imgIdx = imageStore.registerFile(name);
-    }
+   Drawable.prototype.draw = function() {};
 
-    extend(Picture, Drawable);
+   Drawable.prototype.activate = function() {
+      if (!this.active) {
+         this.active = true;
+      }
+   };
 
-    Picture.prototype.draw = function() {
-        ctx.drawImage(imageStore.data[this.imgIdx], this.x, this.y, this.w, this.h);
-    };
+   Drawable.prototype.deactivate = function() {
+      if (this.active) {
+         this.active = false;
+      }
+   };
 
-    Picture.prototype.postLoad = function() {
-        if (this.w == undefined || this.h == undefined) {
-            img = imageStore.data[this.imgIdx];
-            if (this.w == undefined && this.h == undefined) {
-                this.w = img.width;
-                this.h = img.height;
-            }
-            else if (this.w == undefined) {
-                this.w = (1.0*img.width/img.height)*this.h;
-            }
-            else {
-                this.h = (1.0*img.height/img.width)*this.w;
-            }
-        }
-    };
+   // Drawable images
+   // ---------------
+   function Picture(x, y, img, kwargs) {
+      Picture.parent.constructor.call(this, x, y, kwargs);
+      this.img = img;
+   }
 
-    // Text: Renderable text
-    // ---------------------
-    function Text(name, idx, x, y, w, h, font, active, align) {
-        Text.parent.constructor.call(this, x, y, w, h, active);
-        this.jsonIdx = jsonStore.registerFile(name);
-        this.idx = idx;
-        this.font = font;
-        align == undefined ? this.align = "left" : this.align = align;
-    }
+   extend(Picture, Drawable);
 
-    extend(Text, Drawable);
+   Picture.prototype.draw = function() {
+      ctx.drawImage(this.img.data, this.x, this.y, this.w, this.h);
+   };
 
-    Text.prototype.draw = function() {
-        ctx.fillStyle = 'rgb(0,0,0)';
-        ctx.font = this.font;
-        ctx.textAlign = this.align;
-        ctx.fillText(jsonStore.data[this.jsonIdx][this.idx], this.x, this.y);
-    };
+   Picture.prototype.postLoad = function() {
+      if (this.w == undefined || this.h == undefined) {
+         var w = this.img.data.width;
+         var h = this.img.data.height;
+         if (this.w == undefined && this.h == undefined) {
+            this.w = w;
+            this.h = h;
+         }
+         else if (this.w == undefined) {
+            this.w = (1.0*w/h)*this.h;
+         }
+         else {
+            this.h = (1.0*h/w)*this.w;
+         }
+      }
+   };
 
+   // Base class for renderable text
+   // ------------------------------
+   function BaseText(x, y, kwargs) {
+      BaseText.parent.constructor.call(this, x, y, kwargs);
+      kwargs = kwargs || {};
+      this.font = kwargs.font || "Arial";
+      this.size = kwargs.size || 20;
+      this.align = kwargs.align || "left";
+      this.text = undefined;
+   }
 
-    // BShape: Drawable that draws a shape defined by a Bezier curve
-    // -------------------------------------------------------------
-    function BShape(name, idx, x, y, w, h, color, lineWidth, active) {
-        BShape.parent.constructor.call(this, x, y, w, h, active);
-        this.jsonIdx = jsonStore.registerFile(name);
-        this.idx = idx;
-        this.color = color;
-        this.lineWidth = lineWidth;
-    }
+   extend(BaseText, Drawable);
 
-    extend(BShape, Drawable);
+   BaseText.prototype.draw = function() {
+      ctx.fillStyle = 'rgb(0,0,0)';
+      ctx.font = this.size.toString() + 'px' + ' ' + this.font;
+      ctx.textAlign = this.align;
+      ctx.fillText(this.text, this.x, this.y + this.size);
+   };
 
-    BShape.prototype.draw = function() {
-        var shape = jsonStore.data[this.jsonIdx][this.idx];
+   // Simple text
+   // -----------
+   function Text(x, y, text, kwargs) {
+      Text.parent.constructor.call(this, x, y, kwargs);
+      this.text = text;
+   }
 
-        ctx.fillStyle = this.color;
-        ctx.lineStyle = "rgb(0,0,0)";
-        ctx.lineWidth = this.lineWidth;
+   extend(Text, BaseText);
 
+   // Text loaded from JSON file
+   function TextFromJSON(x, y, json, idx, kwargs) {
+      Text.parent.constructor.call(this, x, y, kwargs);
+      this.idx = idx;
+      this.json = json;
+   }
 
-        ctx.beginPath();
-        var first = true;
-        for (var i=0; i<shape.length; i++) {
-            l = shape[i];
+   extend(TextFromJSON, BaseText);
+
+   TextFromJSON.prototype.postLoad = function() {
+      if (typeof(this.idx) == "number" || typeof(this.idx) == "string") {
+         this.idx = [this.idx];
+      }
+      var result = this.json.data;
+      this.idx.forEach(function(idx) {
+         result = result[idx];
+      });
+      this.text = result;
+   };
+
+   // Drawable rectangle
+   // ------------------
+   function Rectangle(x, y, w, h, kwargs) {
+      Rectangle.parent.constructor.call(this, x, y, kwargs);
+      this.w = w;
+      this.h = h;
+      kwargs = kwargs || {};
+      this.color = kwargs.color || kwargs.c || "rgb(255, 255, 255)";
+      this.lineWidth = defaultValue(kwargs, ["lineWidth", "lw"], 2);
+   }
+
+   extend(Rectangle, Drawable);
+
+   Rectangle.prototype.draw = function() {
+      ctx.fillStyle = this.color;
+      ctx.lineStyle = 'rbg(0,0,0)';
+      ctx.lineWidth = this.lineWidth;
+      ctx.fillRect(this.x, this.y, this.w, this.h);
+      if (this.lineWidth !== 0) {
+         ctx.strokeRect(this.x, this.y, this.w, this.h);
+      }
+   };
+
+   // Collection of Bezier curves
+   // ---------------------------
+   function Curves(x, y, json, kwargs) {
+      Curves.parent.constructor.call(this, x, y, kwargs);
+      this.json = json;
+      kwargs = kwargs || {};
+      this.colors = kwargs.colors || "rgb(255, 255, 255)";
+      this.dx = kwargs.dx || 0;
+      this.dy = kwargs.dy || 0;
+      this.lineWidth = kwargs.lineWidth || kwargs.lw || 2;
+   }
+
+   extend(Curves, Drawable);
+
+   Curves.prototype.draw = function() {
+      for(var i=0; i<this.nshapes; i++) {
+         ctx.fillStyle = this.colors[i];
+         ctx.lineStyle = 'rgb(0,0,0)';
+         ctx.lineWidth = this.lineWidth;
+
+         var shape = this.json.data[i];
+
+         ctx.beginPath();
+         var first = true;
+         for (var j=0; j<shape.length; j++) {
+            l = shape[j];
             if (l.line) {
-                v = l.line;
-                if (first) {
-                    ctx.moveTo(this.x+v[0], this.y+v[1]);
-                    first = false;
-                }
-                ctx.lineTo(this.x+v[2], this.y+v[3]);
+               v = l.line;
+               if (first) {
+                  ctx.moveTo(this.x+v[0], this.y+v[1]);
+                  first = false;
+               }
+               ctx.lineTo(this.x+v[2], this.y+v[3]);
             }
             else if (l.bezier) {
-                v = l.bezier;
-                if (first) {
-                    ctx.moveTo(this.x+v[0], this.y+v[1]);
-                    first = false;
-                }
-                ctx.bezierCurveTo(this.x+v[2], this.y+v[3], this.x+v[4], this.y+v[5], this.x+v[6], this.y+v[7]);
+               v = l.bezier;
+               if (first) {
+                  ctx.moveTo(this.x+v[0], this.y+v[1]);
+                  first = false;
+               }
+               ctx.bezierCurveTo(this.x+v[2], this.y+v[3], this.x+v[4], this.y+v[5], this.x+v[6], this.y+v[7]);
             }
-        }
-        ctx.closePath();
-        ctx.stroke();
-        ctx.fill();
-    };
+         }
+         ctx.closePath();
+         ctx.stroke();
+         ctx.fill();
+      }
+   };
 
-    // Event Handler: Holds all Interactables for event handling
-    // ---------------------------------------------------------
-    var eventHandler = {
-        interactables: new Array
-    };
+   Curves.prototype.setColor = function(i, color) {
+      this.colors[i] = color;
+      Drawable.render();
+   };
 
-    eventHandler.add = function(interactable) {
-        this.interactables.push(interactable);
-    };
+   Curves.prototype.postLoad = function() {
+      // handle colors
+      this.nshapes = this.json.data.length;
+      if (typeof(this.colors) === "string") {
+         var array = new Array(this.nShapes);
+         for(var i=0; i<this.nshapes; i++) {
+            array[i] = this.colors;
+         }
+         this.colors = array;
+      }
 
-    eventHandler.map = {
-        // maps event types to event handler names
-        "click": "handleClick",
-    };
+      // handle dimensions
+      if (this.w !== undefined || this.h !== undefined || this.dx != 0 || this.dy != 0) {
+         var maxVals = new Array(2);
+         var offsets = [this.dx, this.dy];
 
-    eventHandler.checkHit = function(event, interactable) {
-        var x = event.pageX - canvas.offsetLeft;
-        var y = event.pageY - canvas.offsetTop;
-        var checkX = x > interactable.x && x < (interactable.x + interactable.w);
-        var checkY = y > interactable.y && y < (interactable.y + interactable.h);
-        return checkX && checkY;
-    }
+         // first pass applies offsets and computes maximum values
+         this.json.data.forEach(function(strokes) {
+            strokes.forEach(function(stroke) {
+               if (stroke.hasOwnProperty('line')) var type = 'line';
+               else if (stroke.hasOwnProperty('bezier')) var type = 'bezier';
+               else return;
+               for (var i=0; i<stroke[type].length; i++) {
+                  var idx = i%2;
+                  stroke[type][i] += offsets[idx];
+                  var val = stroke[type][i];
+                  if (val > maxVals[idx] || maxVals[idx] === undefined) maxVals[idx] = val;
+               }
+            });
+         });
+      }
 
-    eventHandler.handle = function(event) {
-        for (var i=0; i<this.interactables.length; i++) {
-            handler = this.map[event.type];
-            interactable = this.interactables[i];
-            if (interactable.active && interactable[handler] && this.checkHit(event, interactable)) {
-                interactable[handler](event);
+      // set height and width
+      if (this.w === undefined && this.h === undefined) {
+         this.w = maxVals[0];
+         this.h = maxVals[1];
+         return;
+      }
+      else {
+         if (!(this.w !== undefined && this.h !== undefined)) {
+            if (this.h === undefined) {
+               this.h = (1.0*maxVals[1]/maxVals[0])*this.w;
             }
-        }
-    };
-
-    // Interactable: Holds data/functions needed for interactive elements
-    // ------------------------------------------------------------------
-    function Interactable(x, y, w, h, active) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.active = active;
-    }
-
-    Interactable.prototype.handleClick = false;
-
-    Interactable.prototype.activate = function() {
-        this.activate = true;
-    };
-
-    Interactable.prototype.deactivate = function() {
-        this.active = false;
-    };
-
-    Interactable.prototype.postLoad = function() {};
-
-    // Button: A simple clickable button
-    // ---------------------------------
-    function Button(x, y, w, h, imgName, active) {
-        // Button is an Interactable
-        Button.parent.constructor.call(this, x, y, w, h, active);
-        eventHandler.add(this);
-
-        // Button has a Drawable
-        this.picture = new Picture(imgName, this.x, this.y, this.w, this.h, this.active);
-        renderer.add(this.image);
-    }
-
-    extend(Button, Interactable);
-
-    Button.prototype.activate = function() {
-        Button.parent.activate();
-        this.picture.activate();
-    };
-
-    Button.prototype.deactivate = function() {
-        Button.parent.deactivate();
-        this.picture.deactivate();
-    };
-
-    Button.prototype.postLoad = function() {
-        if (this.w == undefined) this.w = this.picture.w;
-        if (this.h == undefined) this.h = this.picture.h;
-    };
-
-    // Two-State Button: Button with two images for mousedown and mouseup
-    // ------------------------------------------------------------------
-    function Button2(x, y, w, h, image1, image2, active) {
-        // Button2 is Interactable
-        Button2.parent.constructor.call(this, x, y, w, h, active);
-        eventHandler.add(this);
-
-        // Button has two Drawables
-        this.picture1 = new Picture(image1, this.x, this.y, this.w, this.h, this.active);
-        this.picture2 = new Picture(image2, this.x, this.y, this.w, this.h, false);
-
-        // keep track of state of the button, on/off
-        this.state = false;
-    }
-
-    extend(Button2, Interactable);
-
-    Button2.prototype.activate = function() {
-        Button.parent.deactivate();
-        this.picture1.deactivate();
-        this.picture2.deactivate();
-        this.state = false;
-    };
-
-    Button2.prototype.deactivate = function() {
-        Button.parent.deactivate();
-        this.picture1.activate();
-        this.picture2.deactivate();
-        this.state = false;
-    };
-
-    Button2.prototype.select = function() {
-        if(!this.state) {
-            this.state = true;
-            this.picture1.deactivate();
-            this.picture2.activate();
-            renderer.draw();
-        }
-    };
-
-    Button2.prototype.deselect = function() {
-        if(this.state) {
-            this.state = false;
-            this.picture1.activate();
-            this.picture2.deactivate();
-            renderer.draw();
-        }
-    };
-
-    Button2.prototype.handleClick = function() {
-        if (this.state) {
-            this.deselect();
-            this.onDeselect();
-        }
-        else {
-            this.select();
-            this.onSelect();
-        }
-    };
-
-    Button2.prototype.onSelect = function() {};
-    Button2.prototype.onDeselect = function() {};
-
-    Button2.prototype.postLoad = function() {
-        if (this.w == undefined) this.w = this.picture1.w;
-        if (this.h == undefined) this.h = this.picture1.h;
-    };
-
-    // Button Panel: A horizontal panel of Button2 elements
-    // ----------------------------------------------------
-    function ButtonPanel(x, y, w, h, images1, images2, active, dw) {
-        // ButtonPanel is Interactable, but never active
-        ButtonPanel.parent.constructor.call(this, x, y, undefined, undefined, false);
-        eventHandler.add(this);
-
-        dw == undefined ? this.dw = 0 : this.dw = dw
-
-        this.n = images1.length
-        this.active = active;
-        this.selected = -1;
-
-        // array of Button2 elements
-        this.buttons = new Array(this.n);
-
-        var that = this;
-        function handler() {
-            that.change(this.buttonID);
-        }
-        for (var i=0; i<this.n; i++) {
-            this.buttons[i] = new Button2(x, y, w, h, images1[i], images2[i], active);
-            this.buttons[i].buttonID = i;
-            this.buttons[i].onSelect = handler;
-            this.buttons[i].onDeselect = handler;
-        }
-    }
-
-    extend(ButtonPanel, Interactable);
-
-    ButtonPanel.prototype.change = function(buttonID) {
-        preID = this.selected;
-        postID = buttonID;
-
-        if (postID == preID) {
-            this.buttons[postID].deselect();
-            this.selected = -1;
-        }
-        else {
-            if (this.selected != -1) this.buttons[preID].deselect();
-            this.buttons[postID].select();
-            this.selected = postID;
-        }
-
-        this.onChange();
-    };
-
-    ButtonPanel.prototype.activate = function() {
-        for (var i=0; i<this.n; i++) {
-            this.buttons[i].activate();
-        }
-    };
-
-    ButtonPanel.prototype.deactivate = function() {
-        for (var i=0; i<this.n; i++) {
-            this.buttons[i].deactivate();
-        }
-    };
-
-    ButtonPanel.prototype.onChange = function() {};
-
-    ButtonPanel.prototype.postLoad = function() {
-        if (this.w == undefined) this.w = this.buttons[0].picture1.w;
-        if (this.h == undefined) this.h = this.buttons[0].picture1.h;
-        for (var i=0; i<this.n; i++) {
-            var x = this.x + i*(this.w + this.dw);
-            this.buttons[i].x = x;
-            this.buttons[i].picture1.x = x;
-            this.buttons[i].picture2.x = x;
-        }
-    };
-
-    // Helper functions
-    // ----------------
-    function getCtx() {
-        return ctx;
-    }
-
-    function inherit(proto) {
-        function F() {}
-        F.prototype = proto
-        return new F
-    }
-
-    function extend(Child, Parent) {
-      Child.prototype = inherit(Parent.prototype)
-      Child.prototype.constructor = Child
-      Child.parent = Parent.prototype
-    }
-
-    function loadAndDraw() {
-        // after all loading is finished
-        var final = function () {
-            // infer unset Drawable dimensions from loaded objects
-            for (var i=0; i<renderer.drawables.length; i++) {
-                renderer.drawables[i].postLoad();
+            else {
+               this.w = (1.0*maxVals[0]/maxVals[1])*this.h;
             }
+         }
 
-            // infer unset Interactable dimensions from loaded objects
-            for (var i=0; i<eventHandler.interactables.length; i++) {
-                eventHandler.interactables[i].postLoad();
+         // potential second pass scales values
+         var scales = [1.0*this.w/maxVals[0], 1.0*this.h/maxVals[1]];
+         this.json.data.forEach(function(strokes) {
+            strokes.forEach(function(stroke) {
+               if (stroke.hasOwnProperty('line')) var type = 'line';
+               else if (stroke.hasOwnProperty('bezier')) var type = 'bezier';
+               else return;
+               for (var i=0; i<stroke[type].length; i++) {
+                  var idx = i%2
+                  stroke[type][i] *= scales[idx];
+               }
+            });
+         });
+      }
+   };
+
+   // Base class for entities that can be interacted with
+   // ---------------------------------------------------
+   function Interactable(x, y, kwargs) {
+      Interactable.parent.constructor.call(this, kwargs);
+      this.x = x;
+      this.y = y;
+      kwargs = kwargs || {};
+      this.w = kwargs.width || kwargs.w;
+      this.h = kwargs.height || kwargs.h;
+
+      Interactable.items.push(this);
+   }
+
+   extend(Interactable, Entity);
+
+   Interactable.items = new Array;
+
+   Interactable.map = {
+      // maps event types to event handler names
+      "click": "handleClick",
+   };
+
+   Interactable.handleEvent = function(event) {
+      var handler = Interactable.map[event.type];
+      if (handler) {
+         Interactable.items.forEach(function(interactable) {
+            if (Interactable.checkHit(event, interactable)) {
+               interactable[handler](event)
             }
+         });
+      }
+   };
 
-            // initial draw
-            renderer.draw.bind(renderer)();
-        };
+   Interactable.checkHit = function(event, interactable) {
+      var x = event.pageX - canvas.offsetLeft;
+      var y = event.pageY - canvas.offsetTop;
+      var checkX = x > interactable.x && x < (interactable.x + interactable.w);
+      var checkY = y > interactable.y && y < (interactable.y + interactable.h);
+      return checkX && checkY;
+   };
 
-        var that = this;
-        var afterJSON = function() {
-            imageStore.loadFiles(final);
-        }
+   Interactable.prototype.handleClick = function(event) {};
 
-        jsonStore.loadFiles(afterJSON);
-    }
+   // One-state button
+   // ----------------
+   function Button1(x, y, img, kwargs) {
+      Button1.parent.constructor.call(this, x, y, kwargs);
 
-    // Expose elements of the framework by returning them
-    // --------------------------------------------------
-    return {
+      this.img = img;
+   }
 
-        init: init,
-        loadAndDraw: loadAndDraw,
-        Store, Store,
-        Picture: Picture,
-        Text: Text,
-        BShape: BShape,
-        Button: Button,
-        Button2: Button2,
-        ButtonPanel: ButtonPanel,
-        getCtx: getCtx,
+   extend(Button1, Interactable);
 
-        Drawable: Drawable,
-        Interactable: Interactable,
-        imageStore: imageStore,
-        jsonStore: jsonStore,
-        renderer: renderer,
-        eventHandler: eventHandler,
-        canvas: canvas,
-        ctx: ctx
-    };
+   Button1.prototype.postLoad = function() {
 
+      this.pic = new Picture(this.x, this.y, this.img, {attached:true});
+      this.pic.postLoad();
+
+      if (this.w === undefined || this.h === undefined) {
+         if (this.w === undefined && this.h === undefined) {
+            this.w = this.pic.w;
+            this.h = this.pic.h;
+         }
+         else if (this.w === undefined) {
+            this.w = (1.0*this.pic.w/this.pic.h)*this.h;
+         }
+         else if (this.h === undefined) {
+            this.h = (1.0*this.pic.h/this.pic.w)*this.w;
+         }
+      }
+
+      this.pic.h = this.h;
+      this.pic.w = this.w;
+
+   };
+
+
+   // Two-state button
+   // ----------------
+   function Button2(x, y, img0, img1, kwargs) {
+      Button2.parent.constructor.call(this, x, y, kwargs);
+      this.img0 = img0;
+      this.img1 = img1;
+
+      this.state = 0;
+   }
+
+   extend(Button2, Interactable);
+
+   Button2.prototype.postLoad = function() {
+
+      this.pic0 = new Picture(this.x, this.y, this.img0, {attached:true, active:true});
+      this.pic1 = new Picture(this.x, this.y, this.img1, {attached:true, active:false});
+
+      this.pic0.postLoad();
+      this.pic1.postLoad();
+
+      if (this.w === undefined || this.h === undefined) {
+         if (this.w === undefined && this.h === undefined) {
+            this.w = this.pic0.w;
+            this.h = this.pic0.h;
+         }
+         else if (this.w === undefined) {
+            this.h = (1.0*this.pic0.h/this.pic0.w)*this.w;
+         }
+         else if (this.h === undefined) {
+            this.w = (1.0*this.pic0.w/this.pic0.h)*this.h;
+         }
+      }
+
+      this.pic0.h = this.h;
+      this.pic0.w = this.w;
+      this.pic1.h = this.h;
+      this.pic1.w = this.w;
+   };
+
+   Button2.prototype.handleClick = function(event) {
+      if (this.state) {
+         this.pic0.activate();
+         this.pic1.deactivate();
+         this.state = 0;
+         this.onSelect();
+         Drawable.render();
+      }
+      else {
+         this.pic0.deactivate();
+         this.pic1.activate();
+         this.state = 1;
+         this.onDeselect();
+         Drawable.render();
+      }
+   };
+
+   Button2.prototype.select = function() {
+      if(!this.state) {
+           this.state = true;
+           this.pic0.deactivate();
+           this.pic1.activate();
+           Drawable.render();
+      }
+   };
+
+   Button2.prototype.deselect = function() {
+      if(this.state) {
+           this.state = false;
+           this.pic0.activate();
+           this.pic1.deactivate();
+           Drawable.render();
+      }
+   };
+
+   Button2.prototype.onSelect = function() {};
+   Button2.prototype.onDeselect = function() {};
+
+   // Panel of buttons
+   // ----------------
+   function ButtonPanel(x, y, images0, images1, kwargs) {
+      ButtonPanel.parent.constructor.call(this, kwargs);
+
+      this.x = x;
+      this.y = y;
+      this.images0 = images0;
+      this.images1 = images1;
+
+      kwargs = kwargs || {};
+      this.w = kwargs.width || kwargs.w;
+      this.h = kwargs.height || kwargs.h;
+      this.dw = kwargs.dw || 0;
+
+      this.n = images0.length
+      this.selected = -1;
+
+      this.buttons = new Array(this.n);
+      for (var i=0; i<this.n; i++) {
+
+      }
+   }
+
+   extend(ButtonPanel, Entity);
+
+   ButtonPanel.prototype.postLoad = function() {
+
+      var w0;
+      var img = this.images0[0].data
+
+      if (this.w === undefined) {
+         if (this.h === undefined) {
+            w0 = img.width;
+            this.h = img.height;
+         }
+         else {
+            w0 = (1.0*img.width/img.height)*this.h;
+         }
+      }
+      else{
+         w0 = 1.0*(this.w - (this.n - 1)*this.dw)/this.n;
+         if (this.h === undefined) {
+            this.h = (1.0*img.height/img.width)*w0;
+         }
+      }
+
+      var that = this;
+      function handler() {
+          that.change(this.buttonID);
+      }
+
+      for (var i=0; i<this.n; i++) {
+         var x = this.x + i*(w0 + this.dw);
+         this.buttons[i] = new Button2(x, this.y, this.images0[i], this.images1[i], {w:w0, h:this.h, attached:true});
+         this.buttons[i].buttonID = i;
+         this.buttons[i].onSelect = handler;
+         this.buttons[i].onDeselect = handler;
+         this.buttons[i].postLoad();
+      }
+   };
+
+   ButtonPanel.prototype.change = function(buttonID) {
+      preID = this.selected;
+      postID = buttonID;
+
+      if (postID == preID) {
+           this.buttons[postID].deselect();
+           this.selected = -1;
+      }
+      else {
+           if (this.selected != -1) this.buttons[preID].deselect();
+           this.buttons[postID].select();
+           this.selected = postID;
+      }
+
+      this.onChange();
+   };
+
+   ButtonPanel.prototype.onChange = function() {};
+
+   // Panel of colored squares
+   // ------------------------
+   function ColorPanel(x, y, w, h, colors, kwargs) {
+      ColorPanel.parent.constructor.call(this, kwargs);
+      this.x = x;
+      this.y = y;
+      this.w = w;
+      this.h = h;
+      this.colors = colors;
+      kwargs = kwargs || {};
+      this.labels = kwargs.labels;
+
+      this.n = colors.length;
+
+      this.rects = new Array(this.n);
+      for (var i=0; i<this.n; i++) {
+         this.rects[i] = new Rectangle(x+i*w, y, w, h, {c:colors[i], lw:0});
+      }
+
+      if (this.labels !== undefined) {
+         this.texts = new Array(this.n);
+         for (var i=0; i<this.n; i++) {
+            this.texts[i] = new Text((x+w/2)+i*w, y+1.3*h, labels[i], {align:"center"});
+         }
+      }
+   }
+
+   extend(ColorPanel, Entity);
+
+
+   // OOP functions
+   // -------------
+   function inherit(proto) {
+      function F() {};
+      F.prototype = proto;
+      return new F;
+   }
+
+   function extend(Child, Parent) {
+     Child.prototype = inherit(Parent.prototype);
+     Child.prototype.constructor = Child;
+     Child.parent = Parent.prototype;
+   }
+
+   // Utility functions
+   // -----------------
+   function defaultValue(kwargs, names, defaultVal) {
+      var result;
+      names.forEach(function(name) {
+         if (kwargs[name] !== undefined) result = kwargs[name];
+      });
+      if (result === undefined) return defaultVal;
+      else return result;
+   }
+
+   // expose desired elements
+   // -----------------------
+   return {
+      init: init,
+      getCtx: getCtx,
+      Asset: Asset,  // debug
+      ImageAsset: ImageAsset,
+      JSONAsset: JSONAsset,
+      Rectangle: Rectangle,
+      Picture: Picture,
+      Text: Text,
+      TextFromJSON, TextFromJSON,
+      Curves, Curves,
+      Interactable: Interactable, // debug
+      Button1: Button1,
+      Button2: Button2,
+      Entity: Entity, // debug
+      ButtonPanel: ButtonPanel,
+      ColorPanel: ColorPanel
+   }
 })();
