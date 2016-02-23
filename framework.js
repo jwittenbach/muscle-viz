@@ -177,8 +177,8 @@ var framework = (function() {
 
    Picture.prototype.postLoad = function() {
       if (this.w == undefined || this.h == undefined) {
-         var h = this.img.data.width;
-         var w = this.img.data.height;
+         var w = this.img.data.width;
+         var h = this.img.data.height;
          if (this.w == undefined && this.h == undefined) {
             this.w = w;
             this.h = h;
@@ -428,7 +428,7 @@ var framework = (function() {
    // One-state button
    // ----------------
    function Button1(x, y, img, kwargs) {
-      Button.parent.constructor.call(this, x, y, kwargs);
+      Button1.parent.constructor.call(this, x, y, kwargs);
 
       this.img = img;
    }
@@ -446,10 +446,10 @@ var framework = (function() {
             this.h = this.pic.h;
          }
          else if (this.w === undefined) {
-            this.h = (1.0*this.pic.h/this.pic.w)*this.w;
+            this.w = (1.0*this.pic.w/this.pic.h)*this.h;
          }
          else if (this.h === undefined) {
-            this.w = (1.0*this.pic.w/this.pic.h)*this.h;
+            this.h = (1.0*this.pic.h/this.pic.w)*this.w;
          }
       }
 
