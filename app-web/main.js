@@ -184,7 +184,7 @@ var ColorBar = React.createClass({
 
 });
 
-var App = React.createClass({
+var MainView = React.createClass({
 
    getInitialState: function() {
       return({config: null, shapes: null, names: null, selections: null});
@@ -256,7 +256,7 @@ var App = React.createClass({
    },
 
    render: function() {
-      if (this.state.shapes === null || this.state.names === null) {
+      if (this.props.view !== "main" || this.state.shapes === null || this.state.names === null) {
          return (<div/>);
       }
       var colorMap = this.state.config.colorMap.slice(1);
@@ -292,6 +292,14 @@ var App = React.createClass({
                      >
                         clear all
                      </button>
+                     <br/>
+                     <button
+                        type="button"
+                        id="Annotate"
+                        onClick={this.props.toAnnotate}
+                     >
+                        annotate
+                     </button>
 
                   </div>
                </div>
@@ -326,9 +334,66 @@ var App = React.createClass({
       );
    }
 
-})
+});
+
+var AnnotateView = React.createClass({
+
+   render: function() {
+      if (this.props.view !== "annotate") {
+         return (<div/>);
+      }
+      return (
+         <div>
+            Fillable forms name, date, age, sex, diagnosis, and notes
+            <br/>
+            <button
+               type="button"
+               id="ToMain"
+               onClick={this.props.toMain}
+            >
+               back
+            </button>
+         </div>
+      );
+   }
+
+});
+
+var App = React.createClass({
+
+   getInitialState: function() {
+      return {view: "main"};
+   },
+
+   toAnnotate: function() {
+      this.setState({view: "annotate"});
+   },
+
+   toMain: function() {
+      this.setState({view: "main"});
+   },
+
+   render: function() {
+      return (
+         <div>
+            <MainView
+               config="./config.json"
+               shapes="./shapes.json"
+               names="./names.json"
+               view={this.state.view}
+               toAnnotate={this.toAnnotate}
+            />
+            <AnnotateView
+               view={this.state.view}
+               toMain={this.toMain}
+            />
+         </div>
+      );
+   }
+
+});
 
 ReactDOM.render(
-   <App config="/config.json" shapes="/shapes.json" names="/names.json" />,
+   <App />,
    document.getElementById('content')
 );
