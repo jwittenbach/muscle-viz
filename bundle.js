@@ -382,7 +382,9 @@ var MainView = React.createClass({
          // load muscle shapes
          this.loadData(this.props.shapes, function (data) {
             var shapes = new Curves(data, this.state.config.colorMap);
-            shapes.reshape({ dx: -375, dy: 560, h: this.state.config.bodyHeight });
+            shapes.reshape({ dx: this.state.config.dxBody,
+               dy: this.state.config.dyBody,
+               h: this.state.config.bodyHeight });
             this.setState({ shapes: shapes });
          });
 
@@ -475,7 +477,20 @@ var MainView = React.createClass({
                React.createElement(
                   'div',
                   { className: 'Bottom' },
-                  React.createElement(ColorBar, { colors: colorMap })
+                  React.createElement(ColorBar, { colors: colorMap }),
+                  React.createElement(
+                     'div',
+                     { className: 'Table' },
+                     React.createElement(
+                        'div',
+                        { className: 'Row' },
+                        React.createElement(
+                           'div',
+                           { className: 'Annotation Col' },
+                           this.props.data.name
+                        )
+                     )
+                  )
                )
             )
          )
@@ -495,16 +510,146 @@ var AnnotateView = React.createClass({
       return React.createElement(
          'div',
          null,
-         'Fillable forms name, date, age, sex, diagnosis, and notes',
-         React.createElement('br', null),
          React.createElement(
-            'button',
-            {
-               type: 'button',
-               id: 'ToMain',
-               onClick: this.props.toMain
-            },
-            'back'
+            'div',
+            { className: 'Table' },
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement(
+                  'div',
+                  { className: 'InputText Col' },
+                  'name:'
+               ),
+               React.createElement(
+                  'div',
+                  { className: 'InputText Col' },
+                  'age:'
+               ),
+               React.createElement(
+                  'div',
+                  { className: 'InputText Col' },
+                  'sex:'
+               ),
+               React.createElement(
+                  'div',
+                  { className: 'InputText Col' },
+                  'date:'
+               )
+            ),
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement(
+                  'div',
+                  { className: 'Col' },
+                  React.createElement('input', {
+                     type: 'text',
+                     className: 'Input',
+                     id: 'Name',
+                     value: this.props.data.name,
+                     onChange: this.props.onChange("name")
+                  })
+               ),
+               React.createElement(
+                  'div',
+                  { className: 'Col' },
+                  React.createElement('input', {
+                     type: 'text',
+                     className: 'Input',
+                     id: 'Age',
+                     value: this.props.data.age,
+                     onChange: this.props.onChange("age")
+                  })
+               ),
+               React.createElement(
+                  'div',
+                  { className: 'Col' },
+                  React.createElement('input', {
+                     type: 'text',
+                     className: 'Input',
+                     id: 'Sex',
+                     value: this.props.data.sex,
+                     onChange: this.props.onChange("sex")
+                  })
+               ),
+               React.createElement(
+                  'div',
+                  { className: 'Col' },
+                  React.createElement('input', {
+                     type: 'text',
+                     className: 'Input',
+                     id: 'Date',
+                     value: this.props.data.date,
+                     onChange: this.props.onChange("date")
+                  })
+               )
+            )
+         ),
+         React.createElement(
+            'div',
+            { className: 'Table' },
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement(
+                  'div',
+                  { className: 'InputText Col' },
+                  'diagnosis:'
+               )
+            ),
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement(
+                  'div',
+                  { className: 'Col' },
+                  React.createElement('input', {
+                     type: 'text',
+                     className: 'Input',
+                     id: 'Diagnosis',
+                     value: this.props.data.diagnosis,
+                     onChange: this.props.onChange("diagnosis")
+                  })
+               )
+            )
+         ),
+         React.createElement(
+            'div',
+            { className: 'Table' },
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement(
+                  'div',
+                  { className: 'InputText Col' },
+                  'notes:'
+               )
+            ),
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement('textarea', {
+                  rows: '10',
+                  className: 'InputBox',
+                  id: 'Notes',
+                  value: this.props.data.notes,
+                  onChange: this.props.onChange("notes")
+               })
+            ),
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement(
+                  'button',
+                  {
+                     type: 'button',
+                     id: 'ToMain',
+                     onClick: this.props.toMain
+                  },
+                  'confirm'
+               )
+            )
          )
       );
    }
@@ -516,7 +661,18 @@ var App = React.createClass({
 
 
    getInitialState: function () {
-      return { view: "main" };
+      var data = { name: '', age: '', sex: '', date: '',
+         diagnosis: '', notes: '' };
+      return { view: "main", data: data };
+   },
+
+   handleDataChange: function (variable) {
+      var handler = function (e) {
+         var data = this.state.data;
+         data[variable] = e.target.value;
+         this.setState({ data: data });
+      };
+      return handler.bind(this);
    },
 
    toAnnotate: function () {
@@ -535,11 +691,14 @@ var App = React.createClass({
             config: './config.json',
             shapes: './shapes.json',
             names: './names.json',
+            data: this.state.data,
             view: this.state.view,
             toAnnotate: this.toAnnotate
          }),
          React.createElement(AnnotateView, {
             view: this.state.view,
+            data: this.state.data,
+            onChange: this.handleDataChange,
             toMain: this.toMain
          })
       );
