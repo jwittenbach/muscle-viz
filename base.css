@@ -91,10 +91,30 @@ button.selected {
    height: 40px;
    font-size: 17px;
    border-radius: 15px;
-   margin-top: 70px
+   margin-top: 50px
 }
 
 #ClearAll {
+   background-color: #4CAF50;
+   color: white;
+   width: 150px;
+   height: 40px;
+   font-size: 17px;
+   border-radius: 15px;
+   margin-top: 20px;
+}
+
+#Annotate {
+   background-color: #4CAF50;
+   color: white;
+   width: 150px;
+   height: 40px;
+   font-size: 17px;
+   border-radius: 15px;
+   margin-top: 20px;
+}
+
+#ToMain {
    background-color: #4CAF50;
    color: white;
    width: 150px;

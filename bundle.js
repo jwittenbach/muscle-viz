@@ -321,8 +321,8 @@ var ColorBar = React.createClass({
 
 });
 
-var App = React.createClass({
-   displayName: 'App',
+var MainView = React.createClass({
+   displayName: 'MainView',
 
 
    getInitialState: function () {
@@ -394,7 +394,7 @@ var App = React.createClass({
    },
 
    render: function () {
-      if (this.state.shapes === null || this.state.names === null) {
+      if (this.props.view !== "main" || this.state.shapes === null || this.state.names === null) {
          return React.createElement('div', null);
       }
       var colorMap = this.state.config.colorMap.slice(1);
@@ -438,6 +438,16 @@ var App = React.createClass({
                         onClick: this.clearAll
                      },
                      'clear all'
+                  ),
+                  React.createElement('br', null),
+                  React.createElement(
+                     'button',
+                     {
+                        type: 'button',
+                        id: 'Annotate',
+                        onClick: this.props.toAnnotate
+                     },
+                     'annotate'
                   )
                )
             ),
@@ -474,7 +484,70 @@ var App = React.createClass({
 
 });
 
-ReactDOM.render(React.createElement(App, { config: './config.json', shapes: './shapes.json', names: './names.json' }), document.getElementById('content'));
+var AnnotateView = React.createClass({
+   displayName: 'AnnotateView',
+
+
+   render: function () {
+      if (this.props.view !== "annotate") {
+         return React.createElement('div', null);
+      }
+      return React.createElement(
+         'div',
+         null,
+         'Fillable forms name, date, age, sex, diagnosis, and notes',
+         React.createElement('br', null),
+         React.createElement(
+            'button',
+            {
+               type: 'button',
+               id: 'ToMain',
+               onClick: this.props.toMain
+            },
+            'back'
+         )
+      );
+   }
+
+});
+
+var App = React.createClass({
+   displayName: 'App',
+
+
+   getInitialState: function () {
+      return { view: "main" };
+   },
+
+   toAnnotate: function () {
+      this.setState({ view: "annotate" });
+   },
+
+   toMain: function () {
+      this.setState({ view: "main" });
+   },
+
+   render: function () {
+      return React.createElement(
+         'div',
+         null,
+         React.createElement(MainView, {
+            config: './config.json',
+            shapes: './shapes.json',
+            names: './names.json',
+            view: this.state.view,
+            toAnnotate: this.toAnnotate
+         }),
+         React.createElement(AnnotateView, {
+            view: this.state.view,
+            toMain: this.toMain
+         })
+      );
+   }
+
+});
+
+ReactDOM.render(React.createElement(App, null), document.getElementById('content'));
 
 },{"./curves":1,"jquery":30,"react":160,"react-dom":31}],3:[function(require,module,exports){
 (function (process){
