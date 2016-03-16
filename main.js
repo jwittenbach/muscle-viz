@@ -329,6 +329,6 @@ var App = React.createClass({
 })
 
 ReactDOM.render(
-   <App config="/config.json" shapes="/shapes.json" names="/names.json" />,
+   <App config="./config.json" shapes="./shapes.json" names="./names.json" />,
    document.getElementById('content')
 );

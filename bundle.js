@@ -474,7 +474,7 @@ var App = React.createClass({
 
 });
 
-ReactDOM.render(React.createElement(App, { config: '/config.json', shapes: '/shapes.json', names: '/names.json' }), document.getElementById('content'));
+ReactDOM.render(React.createElement(App, { config: './config.json', shapes: './shapes.json', names: './names.json' }), document.getElementById('content'));
 
 },{"./curves":1,"jquery":30,"react":160,"react-dom":31}],3:[function(require,module,exports){
 (function (process){
