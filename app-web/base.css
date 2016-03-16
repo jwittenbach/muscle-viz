@@ -1,0 +1,105 @@
+button {
+    background-color: white;
+    border: 2px solid #999999;
+    color: black;
+    width: 25px;
+    height: 25px;
+    font-size: 15px;
+    text-align: center;
+    margin-right: -2px
+}
+
+button:focus {
+   outline: none
+}
+
+button.selected {
+    color: white
+}
+
+.ButtonPanel {
+   margin-bottom: 5px;
+}
+
+.Table {
+   display: table;
+}
+
+.Row {
+   display: table-row
+}
+
+.Col {
+   display: table-cell;
+   vertical-align: top
+}
+
+.Bottom {
+   text-align: center;
+}
+
+.LeftButtons {
+   display: inline;
+   float: right;
+}
+
+.LeftLabel {
+   display: inline-block;
+   margin-top: 2px;
+   margin-right: 20px;
+}
+
+.RightButtons {
+   float: left
+}
+
+.RightLabel {
+   display: inline-block;
+   margin-top: 2px;
+   margin-left: 20px;
+}
+
+.ColorBlock {
+   height: 30px;
+   width: 50px;
+}
+
+.LabelBlock {
+   padding-top: 5px;
+}
+
+.ColorBar {
+   margin-top: 100px
+}
+
+.clearfix:after {
+   content: " ";
+   display: block;
+   height: 0;
+   clear: both;
+}
+
+#CenterCol {
+   padding-left: 25px;
+   padding-right: 25px;
+}
+
+#FullStrength {
+   background-color: #4CAF50;
+   color: white;
+   width: 150px;
+   height: 40px;
+   font-size: 17px;
+   border-radius: 15px;
+   margin-top: 70px
+}
+
+#ClearAll {
+   background-color: #4CAF50;
+   color: white;
+   width: 150px;
+   height: 40px;
+   font-size: 17px;
+   border-radius: 15px;
+   margin-top: 20px;
+}
