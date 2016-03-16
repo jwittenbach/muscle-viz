@@ -69,7 +69,55 @@ button.selected {
 }
 
 .ColorBar {
-   margin-top: 100px
+
+   margin-top: 80px;
+   margin-bottom: 30px;
+}
+
+.Annotation {
+   font-size: 20px;
+   font-weight: bold;
+   text-transform: uppercase;
+   font-family: sans-serif;
+}
+
+.Input {
+   padding-top: 10px;
+   padding-bottom: 5px;
+   font-size: 15px;
+   font-weight: bold;
+   border: none;
+   border-bottom: solid 2px #c9c9c9;
+   transition: border 0.3s;
+   margin-right: 40px;
+   margin-bottom: 50px;
+}
+
+.Input:focus {
+  outline: none;
+  border-bottom: solid 2px #969696;
+}
+
+.InputBox {
+   margin-top: 10px;
+   width: 510px;
+   font-size: 15px;
+   border: solid 2px #c9c9c9;
+   transition: border 0.3s;
+}
+
+.InputBox:focus {
+  outline: none;
+  border: solid 2px #969696;
+}
+
+.InputText {
+   font-size: 15px;
+   font-weight: bold;
+   font-family: sans-serif;
+   color: #1a8cff;
+   text-transform: uppercase;
+   text-align: left;
 }
 
 .clearfix:after {
@@ -122,4 +170,24 @@ button.selected {
    font-size: 17px;
    border-radius: 15px;
    margin-top: 20px;
+}
+
+#Name {
+   width: 200px;
+}
+
+#Age {
+   width: 40px;
+}
+
+#Sex {
+   width: 40px;
+}
+
+#Date {
+   width: 100px;
+}
+
+#Diagnosis {
+   width: 510px;
 }

@@ -244,7 +244,9 @@ var MainView = React.createClass({
          // load muscle shapes
          this.loadData(this.props.shapes, function(data) {
             var shapes = new Curves(data, this.state.config.colorMap);
-            shapes.reshape({dx: -375, dy: 560, h:this.state.config.bodyHeight});
+            shapes.reshape({dx: this.state.config.dxBody,
+                            dy: this.state.config.dyBody,
+                            h:this.state.config.bodyHeight});
             this.setState({shapes: shapes});
          });
 
@@ -325,6 +327,13 @@ var MainView = React.createClass({
                   />
                   <div className="Bottom">
                      <ColorBar colors={colorMap} />
+                     <div className="Table">
+                        <div className="Row">
+                           <div className="Annotation Col">
+                              {this.props.data.name}
+                           </div>
+                        </div>
+                     </div>
                   </div>
                </div>
 
@@ -344,15 +353,100 @@ var AnnotateView = React.createClass({
       }
       return (
          <div>
-            Fillable forms name, date, age, sex, diagnosis, and notes
-            <br/>
-            <button
-               type="button"
-               id="ToMain"
-               onClick={this.props.toMain}
-            >
-               back
-            </button>
+            <div className="Table">
+               <div className="Row">
+                  <div className="InputText Col">name:</div>
+                  <div className="InputText Col">age:</div>
+                  <div className="InputText Col">sex:</div>
+                  <div className="InputText Col">date:</div>
+               </div>
+
+               <div className="Row">
+                  <div className="Col">
+                     <input
+                        type="text"
+                        className="Input"
+                        id="Name"
+                        value={this.props.data.name}
+                        onChange={this.props.onChange("name")}
+                     />
+                  </div>
+
+                  <div className="Col">
+                     <input
+                        type="text"
+                        className="Input"
+                        id="Age"
+                        value={this.props.data.age}
+                        onChange={this.props.onChange("age")}
+                     />
+                  </div>
+
+                  <div className="Col">
+                     <input
+                        type="text"
+                        className="Input"
+                        id="Sex"
+                        value={this.props.data.sex}
+                        onChange={this.props.onChange("sex")}
+                     />
+                  </div>
+
+                  <div className="Col">
+                     <input
+                        type="text"
+                        className="Input"
+                        id="Date"
+                        value={this.props.data.date}
+                        onChange={this.props.onChange("date")}
+                     />
+                  </div>
+               </div>
+            </div>
+
+            <div className="Table">
+               <div className="Row">
+                  <div className="InputText Col">diagnosis:</div>
+               </div>
+
+               <div className="Row">
+                  <div className="Col">
+                     <input
+                        type="text"
+                        className="Input"
+                        id="Diagnosis"
+                        value={this.props.data.diagnosis}
+                        onChange={this.props.onChange("diagnosis")}
+                     />
+                  </div>
+               </div>
+            </div>
+
+            <div className="Table">
+               <div className="Row">
+                  <div className="InputText Col">notes:</div>
+               </div>
+
+               <div className="Row">
+                  <textarea
+                     rows="10"
+                     className="InputBox"
+                     id="Notes"
+                     value={this.props.data.notes}
+                     onChange={this.props.onChange("notes")}
+                  />
+               </div>
+
+               <div className="Row">
+                  <button
+                     type="button"
+                     id="ToMain"
+                     onClick={this.props.toMain}
+                  >
+                     confirm
+                  </button>
+               </div>
+            </div>
          </div>
       );
    }
@@ -362,7 +456,18 @@ var AnnotateView = React.createClass({
 var App = React.createClass({
 
    getInitialState: function() {
-      return {view: "main"};
+      var data = {name: '', age: '', sex: '', date: '',
+                  diagnosis: '', notes: ''};
+      return {view: "main", data: data};
+   },
+
+   handleDataChange: function(variable) {
+      var handler = function(e) {
+         var data = this.state.data;
+         data[variable] = e.target.value;
+         this.setState({data: data});
+      }
+      return handler.bind(this);
    },
 
    toAnnotate: function() {
@@ -380,11 +485,14 @@ var App = React.createClass({
                config="./config.json"
                shapes="./shapes.json"
                names="./names.json"
+               data={this.state.data}
                view={this.state.view}
                toAnnotate={this.toAnnotate}
             />
             <AnnotateView
                view={this.state.view}
+               data={this.state.data}
+               onChange={this.handleDataChange}
                toMain={this.toMain}
             />
          </div>
