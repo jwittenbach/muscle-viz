@@ -121,13 +121,6 @@ var $ = require("jquery");
 var JSON = require("JSON");
 var Curves = require("./curves");
 
-function rgbToHex(str) {
-   vals = str.split('(')[1].split(')')[0].split(',').map(function (s) {
-      return parseInt(s.trim());
-   });
-   return "#" + ((1 << 24) + (vals[0] << 16) + (vals[1] << 8) + vals[2]).toString(16).slice(1);
-}
-
 function loadJSON(url, success) {
    $.ajax({
       url: url,
@@ -163,18 +156,44 @@ var Button2 = React.createClass({
    displayName: 'Button2',
 
 
+   getInitialState: function () {
+      return { hover: false };
+   },
+
+   componentDidMount: function () {
+      var color = this.props.color;
+      var pieces = color.split('(');
+      color = pieces[0] + 'a(' + pieces[1];
+      pieces = color.split(')');
+      color = pieces[0] + ', 0.5)';
+      this.hoverColor = color;
+   },
+
+   mouseIn: function () {
+      this.setState({ hover: true });
+   },
+
+   mouseOut: function () {
+      this.setState({ hover: false });
+   },
+
    render: function () {
+      var style = {};
       if (this.props.status == "selected") {
-         style = { backgroundColor: rgbToHex(this.props.color) };
-      } else {
-         style = {};
+         style.backgroundColor = this.props.color;
+      } else if (this.state.hover) {
+         var color = this.props.color;
+         style.backgroundColor = this.hoverColor;
       }
+
       return React.createElement(
          'button',
          {
             type: 'button',
             className: this.props.status,
             style: style,
+            onMouseOver: this.mouseIn,
+            onMouseOut: this.mouseOut,
             onClick: this.props.onClick },
          this.props.children
       );
@@ -360,7 +379,7 @@ var ColorBar = React.createClass({
       colors = [];
       labels = [];
       for (var i = 0; i < this.props.colors.length; i++) {
-         var color = rgbToHex(this.props.colors[i]);
+         var color = this.props.colors[i];
          colors.push(React.createElement('div', {
             className: 'ColorBlock Col',
             key: i,
