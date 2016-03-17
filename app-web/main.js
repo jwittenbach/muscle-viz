@@ -9,6 +9,26 @@ function rgbToHex(str) {
    return "#" + ((1 << 24) + (vals[0] << 16) + (vals[1] << 8) + vals[2]).toString(16).slice(1);
 }
 
+function download(filename, data) {
+   if (typeof(data) === "string") {
+      var output = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+   }
+   else {
+      var output = data.toDataURL();
+   }
+
+   var element = document.createElement('a');
+   element.setAttribute('href', output);
+   element.setAttribute('download', filename);
+
+   element.style.display = 'none';
+   document.body.appendChild(element);
+
+   element.click();
+
+   document.body.removeChild(element);
+}
+
 var Button2 = React.createClass({
 
    render: function() {
@@ -103,6 +123,40 @@ var ButtonBank = React.createClass({
       return (
          <div className="ButtonBank">
             {elements}
+         </div>
+      );
+   }
+});
+
+var DropDown = React.createClass({
+
+   getInitialState: function() {
+      return {active: false};
+   },
+
+   switch: function() {
+      this.setState({active: !this.state.active});
+   },
+
+   render: function() {
+      if (this.state.active) {
+         var status = " DropDownActive";
+      }
+      else {
+         var status = "";
+      }
+
+      return (
+         <div className="DropDown">
+            <button type="button"
+               className={"DropDownHead"+status}
+               onClick={this.switch}
+            >
+               {this.props.text}
+            </button>
+            <div className={"DropDownInside"+status}>
+               {this.props.children}
+            </div>
          </div>
       );
    }
@@ -211,6 +265,12 @@ var MainView = React.createClass({
       this.setState({selections: selections});
    },
 
+   saveImage: function() {
+      var filename = prompt("filename:", "image.png");
+      var canvas = document.getElementsByTagName("canvas")[0];
+      download(filename, canvas);
+   },
+
    clearAll: function() {
       var selections = [];
       for (var i=0; i<this.state.config.n; i++) {
@@ -279,29 +339,26 @@ var MainView = React.createClass({
                      idx={0}
                   />
                   <div className="Bottom">
-                     <button
-                        type="button"
-                        id="FullStrength"
-                        onClick={this.fullStrength}
-                     >
-                        full strength
-                     </button>
-                     <br/>
-                     <button
-                        type="button"
-                        id="ClearAll"
-                        onClick={this.clearAll}
-                     >
-                        clear all
-                     </button>
-                     <br/>
-                     <button
-                        type="button"
-                        id="Annotate"
-                        onClick={this.props.toAnnotate}
-                     >
-                        annotate
-                     </button>
+
+                     <DropDown text="options">
+
+                        <button
+                           type="button"
+                           className="DropDownElement"
+                           onClick={this.props.toAnnotate}
+                        >
+                           annotate
+                        </button>
+                        <br/>
+                        <button
+                           type="button"
+                           className="DropDownElement"
+                           onClick={this.saveImage}
+                        >
+                           export image
+                        </button>
+
+                     </DropDown>
 
                   </div>
                </div>
@@ -326,7 +383,27 @@ var MainView = React.createClass({
                      idx={1}
                   />
                   <div className="Bottom">
+
+                     <button
+                        type="button"
+                        className="Button Col"
+                        onClick={this.clearAll}
+                     >
+                        clear all
+                     </button>
+
+                     <button
+                        type="button"
+                        className="Button Col"
+                        onClick={this.fullStrength}
+                     >
+                        full strength
+                     </button>
+
+                     <br/>
+
                      <ColorBar colors={colorMap} />
+
                      <div className="Table">
                         <div className="Row">
                            <div className="Annotation Col">
@@ -336,9 +413,7 @@ var MainView = React.createClass({
                      </div>
                   </div>
                </div>
-
             </div>
-
          </div>
       );
    }
@@ -440,6 +515,7 @@ var AnnotateView = React.createClass({
                <div className="Row">
                   <button
                      type="button"
+                     className="Button"
                      id="ToMain"
                      onClick={this.props.toMain}
                   >

@@ -36,6 +36,7 @@ button.selected {
 
 .Bottom {
    text-align: center;
+   padding-top: 30px;
 }
 
 .LeftButtons {
@@ -70,7 +71,8 @@ button.selected {
 
 .ColorBar {
 
-   margin-top: 80px;
+   display: inline-block;
+   margin-top: 30px;
    margin-bottom: 30px;
 }
 
@@ -119,6 +121,49 @@ button.selected {
    text-align: left;
 }
 
+.Button {
+   background-color: #4CAF50;
+   color: white;
+   width: 130px;
+   height: 40px;
+   font-size: 17px;
+   border-radius: 15px;
+   margin: 5px;
+}
+
+.DropDownHead {
+   background-color: white;
+   color: black;
+   width: 130px;
+   height: 40px;
+   font-size: 17px;
+   margin: 0px;
+}
+
+.DropDownHead.DropDownActive {
+   background-color: grey;
+   color: white;
+}
+
+.DropDownElement {
+   display: inline-block;
+   background-color: #4CAF50;
+   color: white;
+   width: 130px;
+   height: 40px;
+   font-size: 17px;
+   margin: -2px;
+}
+
+.DropDownInside {
+   display: none;
+   text-align: center;
+}
+
+.DropDownInside.DropDownActive {
+   display: block;
+}
+
 .clearfix:after {
    content: " ";
    display: block;
@@ -129,46 +174,6 @@ button.selected {
 #CenterCol {
    padding-left: 25px;
    padding-right: 25px;
-}
-
-#FullStrength {
-   background-color: #4CAF50;
-   color: white;
-   width: 150px;
-   height: 40px;
-   font-size: 17px;
-   border-radius: 15px;
-   margin-top: 50px
-}
-
-#ClearAll {
-   background-color: #4CAF50;
-   color: white;
-   width: 150px;
-   height: 40px;
-   font-size: 17px;
-   border-radius: 15px;
-   margin-top: 20px;
-}
-
-#Annotate {
-   background-color: #4CAF50;
-   color: white;
-   width: 150px;
-   height: 40px;
-   font-size: 17px;
-   border-radius: 15px;
-   margin-top: 20px;
-}
-
-#ToMain {
-   background-color: #4CAF50;
-   color: white;
-   width: 150px;
-   height: 40px;
-   font-size: 17px;
-   border-radius: 15px;
-   margin-top: 20px;
 }
 
 #Name {
