@@ -267,6 +267,9 @@ var MainView = React.createClass({
 
    saveImage: function() {
       var filename = prompt("filename:", "image.png");
+      if (filename === null) {
+         return;
+      }
       var canvas = document.getElementsByTagName("canvas")[0];
       download(filename, canvas);
    },
