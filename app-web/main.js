@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = require("jquery");
+var JSON = require("JSON");
 var Curves = require("./curves");
 
 function rgbToHex(str) {
@@ -9,9 +10,21 @@ function rgbToHex(str) {
    return "#" + ((1 << 24) + (vals[0] << 16) + (vals[1] << 8) + vals[2]).toString(16).slice(1);
 }
 
+function loadJSON(url, success) {
+   $.ajax({
+      url: url,
+      dataType: 'json',
+      cache: false,
+      success: success,
+      error: function() {
+         console.log("Failure loading " + url);
+      }
+   });
+}
+
 function download(filename, data) {
    if (typeof(data) === "string") {
-      var output = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+      var output = 'data:text/plain;charset=utf-8,' + encodeURIComponent(data);
    }
    else {
       var output = data.toDataURL();
@@ -241,28 +254,36 @@ var ColorBar = React.createClass({
 var MainView = React.createClass({
 
    getInitialState: function() {
-      return({config: null, shapes: null, names: null, selections: null});
+      return({shapes: null, names: null});
    },
 
    handleClick: function(n, k) {
-      var selections = this.state.selections;
+      var selections = this.props.selections;
       if (selections[n] == k) {
          selections[n] = -1;
       }
       else {
          selections[n] = k;
       }
-      this.setState({selections: selections});
+      this.props.setSelections(selections);
    },
 
    fullStrength: function() {
-      var selections = this.state.selections;
+      var selections = this.props.selections;
       for (var i=0; i<selections.length; i++) {
          if (selections[i] == -1) {
-            selections[i] = this.state.config.k-1;
+            selections[i] = this.props.config.k-1;
          }
       }
-      this.setState({selections: selections});
+      this.props.setSelections(selections);
+   },
+
+   clearAll: function() {
+      var selections = [];
+      for (var i=0; i<this.props.config.n; i++) {
+         selections.push(-1);
+      }
+      this.props.setSelections(selections);
    },
 
    saveImage: function() {
@@ -274,57 +295,28 @@ var MainView = React.createClass({
       download(filename, canvas);
    },
 
-   clearAll: function() {
-      var selections = [];
-      for (var i=0; i<this.state.config.n; i++) {
-         selections.push(-1);
-      }
-      this.setState({selections: selections});
-   },
-
-   loadData: function(url, success) {
-      $.ajax({
-         url: url,
-         dataType: 'json',
-         cache: false,
-         success: success.bind(this),
-         error: function(xhr, status, err) {
-            console.error(url, status, err.toString());
-         }.bind(this)
-      });
-   },
-
    componentDidMount: function() {
 
-      // load application configuration parameters first
-      this.loadData(this.props.config, function(data) {
-         var selections = [];
-         for (var i=0; i<data.n; i++) {
-            selections.push(-1);
-         }
-         this.setState({config: data, selections: selections});
+      // load muscle shapes
+      loadJSON(this.props.shapes, (function(data) {
+         var shapes = new Curves(data, this.props.config.colorMap);
+         shapes.reshape({dx: this.props.config.dxBody,
+                         dy: this.props.config.dyBody,
+                         h:this.props.config.bodyHeight});
+         this.setState({shapes: shapes});
+      }).bind(this));
 
-         // load muscle shapes
-         this.loadData(this.props.shapes, function(data) {
-            var shapes = new Curves(data, this.state.config.colorMap);
-            shapes.reshape({dx: this.state.config.dxBody,
-                            dy: this.state.config.dyBody,
-                            h:this.state.config.bodyHeight});
-            this.setState({shapes: shapes});
-         });
-
-         // load muscle names
-         this.loadData(this.props.names, function(data) {
-            this.setState({names: data});
-         });
-      });
+      // load muscle names
+      loadJSON(this.props.names, (function(data) {
+         this.setState({names: data});
+      }).bind(this));
    },
 
    render: function() {
       if (this.props.view !== "main" || this.state.shapes === null || this.state.names === null) {
          return (<div/>);
       }
-      var colorMap = this.state.config.colorMap.slice(1);
+      var colorMap = this.props.config.colorMap.slice(1);
       return (
          <div className="App Table">
 
@@ -332,9 +324,9 @@ var MainView = React.createClass({
 
                <div className="Col">
                   <ButtonBank
-                     n={this.state.config.n/2}
-                     k={this.state.config.k}
-                     selections={this.state.selections.slice(0, this.state.config.n/2)}
+                     n={this.props.config.n/2}
+                     k={this.props.config.k}
+                     selections={this.props.selections.slice(0, this.props.config.n/2)}
                      names={this.state.names}
                      colors={colorMap}
                      namePos="left"
@@ -360,6 +352,22 @@ var MainView = React.createClass({
                         >
                            export image
                         </button>
+                        <br/>
+                        <button
+                           type="button"
+                           className="DropDownElement"
+                           onClick={this.props.saveData}
+                        >
+                           save
+                        </button>
+                        <br/>
+                        <button
+                           type="button"
+                           className="DropDownElement"
+                           onClick={this.props.loadData}
+                        >
+                           load
+                        </button>
 
                      </DropDown>
 
@@ -369,17 +377,17 @@ var MainView = React.createClass({
                <div className="Col" id="CenterCol">
                   <Shapes
                      shapes={this.state.shapes}
-                     selections={this.state.selections}
+                     selections={this.props.selections}
                   />
                </div>
 
 
                <div className="Col">
                   <ButtonBank
-                     n={this.state.config.n/2}
-                     k={this.state.config.k}
+                     n={this.props.config.n/2}
+                     k={this.props.config.k}
                      colors={colorMap}
-                     selections={this.state.selections.slice(this.state.config.n/2)}
+                     selections={this.props.selections.slice(this.props.config.n/2)}
                      names={this.state.names}
                      namePos="right"
                      onClick={this.handleClick}
@@ -537,7 +545,22 @@ var App = React.createClass({
    getInitialState: function() {
       var data = {name: '', age: '', sex: '', date: '',
                   diagnosis: '', notes: ''};
-      return {view: "main", data: data};
+      return {view: "main", data: data, config: null, selections: null};
+   },
+
+   componentDidMount: function() {
+      // load application configuration parameters
+      loadJSON(this.props.config, (function(data) {
+         var selections = [];
+         for (var i=0; i<data.n; i++) {
+            selections.push(-1);
+         }
+         this.setState({config: data, selections: selections});
+      }).bind(this));
+   },
+
+   setSelections(selections) {
+      this.setState({selections: selections});
    },
 
    handleDataChange: function(variable) {
@@ -557,22 +580,60 @@ var App = React.createClass({
       this.setState({view: "main"});
    },
 
+   save: function() {
+      var filename = prompt("filename:", "data.json");
+      if (filename === null) {
+         return;
+      }
+      var allData = {}
+      allData.data = this.state.data;
+      allData.selections = this.state.selections;
+      download(filename, JSON.stringify(allData, null, '\t'));
+   },
+
+   load: function() {
+      this.refs.fileSelector.click();
+   },
+
+   handleLoad: function() {
+      var file = this.refs.fileSelector.files[0];
+      var reader = new FileReader;
+      reader.onload = (function (e) {
+         var data = JSON.parse(e.target.result);
+         this.setState(data);
+      }).bind(this);
+      reader.readAsText(file);
+   },
+
    render: function() {
+      if (this.state.config == null) {
+         return(<div/>);
+      }
       return (
          <div>
             <MainView
-               config="./config.json"
-               shapes="./shapes.json"
-               names="./names.json"
+               shapes={this.props.shapes}
+               names={this.props.names}
+               config={this.state.config}
+               selections={this.state.selections}
+               setSelections={this.setSelections}
                data={this.state.data}
                view={this.state.view}
                toAnnotate={this.toAnnotate}
+               saveData={this.save}
+               loadData={this.load}
             />
             <AnnotateView
                view={this.state.view}
                data={this.state.data}
                onChange={this.handleDataChange}
                toMain={this.toMain}
+            />
+            <input
+               type="file"
+               ref="fileSelector"
+               style={{display: "none"}}
+               onChange={this.handleLoad}
             />
          </div>
       );
@@ -581,6 +642,6 @@ var App = React.createClass({
 });
 
 ReactDOM.render(
-   <App />,
+   <App shapes="./shapes.json" names="./names.json" config="./config.json"/>,
    document.getElementById('content')
 );
