@@ -192,6 +192,10 @@ button.selected {
    width: 100px;
 }
 
+#MRN {
+    width: 200px;
+}
+
 #Diagnosis {
    width: 510px;
 }
