@@ -706,6 +706,34 @@ var AnnotateView = React.createClass({
                React.createElement(
                   'div',
                   { className: 'InputText Col' },
+                  'mrn:'
+               )
+            ),
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement(
+                  'div',
+                  { className: 'Col' },
+                  React.createElement('input', {
+                     type: 'text',
+                     className: 'Input',
+                     id: 'MRN',
+                     value: this.props.data.mrn,
+                     onChange: this.props.onChange("mrn")
+                  })
+               )
+            )
+         ),
+         React.createElement(
+            'div',
+            { className: 'Table' },
+            React.createElement(
+               'div',
+               { className: 'Row' },
+               React.createElement(
+                  'div',
+                  { className: 'InputText Col' },
                   'diagnosis:'
                )
             ),
