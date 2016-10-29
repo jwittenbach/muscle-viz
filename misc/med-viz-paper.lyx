@@ -1,0 +1,297 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Visualizing clinical weakness with open source software
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Complaints of weakness are common[1].
+ The neuromuscular exam is commonly performed among many specialties; specialize
+d and detailed examinations are a mainstay of the neurological exam and
+ central to the examination of patients with neuromuscular disorders.
+ In the academic medical setting, clear and informative communication between
+ medical students, residents and attendings is critical to optimal patient
+ care.
+ Here we present a free, open-source software application for generating
+ plots of muscle weakness; the plots provide an adjunct to the written tables
+ of weakness normally used in clinical settings.
+ The plots are informative and intuitive; they provide a platform for pattern
+ recognition.
+\end_layout
+
+\begin_layout Standard
+Previous groups have addressed visualizing muscle weakness using software
+ [2], however the lack of distribution of the tool and hidden underlying
+ code limited it's usefulness for the field.
+ There has been a recent push in neuroscience for open source tools [3];
+ such an approach would also benefit the medical community.
+\end_layout
+
+\begin_layout Standard
+Here we present a tool for clincal use; the code and tool are freely available
+ and modular.
+ We hope the framework will be adapted for similar uses by the community
+ to develop additional useful clinical tools.
+ The regular use of the tool should be beneficial for communication between
+ caretakers and for patient education.
+ Furthermore, the shift to open source tools in medicine is one we should
+ purposefully pursue.
+\end_layout
+
+\begin_layout Section
+Methods:
+\end_layout
+
+\begin_layout Subsection
+Clinical rationale
+\end_layout
+
+\begin_layout Subsection
+Software
+\end_layout
+
+\begin_layout Section
+Results:
+\end_layout
+
+\begin_layout Standard
+Give use cases, convince the audience that distributions are simple to appreciat
+e.
+\end_layout
+
+\begin_layout Standard
+Jeremy, you can add your cases here.
+ We want cases that broadly represent neurology and clear weakness differential
+ diagnoses.
+ Also I would like a mix of pediatric and adult conditions, if possible.
+ As it turns out, finding data from published case reports is essentially
+ impossible.
+ We will move forward with simulated cases.
+ Will include:
+\end_layout
+
+\begin_layout Standard
+stroke patient examples -- can do time series showing weakness that improves
+ over time disease with proximal > distal weakness disease with distal >
+ proximal weakness sma patient, because I like sma Herm says he'll do these:
+\end_layout
+
+\begin_layout Standard
+stroke (hemiparesis); polymyositis; muscular dystrophy; and guillan barre.
+ 
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+Here we present free, open-source software for visualizing the distribution
+ of muscle weakness.
+ The software is built upon (Jason enter a brief description here).
+ The software is simple and intuitive.
+ The plots produced provide enough information for the viewer to appreciate
+ the distribution of weakness; the inclusion of distracting information
+ has been avoided.
+\end_layout
+
+\begin_layout Standard
+We anticipate this tool will be useful in the clinic and in case reports.
+ Ideally, the use of this tool by medical students and residents will allow
+ for more clear patient presentations.
+ The onus will no longer be on the reciever to generate a mental image of
+ weakness.
+ The image can be generated by the presenter and shown to the reciever;
+ this should decrease confusion and aid in diagnosis.
+ This tool also provides a useful platform for figure generation for publication
+s.
+ By displaying weakness in a uniform structure, the range of weaknesses
+ among cases and progression over time can be easily appreciated.
+\end_layout
+
+\begin_layout Standard
+The introduction of technology to patient care is not novel; indeed, clinic
+ visits have become increasingly dependent on technology [4].
+ We do not intend to add more clutter.
+ Effective communication requires a patient and physician connection which
+ can be negatively impacted by techonological distraction.
+ Our decision to include less detail was purposeful.
+ The tool should provide enough information to make distribution obvious,
+ but it should not include any distractions.
+ By introducing software that is simple to use, freely available and modifiable,
+ we hope to improve clinical diaganosis and communication.
+ Furthermore, we hope the release of source code will inspire others to
+ join us in open source medical tool development.
+\end_layout
+
+\begin_layout Section
+References:
+\end_layout
+
+\begin_layout Standard
+[1] Saguil, A.
+ "Evaluation of the patient with muscle weakness." American family physician
+ 71.7 (2005): 1327-1336.
+ This article is a nice general overview of weakness from a primary care
+ perspective
+\end_layout
+
+\begin_layout Standard
+[2] Pieterse, A.
+ J., Voermans, N.
+ C., Tuinenga, H.
+ S., & Van Engelen, B.
+ G.
+ (2008).
+ Computer-aided visualization of muscle weakness distribution.
+ Journal of neurology, 255(11), 1670-1678.
+ This article is quite similar to our idea -- notably I had the idea for
+ this tool before finding this article.
+ While they solve the same problem we seek to solve, there are many areas
+ where we improve and expand their work.
+\end_layout
+
+\begin_layout Standard
+[3] Freeman, Jeremy.
+ "Open source tools for large-scale neuroscience." Current opinion in neurobiolog
+y 32 (2015): 156-163.
+\end_layout
+
+\begin_layout Standard
+[4] Arnold Relman.
+ 2014.
+ "On Breaking One's Neck." The New York Review of Books.
+ Feb 6, 2015.
+ Relevant paragraph from article: "What did this experience teach me about
+ the current state of medical care in the US? Quite a lot, as it turns out.
+ I always knew that the treatment of the critically ill in our best teaching
+ hospitals was excellent.
+ That was certainly confirmed by the life-saving treatment I received in
+ the Massachusetts General emergency room.
+ Physicians there simply refused to let me die (try as hard as I might).
+ But what I hadn’t appreciated was the extent to which, when there is no
+ emergency, new technologies and electronic record-keeping affect how doctors
+ do their work.
+ Attention to the masses of data generated by laboratory and imaging studies
+ has shifted their focus away from the patient.
+ Doctors now spend more time with their computers than at the bedside.
+ That seemed true at both the ICU and Spaulding.
+ Reading the physicians’ notes in the MGH and Spaulding records, I found
+ only a few brief descriptions of how I felt or looked, but there were copious
+ reports of the data from tests and monitoring devices.
+ Conversations with my physicians were infrequent, brief, and hardly ever
+ reported." (emphaisis added)
+\end_layout
+
+\begin_layout Standard
+Paternostro-Sluga, T., Grim-Stieger, M., Posch, M., Schuhfried, O., Vacariu,
+ G., Mittermaier, C., ...
+ & Fialka-Moser, V.
+ (2008).
+ Reliability and validity of the Medical Research Council (MRC) scale and
+ a modified scale for testing muscle strength in patients with radial palsy.
+ Journal of rehabilitation medicine, 40(8), 665-671.
+ An article describing and validating the MRC weakness scale
+\end_layout
+
+\begin_layout Standard
+Medical Research Council.
+ Aids to examination of the peripheral nervous system.
+ Memorandum no.
+ 45.
+ London: Her Majesty’s Stationary Office; 1976.
+ This is the MRC scale reference.
+ But the link is to a book review of the actual work.
+\end_layout
+
+\begin_layout Standard
+Hough, C.
+ L., Lieu, B.
+ K., & Caldwell, E.
+ S.
+ (2011).
+ Manual muscle strength testing of critically ill patients: feasibility
+ and interobserver agreement.
+ Crit Care, 15(1), R43.
+ This article uses a modifited sum-score.
+ Jason, perhaps this could be useful to look at to develop (or use their
+ method) to get a summary statistic for weakness.
+ It would be nice to have a metric that tells proximal-ness and distal-ness.
+\end_layout
+
+\end_body
+\end_document
