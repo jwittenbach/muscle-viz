@@ -22,8 +22,12 @@ xhr.overrideMimeType("image/svg+xml");
 xhr.send();
 xhr.onload = function(e) {
 	svg = document.getElementById("centerPanel").appendChild(xhr.responseXML.documentElement);
+	svg.id = "body";
+	svg.setAttribute("height", "100%");
+	svg.setAttribute("width", "100%");
 	setParamsFromSVG(svg);
 	makeButtonBanks(svg);
+	makeMisc();
 }
 
 // translate name from SVG to human-readable form
@@ -163,4 +167,17 @@ function makeButtonBanks(svg) {
 			panelRow.appendChild(name);
 		}
 	});
+}
+
+function makeMisc() {
+	// make color map
+	var cmap = document.getElementById("colorBar");
+	cmap.id = "colorBar";
+	for (i=0; i<params.nLevels; i++) {
+		var c = document.createElement("div");
+		c.className = "colorBox";
+		c.innerHTML = i;
+		c.style.background = params.colors[i];
+		cmap.appendChild(c);
+	}
 }
