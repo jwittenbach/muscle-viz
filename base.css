@@ -1,21 +1,31 @@
-#mainView {
+div {
    display: flex;
    flex-flow: row nowrap;
+}
+
+#mainView {
+   height: 700px;
+   width: 1000px;
+
+}
+
+.sidePanel {
+   flex-flow: column nowrap;
+}
+
+.buttonBank {
+   flex-flow: column nowrap;
+   flex-grow: 0;
 }
 
 .panelRow {
-   display: flex;
-   flex-flow: row nowrap;
    justify-content: space-between;
+   align-items: baseline;
 }
 
 .buttonRow {
-   display: flex;
-   flex-flow: row nowrap;
    align-items: center;
-   margin-left: 20px;
-   margin-right: 20px;
-   margin-bottom: 5px;
+   padding: 5px;
 }
 
 .leftName {
@@ -33,5 +43,60 @@ button:focus {
    height: 25px;
    font-size: 15px;
    text-align: center;
-   margin-right: -2px;
+   margin-left: -2px;
+}
+
+.menuButton {
+   border: 2px solid #999999;
+   width: 110px;
+   height: 40px;
+   background: white;
+   font-size: 15px;
+   text-align: center;
+}
+
+.menuButton:hover {
+   background: #999999;
+   color: white;
+}
+
+.menuButton:active {
+   background: grey;
+}
+
+.misc {
+   flex-flow: column nowrap;
+   justify-content: space-around;
+   align-items: center;
+   flex-grow: 1;
+}
+
+#rightButtons {
+   justify-content: space-around;
+   width: 100%;
+}
+
+#colorBar {
+   text-align: center;
+}
+
+.colorBox {
+   flex-flow: column nowrap;
+   justify-content: space-around;
+   width: 45px;
+   height: 45px;
+   color: white;
+}
+
+#menu {
+   flex-flow: column nowrap;
+}
+
+#menu .menuButton {
+   margin-left: -2px;
+   margin-top: -2px;
+}
+
+#miscLeft {
+   padding-left: 2px;
 }
