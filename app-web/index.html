@@ -18,7 +18,7 @@
                   </div>
                   <div>
                      <button id="annotate" class="menuButton">annotate</button>
-                     <button id="export" class="menuButton">export</button>
+                     <button id="export" class="menuButton" onclick="saveSVG()">export</button>
                   </div>
                </div>
             </div>
@@ -37,9 +37,14 @@
                   <button id="clearAll" class="menuButton" onclick="setNoStrength()">
                      clear all
                   </button>
+                </div>
             </div>
          </div>
 
+      </div>
+
+      <div id="annotateView" style="display:none;">
+        ANNOTATION CITY!
       </div>
 
       <a id="downloadAnchorElem" style="display:none"></a>

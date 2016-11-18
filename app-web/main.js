@@ -146,6 +146,7 @@ function download(data, defaultName) {
 		return;
 	}
 
+	// download
 	var element = document.createElement('a');
 	element.setAttribute('href', data);
 	element.setAttribute('download', filename);
@@ -174,6 +175,12 @@ function loadData() {
 		document.body.removeChild(element);
 	}
 	element.click();
+}
+
+function saveSVG() {
+	var data = document.getElementById("centerPanel").innerHTML;
+	var dataStr = "data:text/xml;charset=utf-8," + encodeURIComponent(data);
+	download(dataStr, "image.svg");
 }
 
 // helper functions to create event listeners
