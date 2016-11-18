@@ -13,8 +13,8 @@
             <div id="miscLeft" class="misc">
                <div id="menu">
                   <div>
-                     <button id="save" class="menuButton">save</button>
-                     <button id="load" class="menuButton">load</button>
+                     <button id="save" class="menuButton" onclick="saveData()">save</button>
+                     <button id="load" class="menuButton" onclick="loadData()">load</button>
                   </div>
                   <div>
                      <button id="annotate" class="menuButton">annotate</button>
@@ -31,10 +31,10 @@
             <div id="miscRight" class="misc">
                <div id="colorBar"></div>
                <div id="rightButtons">
-                  <button id="fullStrength" class="menuButton">
+                  <button id="fullStrength" class="menuButton" onclick="setFullStrength()">
                      full strength
                   </button>
-                  <button id="clearAll" class="menuButton">
+                  <button id="clearAll" class="menuButton" onclick="setNoStrength()">
                      clear all
                   </button>
             </div>
@@ -42,6 +42,7 @@
 
       </div>
 
+      <a id="downloadAnchorElem" style="display:none"></a>
       <script src="main.js"></script>
    </body>
 
