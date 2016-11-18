@@ -86,28 +86,106 @@ function setParamsFromSVG(svg) {
 	});
 }
 
-// helper functions to create event listeners
-function makeOnClick(side, row, level) {
-	return function() {
+// actions
+function setMuscle(side, row, level) {
+	var oldState = state.muscles[side][row];
+	if (oldState != level) {
 		var buttonRow = buttons[side][row];
 		var muscleElement = muscleElements[side][row];
-		var oldState = state.muscles[side][row];
-		var color = params.colors[level];
-		// turning off a row
-		if (oldState == level) {
-			buttonRow[level].style.background = addAlpha(color, 0.6);
+		if (level == -1) {
+			buttonRow[oldState].style.background = "white";
 			muscleElement.setAttribute("fill", params.baseColor);
-			state.muscles[side][row] = -1;
 		}
-		// setting a new state
 		else {
-			// turn off old state
+			var color = params.colors[level];
+			buttonRow[level].style.background = color;
+			buttonRow[level].style.color = "white";
+			muscleElement.setAttribute("fill", color);
 			if (oldState != -1) {
 				buttonRow[oldState].style.background = "white";
 			}
-			buttonRow[level].style.background = color;
-			muscleElement.setAttribute("fill", color);
-			state.muscles[side][row] = level;
+		}
+		if (oldState != -1) {
+			buttonRow[oldState].style.color = "black";
+		}
+		state.muscles[side][row] = level;
+	}
+}
+
+function setFullStrength() {
+	["left", "right"].map(function(side) {
+		for (i=0; i<params.nMuscles; i++) {
+				if (state.muscles[side][i] == -1) {
+					setMuscle(side, i, params.nLevels-1);
+				}
+		}
+	});
+}
+
+function setNoStrength() {
+	["left", "right"].map(function(side) {
+		for (i=0; i<params.nMuscles; i++) {
+			setMuscle(side, i, -1);
+		}
+	});
+}
+
+function setFromState(newState) {
+	["left", "right"].map(function(side) {
+		for (i=0; i<params.nMuscles; i++) {
+			setMuscle(side, i, newState.muscles[side][i]);
+		}
+	});
+	state = newState;
+}
+
+function download(data, defaultName) {
+	// get filename
+	var filename = prompt("filename:", defaultName);
+	if (filename === null) {
+		return;
+	}
+
+	var element = document.createElement('a');
+	element.setAttribute('href', data);
+	element.setAttribute('download', filename);
+	element.style.display = 'none';
+	document.body.appendChild(element);
+	element.click();
+	document.body.removeChild(element);
+}
+
+function saveData() {
+	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+	download(dataStr, "data.json");
+}
+
+function loadData() {
+	var element = document.createElement("input");
+	element.setAttribute("type", "file");
+	element.style.display = 'none';
+	document.body.appendChild(element);
+	element.onchange = function(e) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			setFromState(JSON.parse(reader.result));
+		}
+		reader.readAsText(element.files[0]);
+		document.body.removeChild(element);
+	}
+	element.click();
+}
+
+// helper functions to create event listeners
+function makeOnClick(side, row, level) {
+	return function() {
+		var oldState = state.muscles[side][row];
+		// turning off the muscle
+		if (oldState == level) {
+			setMuscle(side, row, -1);
+		}
+		else {
+			setMuscle(side, row, level);
 		}
 	}
 }
