@@ -183,6 +183,13 @@ function saveSVG() {
 	download(dataStr, "image.svg");
 }
 
+function toAnnotation() {
+	var el = document.getElementById("mainView");
+	el.style.display = "none";
+	el = document.getElementById("annotationView");
+	el.style.display = "";
+}
+
 // helper functions to create event listeners
 function makeOnClick(side, row, level) {
 	return function() {
