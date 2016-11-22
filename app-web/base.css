@@ -6,7 +6,6 @@ div {
 #mainView {
    height: 700px;
    width: 1000px;
-
 }
 
 .sidePanel {
@@ -99,4 +98,32 @@ button:focus {
 
 #miscLeft {
    padding-left: 2px;
+}
+
+#annotationView {
+  height: 700px;
+  width: 1000px;
+}
+
+#metadata {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+}
+
+.row {
+  justify-content: space-between;
+  padding-bottom: 20px;
+}
+
+.metadata {
+  flex-flow: column nowrap;
+  color: #4286f4;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+input[type="text"]
+{
+    font-size:18px;
 }
