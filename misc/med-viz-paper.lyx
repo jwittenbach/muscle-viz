@@ -71,7 +71,7 @@
 \begin_body
 
 \begin_layout Title
-Visualizing clinical weakness with open source software
+WeakViz: open source software for weakness visualization
 \end_layout
 
 \begin_layout Section
@@ -79,37 +79,30 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Complaints of weakness are common[1].
- The neuromuscular exam is commonly performed among many specialties; specialize
-d and detailed examinations are a mainstay of the neurological exam and
- central to the examination of patients with neuromuscular disorders.
- In the academic medical setting, clear and informative communication between
- medical students, residents and attendings is critical to optimal patient
- care.
+Muscle strength testing is central to the neuromuscular examination.
+ Recording the results of the examination, however, is not standardized.
+ Communicating results in an intuitive, easy to read visual format could
+ decrease confusion during patient presentations.
  Here we present a free, open-source software application for generating
- plots of muscle weakness; the plots provide an adjunct to the written tables
- of weakness normally used in clinical settings.
- The plots are informative and intuitive; they provide a platform for pattern
- recognition.
+ plots of muscle weakness.
+ The plots provide an alternative or supplement to written tables of weakness.
 \end_layout
 
 \begin_layout Standard
 Previous groups have addressed visualizing muscle weakness using software
  [2], however the lack of distribution of the tool and hidden underlying
- code limited it's usefulness for the field.
- There has been a recent push in neuroscience for open source tools [3];
- such an approach would also benefit the medical community.
+ source code limited its usefulness for the field.
+ There has been a recent push in neuroscience for open source tools [3].
+ An increase in open source technology would also benefit the medical community.
 \end_layout
 
 \begin_layout Standard
-Here we present a tool for clincal use; the code and tool are freely available
- and modular.
+Here we present a tool for clincal use.
+ The code and tool are freely available and modular.
  We hope the framework will be adapted for similar uses by the community
  to develop additional useful clinical tools.
  The regular use of the tool should be beneficial for communication between
  caretakers and for patient education.
- Furthermore, the shift to open source tools in medicine is one we should
- purposefully pursue.
 \end_layout
 
 \begin_layout Section
@@ -122,6 +115,10 @@ Clinical rationale
 
 \begin_layout Subsection
 Software
+\begin_inset Formula $\text{}$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -134,8 +131,7 @@ e.
 \end_layout
 
 \begin_layout Standard
-Jeremy, you can add your cases here.
- We want cases that broadly represent neurology and clear weakness differential
+We want cases that broadly represent neurology and clear weakness differential
  diagnoses.
  Also I would like a mix of pediatric and adult conditions, if possible.
  As it turns out, finding data from published case reports is essentially
@@ -162,7 +158,7 @@ Discussion
 \begin_layout Standard
 Here we present free, open-source software for visualizing the distribution
  of muscle weakness.
- The software is built upon (Jason enter a brief description here).
+ The software is built (Jason enter a brief description here).
  The software is simple and intuitive.
  The plots produced provide enough information for the viewer to appreciate
  the distribution of weakness; the inclusion of distracting information
