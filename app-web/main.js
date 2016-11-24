@@ -12,7 +12,14 @@ var state = {
 		left: [],
 		right: []
 	},
-	name: ""
+	metadata: {
+		name: "",
+		age: "",
+		sex: "",
+		date: "",
+		diagnosis: "",
+		notes: ""
+	}
 }
 
 // load SVG file with image
@@ -136,6 +143,10 @@ function setFromState(newState) {
 			setMuscle(side, i, newState.muscles[side][i]);
 		}
 	});
+	for (name in newState.metadata) {
+		var el = document.getElementById(name);
+		el.value = newState.metadata[name];
+	}
 	state = newState;
 }
 
@@ -157,7 +168,7 @@ function download(data, defaultName) {
 }
 
 function saveData() {
-	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 4));
 	download(dataStr, "data.json");
 }
 
@@ -187,6 +198,18 @@ function toAnnotation() {
 	var el = document.getElementById("mainView");
 	el.style.display = "none";
 	el = document.getElementById("annotationView");
+	el.style.display = "";
+}
+
+function setMetadata() {
+	var els = document.getElementsByTagName("textarea");
+	for (i=0; i<els.length; i++) {
+		state.metadata[els[i].id] = els[i].value;
+	}
+	console.log('changing views');
+	var el = document.getElementById("annotationView");
+	el.style.display = "none";
+	el = document.getElementById("mainView");
 	el.style.display = "";
 }
 

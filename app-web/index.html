@@ -45,42 +45,46 @@
 
       <div id="annotationView" style="display:none;">
 
-        <form id="metadata">
 
-          <div class="row">
+         <div class="row">
             <div class="metadata">
-              Name:
-              <input type="text" name="name" style="width:400px">
+               Name:
+               <textarea id="name" rows=1 style="width:400px"></textarea>
             </div>
             <div class="metadata">
-              Age:
-              <input type="text" name="age" style="width:100px">
+               Age:
+               <textarea id="age" rows=1 style="width:100px"></textarea>
             </div>
             <div class="metadata">
-              Sex:
-              <input type="text" name="sex" style="width:100px">
+               Sex:
+               <textarea id="sex" rows=1 style="width:100px"></textarea>
             </div>
-          </div>
+         </div>
 
-          <div class="row">
+         <div class="row">
             <div class="metadata">
-              Date:
-              <input type="text" name="date" style="width:200px">
+               Date:
+               <textarea id="date" rows=1 style="width:200px"></textarea>
             </div>
             <div class="metadata">
-              Diagnosis (if known):
-              <input type="text" name="diagnosis" style="width:420px">
+               Diagnosis (if known):
+               <textarea id="diagnosis" rows=1 style="width:420px"></textarea>
             </div>
-          </div>
+         </div>
 
-          <div class="row">
+         <div class="row">
             <div class="metadata">
-              Notes:
-              <textarea cols=20 style="width:640px;height:300px"></textarea>
+               Notes:
+               <textarea id="notes" class="fullBox" style="width:640px;height:300px"></textarea>
             </div>
-          </div>
+         </div>
 
-        </form>
+         <div id="annotationButtons">
+            <button id="confirmAnnotation" class="menuButton" onclick="setMetadata()">
+               confirm
+            </button>
+         </div>
+
       </div>
 
       <a id="downloadAnchorElem" style="display:none"></a>

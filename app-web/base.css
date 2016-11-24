@@ -103,10 +103,6 @@ button:focus {
 #annotationView {
   height: 700px;
   width: 1000px;
-}
-
-#metadata {
-  display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
 }
@@ -122,28 +118,25 @@ button:focus {
   margin-right: 20px;
 }
 
-input[type="text"]
-{
+
+textarea {
    font-size: 18px;
    border: none;
    border-bottom: solid 2px #c9c9c9;
    transition: border 0.3s;
    margin-top: 10px;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  border-bottom: solid 2px #969696;
-}
-
-textarea {
-   font-size: 18px;
-   border: solid 2px #c9c9c9;
-   transition: border 0.3s;
-   outline: none;
    resize: none;
+   outline: none;
 }
 
 textarea:focus {
+   border-bottom: solid 2px #969696;
+}
+
+.fullBox {
+   border: solid 2px #c9c9c9;
+}
+
+.fullBox:focus {
    border: solid 2px #969696;
 }
