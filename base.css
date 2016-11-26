@@ -12,6 +12,13 @@ div {
    flex-flow: column nowrap;
 }
 
+.sideLabel {
+   text-align: center;
+   font-size: 20px;
+   margin: 0px;
+   margin-bottom: 20px;
+}
+
 .buttonBank {
    flex-flow: column nowrap;
    flex-grow: 0;
@@ -28,14 +35,14 @@ div {
 }
 
 .leftButtonRow {
-   margin-left: 10px;
-}
-
-.rightButtonRow {
    margin-right: 10px;
 }
 
-.leftName {
+.rightButtonRow {
+   margin-left: 10px;
+}
+
+.rightName {
    order: -1;
 }
 

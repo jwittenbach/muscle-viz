@@ -300,18 +300,17 @@ function makeOnClickPM(side, row, pm) {
 
 function makeMouseOverPM(side, row, pm) {
 	return function() {
-		if (level != state.muscles.main[side][row]) {
-			var button = buttons.main[side][row][level];
-			var color = params.colors[level];
-			button.style.background = addAlpha(color, 0.6);
+		if (pm != state.muscles.pm[side][row]) {
+			var button = buttons.pm[side][row][pm];
+			button.style.background = '#BBBBBB';
 		}
 	}
 }
 
 function makeMouseOutPM(side, row, pm) {
 	return function() {
-		if (level != state.muscles.main[side][row]) {
-			var button = buttons.main[side][row][level];
+		if (pm != state.muscles.pm[side][row]) {
+			var button = buttons.pm[side][row][pm];
 			button.style.background = "white";
 		}
 	}
@@ -320,8 +319,11 @@ function makeMouseOutPM(side, row, pm) {
 // create button banks and set up event listeners
 function makeButtonBanks(svg) {
 	var panels = {
-		left: document.getElementById("leftButtonBank"),
-		right: document.getElementById("rightButtonBank")
+		//NB: left/right switched because the left panel
+		//		maps to muscles on the right side of the patient's body
+		//		and vice-versa
+		left: document.getElementById("rightButtonBank"),
+		right: document.getElementById("leftButtonBank")
 	};
 
 	["left", "right"].map(function(side) {
@@ -338,6 +340,8 @@ function makeButtonBanks(svg) {
 			minus.className = "plusMinus minus panelButton";
 			minus.innerHTML = "-";
 			minus.onclick = makeOnClickPM(side, row, 0);
+			minus.onmouseover = makeMouseOverPM(side, row, 0);
+			minus.onmouseout = makeMouseOutPM(side, row, 0);
 			buttonRow.appendChild(minus)
 
 			var numberRow = document.createElement("div");
@@ -360,6 +364,8 @@ function makeButtonBanks(svg) {
 			plus.className = "plusMinus plus panelButton";
 			plus.innerHTML = "+";
 			plus.onclick = makeOnClickPM(side, row, 1)
+			plus.onmouseover = makeMouseOverPM(side, row, 1);
+			plus.onmouseout = makeMouseOutPM(side, row, 1);
 			buttonRow.appendChild(plus);
 			buttons.pm[side].push([minus, plus]);
 
