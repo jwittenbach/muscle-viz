@@ -13,12 +13,12 @@
             <div id="miscLeft" class="misc">
                <div id="menu">
                   <div>
-                     <button id="save" class="menuButton">save</button>
-                     <button id="load" class="menuButton">load</button>
+                     <button id="save" class="menuButton" onclick="saveData()">save</button>
+                     <button id="load" class="menuButton" onclick="loadData()">load</button>
                   </div>
                   <div>
-                     <button id="annotate" class="menuButton">annotate</button>
-                     <button id="export" class="menuButton">export</button>
+                     <button id="annotate" class="menuButton" onclick="toAnnotation()">annotate</button>
+                     <button id="export" class="menuButton" onclick="saveSVG()">export</button>
                   </div>
                </div>
             </div>
@@ -31,17 +31,63 @@
             <div id="miscRight" class="misc">
                <div id="colorBar"></div>
                <div id="rightButtons">
-                  <button id="fullStrength" class="menuButton">
+                  <button id="fullStrength" class="menuButton" onclick="setFullStrength()">
                      full strength
                   </button>
-                  <button id="clearAll" class="menuButton">
+                  <button id="clearAll" class="menuButton" onclick="setNoStrength()">
                      clear all
                   </button>
+                </div>
             </div>
          </div>
 
       </div>
 
+      <div id="annotationView" style="display:none;">
+
+
+         <div class="row">
+            <div class="metadata">
+               Name:
+               <textarea id="name" rows=1 style="width:400px"></textarea>
+            </div>
+            <div class="metadata">
+               Age:
+               <textarea id="age" rows=1 style="width:100px"></textarea>
+            </div>
+            <div class="metadata">
+               Sex:
+               <textarea id="sex" rows=1 style="width:100px"></textarea>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="metadata">
+               Date:
+               <textarea id="date" rows=1 style="width:200px"></textarea>
+            </div>
+            <div class="metadata">
+               Diagnosis (if known):
+               <textarea id="diagnosis" rows=1 style="width:420px"></textarea>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="metadata">
+               Notes:
+               <textarea id="notes" class="fullBox" style="width:640px;height:300px"></textarea>
+            </div>
+         </div>
+
+         <div id="annotationButtons">
+            <button id="confirmAnnotation" class="menuButton" onclick="setMetadata()">
+               confirm
+            </button>
+         </div>
+
+      </div>
+
+      <a id="downloadAnchorElem" style="display:none"></a>
       <script src="main.js"></script>
    </body>
 
