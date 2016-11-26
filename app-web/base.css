@@ -5,7 +5,7 @@ div {
 
 #mainView {
    height: 700px;
-   width: 1000px;
+   width: 1200px;
 }
 
 .sidePanel {
@@ -20,11 +20,19 @@ div {
 .panelRow {
    justify-content: space-between;
    align-items: baseline;
+   padding-bottom: 10px;
 }
 
 .buttonRow {
    align-items: center;
-   padding: 5px;
+}
+
+.leftButtonRow {
+   margin-left: 10px;
+}
+
+.rightButtonRow {
+   margin-right: 10px;
 }
 
 .leftName {
@@ -38,11 +46,29 @@ button:focus {
 .panelButton {
    border: 2px solid #999999;
    color: black;
+   background: white;
    width: 25px;
    height: 25px;
    font-size: 15px;
-   text-align: center;
+   font-family: monospace;
+}
+
+.number {
    margin-left: -2px;
+}
+
+.numberRow {
+   padding-left: 2px;
+   margin-left: 5px;
+   margin-right: 5px;
+}
+
+.plusMinus {
+   width: 20px;
+   height: 20px;
+   padding: 0px;
+   font-size: 15px;
+   border-radius: 20px;
 }
 
 .menuButton {

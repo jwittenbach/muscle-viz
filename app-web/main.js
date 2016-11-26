@@ -1,16 +1,32 @@
 var params = {};
+
 var muscleElements = {
 	left: [],
 	right: []
 };
+
 var buttons = {
-	left: [],
-	right: []
-};
-var state = {
-	muscles: {
+	main: {
 		left: [],
 		right: []
+	},
+	pm: {
+		left: [],
+		right: []
+	}
+};
+
+var state = {
+	muscles: {
+		main: {
+			left: [],
+			right: []
+		},
+		pm: {
+			left: [],
+			right: []
+		}
+
 	},
 	metadata: {
 		name: "",
@@ -87,7 +103,8 @@ function setParamsFromSVG(svg) {
 	// update initial state
 	["left", "right"].map(function (side) {
 		for (i=0; i<params.nMuscles; i++) {
-			state.muscles[side].push(-1);
+			state.muscles.main[side].push(-1);
+			state.muscles.pm[side].push(-1);
 			muscleElements[side][i].setAttribute("fill", params.baseColor);
 		}
 	});
@@ -95,9 +112,9 @@ function setParamsFromSVG(svg) {
 
 // actions
 function setMuscle(side, row, level) {
-	var oldState = state.muscles[side][row];
+	var oldState = state.muscles.main[side][row];
 	if (oldState != level) {
-		var buttonRow = buttons[side][row];
+		var buttonRow = buttons.main[side][row];
 		var muscleElement = muscleElements[side][row];
 		if (level == -1) {
 			buttonRow[oldState].style.background = "white";
@@ -115,14 +132,35 @@ function setMuscle(side, row, level) {
 		if (oldState != -1) {
 			buttonRow[oldState].style.color = "black";
 		}
-		state.muscles[side][row] = level;
+		state.muscles.main[side][row] = level;
+	}
+}
+
+function setMusclePM(side, row, pm) {
+	var oldState = state.muscles.pm[side][row];
+	if (oldState != pm) {
+		var buttonRow = buttons.pm[side][row];
+		 if (pm == -1) {
+			 buttonRow[oldState].style.background = "white";
+		 }
+		 else {
+			 buttonRow[pm].style.background = "black";
+			 buttonRow[pm].style.color = "white";
+			 if (oldState != -1) {
+				 buttonRow[oldState].style.background = "white";
+			 }
+		 }
+		 if (oldState != -1) {
+			 buttonRow[oldState].style.color = "black";
+		 }
+		 state.muscles.pm[side][row] = pm;
 	}
 }
 
 function setFullStrength() {
 	["left", "right"].map(function(side) {
 		for (i=0; i<params.nMuscles; i++) {
-				if (state.muscles[side][i] == -1) {
+				if (state.muscles.main[side][i] == -1) {
 					setMuscle(side, i, params.nLevels-1);
 				}
 		}
@@ -140,7 +178,8 @@ function setNoStrength() {
 function setFromState(newState) {
 	["left", "right"].map(function(side) {
 		for (i=0; i<params.nMuscles; i++) {
-			setMuscle(side, i, newState.muscles[side][i]);
+			setMuscle(side, i, newState.muscles.main[side][i]);
+			setMusclePM(side, i, newState.muscles.pm[side][i]);
 		}
 	});
 	for (name in newState.metadata) {
@@ -214,9 +253,9 @@ function setMetadata() {
 }
 
 // helper functions to create event listeners
-function makeOnClick(side, row, level) {
+function makeOnClickNum(side, row, level) {
 	return function() {
-		var oldState = state.muscles[side][row];
+		var oldState = state.muscles.main[side][row];
 		// turning off the muscle
 		if (oldState == level) {
 			setMuscle(side, row, -1);
@@ -227,20 +266,52 @@ function makeOnClick(side, row, level) {
 	}
 }
 
-function makeMouseOver(side, row, level) {
+function makeMouseOverNum(side, row, level) {
 	return function() {
-		if (level != state.muscles[side][row]) {
-			var button = buttons[side][row][level];
+		if (level != state.muscles.main[side][row]) {
+			var button = buttons.main[side][row][level];
 			var color = params.colors[level];
 			button.style.background = addAlpha(color, 0.6);
 		}
 	}
 }
 
-function makeMouseOut(side, row, level) {
+function makeMouseOutNum(side, row, level) {
 	return function() {
-		if (level != state.muscles[side][row]) {
-			var button = buttons[side][row][level];
+		if (level != state.muscles.main[side][row]) {
+			var button = buttons.main[side][row][level];
+			button.style.background = "white";
+		}
+	}
+}
+
+function makeOnClickPM(side, row, pm) {
+	return function() {
+		var oldState = state.muscles.pm[side][row];
+		// turning off the muscle
+		if (oldState == pm) {
+			setMusclePM(side, row, -1);
+		}
+		else {
+			setMusclePM(side, row, pm);
+		}
+	}
+}
+
+function makeMouseOverPM(side, row, pm) {
+	return function() {
+		if (level != state.muscles.main[side][row]) {
+			var button = buttons.main[side][row][level];
+			var color = params.colors[level];
+			button.style.background = addAlpha(color, 0.6);
+		}
+	}
+}
+
+function makeMouseOutPM(side, row, pm) {
+	return function() {
+		if (level != state.muscles.main[side][row]) {
+			var button = buttons.main[side][row][level];
 			button.style.background = "white";
 		}
 	}
@@ -263,18 +334,34 @@ function makeButtonBanks(svg) {
 			buttonRow.className = "buttonRow " + side + "ButtonRow"; //e.g. class="buttonRow leftButtonRow"
 			panelRow.appendChild(buttonRow);
 
-			buttons[side].push([])
+			var minus = document.createElement("button");
+			minus.className = "plusMinus minus panelButton";
+			minus.innerHTML = "-";
+			minus.onclick = makeOnClickPM(side, row, 0);
+			buttonRow.appendChild(minus)
+
+			var numberRow = document.createElement("div");
+			numberRow.className = "numberRow";
+			buttonRow.appendChild(numberRow);
+
+			buttons.main[side].push([])
 			for (level=0; level<params.nLevels; level++) {
 				var button = document.createElement("button");
-				button.className = "panelButton";
+				button.className = "number panelButton";
 				button.innerHTML = level;
-				button.style.background = "white";
-				button.onclick = makeOnClick(side, row, level);
-				button.onmouseover = makeMouseOver(side, row, level);
-				button.onmouseout = makeMouseOut(side, row, level);
-				buttonRow.appendChild(button);
-				buttons[side][row].push(button);
+				button.onclick = makeOnClickNum(side, row, level);
+				button.onmouseover = makeMouseOverNum(side, row, level);
+				button.onmouseout = makeMouseOutNum(side, row, level);
+				numberRow.appendChild(button);
+				buttons.main[side][row].push(button);
 			}
+
+			var plus = document.createElement("button");
+			plus.className = "plusMinus plus panelButton";
+			plus.innerHTML = "+";
+			plus.onclick = makeOnClickPM(side, row, 1)
+			buttonRow.appendChild(plus);
+			buttons.pm[side].push([minus, plus]);
 
 			var name = document.createElement("text");
 			name.className = "name " + side + "Name";	//e.g. class="name leftName"
