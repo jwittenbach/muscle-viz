@@ -319,8 +319,11 @@ function makeMouseOutPM(side, row, pm) {
 // create button banks and set up event listeners
 function makeButtonBanks(svg) {
 	var panels = {
-		left: document.getElementById("leftButtonBank"),
-		right: document.getElementById("rightButtonBank")
+		//NB: left/right switched because the left panel
+		//		maps to muscles on the right side of the patient's body
+		//		and vice-versa
+		left: document.getElementById("rightButtonBank"),
+		right: document.getElementById("leftButtonBank")
 	};
 
 	["left", "right"].map(function(side) {
