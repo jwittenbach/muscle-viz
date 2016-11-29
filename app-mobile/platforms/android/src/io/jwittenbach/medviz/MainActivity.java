@@ -21,6 +21,7 @@ package io.jwittenbach.medviz;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
+import android.webkit.WebSettings;
 
 public class MainActivity extends CordovaActivity
 {
