@@ -22,10 +22,6 @@ package io.jwittenbach.medviz;
 import android.os.Bundle;
 import org.apache.cordova.*;
 
-//import android.webkit.WebSettings.ZoomDensity;
-//import android.webkit.WebSettings; 
-//import android.webkit.WebView;
-
 public class MainActivity extends CordovaActivity
 {
     @Override
@@ -41,11 +37,5 @@ public class MainActivity extends CordovaActivity
 
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
-
-        //WebView webView = (WebView) appView.getEngine().getView();
-        //WebSettings settings = webView.getSettings();
-        //settings.setBuiltInZoomControls(true);
-        //settings.setDefaultZoom(ZoomDensity.MEDIUM);
-        //settings.setSupportZoom(true);
     }
 }
