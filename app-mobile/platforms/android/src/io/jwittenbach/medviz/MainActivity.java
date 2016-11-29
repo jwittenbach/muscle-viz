@@ -21,7 +21,9 @@ package io.jwittenbach.medviz;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
+
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 public class MainActivity extends CordovaActivity
 {
@@ -38,5 +40,11 @@ public class MainActivity extends CordovaActivity
 
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+
+        WebView webView = (WebView) appView.getEngine().getView();
+        //WebSettings settings = super.appView.getSettings();
+        //settings.setBuiltInZoomControls(true);
+        //settings.setDisplayZoomControls(true);
+        //settings.setSupportZoom(true);
     }
 }
