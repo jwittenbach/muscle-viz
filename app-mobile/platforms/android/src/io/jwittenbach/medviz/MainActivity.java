@@ -39,13 +39,13 @@ public class MainActivity extends CordovaActivity
             moveTaskToBack(true);
         }
 
+        // Set by <content src="index.html" /> in config.xml
+        loadUrl(launchUrl);
+
         WebView webView = (WebView) appView.getEngine().getView();
         WebSettings settings = webView.getSettings();
         //settings.setBuiltInZoomControls(true);
         //settings.setDefaultZoom(ZoomDensity.MEDIUM);
         //settings.setSupportZoom(true);
-
-        // Set by <content src="index.html" /> in config.xml
-        loadUrl(launchUrl);
     }
 }
