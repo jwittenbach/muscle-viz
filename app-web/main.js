@@ -171,6 +171,7 @@ function setNoStrength() {
 	["left", "right"].map(function(side) {
 		for (i=0; i<params.nMuscles; i++) {
 			setMuscle(side, i, -1);
+            setMusclePM(side, i, -1);
 		}
 	});
 }
