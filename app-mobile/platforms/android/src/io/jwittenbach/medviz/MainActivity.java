@@ -42,6 +42,7 @@ public class MainActivity extends CordovaActivity
         loadUrl(launchUrl);
 
         WebView webView = (WebView) appView.getEngine().getView();
+        WebSettings settings = webView.getSettings();
         //WebSettings settings = super.appView.getSettings();
         //settings.setBuiltInZoomControls(true);
         //settings.setDisplayZoomControls(true);
