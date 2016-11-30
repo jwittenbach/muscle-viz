@@ -1,4 +1,4 @@
-# med-viz
+# muscle-viz
 
 The purpose of this project is to provide open source, useful, and usable
 tools for the visualization of clinical findings. The hope is that intuitive
@@ -15,7 +15,7 @@ across patients with similar conditions. The tool could also be useful
 if saved in the patient's chart, thus allowing for a time series of 
 weakness.
 
-Checkout out the current [prototype](https://jwittenbach.github.io/med-viz).
+Checkout out the current [prototype](https://jwittenbach.github.io/muscle-viz).
 
 
 -----
