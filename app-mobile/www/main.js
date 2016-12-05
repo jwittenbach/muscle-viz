@@ -89,6 +89,26 @@ function setParamsFromSVG(svg) {
 	}
 	muscleElements.right = muscleElements.right.reverse();
 
+	// sort and rename muscle elements
+	var order = [];
+	for (i=0; i<muscles.length; i++) {
+		var fullName = muscleElements.left[i].id;
+		var idx = fullName.indexOf('_');
+		var num = fullName.slice(1, idx);
+		var name = fullName.slice(idx+1);
+		order.push(parseInt(num)-1); //labeling in SVG is 1-based
+		muscleElements.left[i].id = name;
+	}
+	console.log(order);
+	["left", "right"].map(function (side) {
+		var ordered = [];
+		for (i=0; i<muscles.length; i++) {
+			var idx = order.indexOf(i);
+			ordered.push(muscleElements[side][idx]);
+		}
+		muscleElements[side] = ordered;
+	});
+
 	// levels + colors map
 	var rects = svg.getElementById("cmap").children;
 	params.nLevels = rects.length;
