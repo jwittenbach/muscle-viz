@@ -87,11 +87,6 @@ button:focus {
    text-align: center;
 }
 
-.menuButton:hover {
-   background: #999999;
-   color: white;
-}
-
 .menuButton:active {
    background: grey;
 }
