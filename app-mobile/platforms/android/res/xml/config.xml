@@ -4,12 +4,12 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
-    <name>medviz</name>
+    <name>MuscleViz</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        A tool for fast and professions muscle power visualizations
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="muscle.viz.app@gmail.com" href="https://jwittenbach.github.io/muscle-viz">
+        Jason Wittenbach and Benjamin Cocanougher
     </author>
     <content src="index.html" />
     <access origin="*" />
