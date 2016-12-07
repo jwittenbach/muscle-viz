@@ -71,7 +71,31 @@
 \begin_body
 
 \begin_layout Title
-WeakViz: open source software for weakness visualization
+MuscleViz: free, open-source software for weakness visualization
+\end_layout
+
+\begin_layout Standard
+\align center
+Jason Wittenbach*, Benjamin Cocanougher*, Jeremy Herrmann, A.
+ Reghan Foley, Carsten G.
+ Bonnemann
+\end_layout
+
+\begin_layout Section*
+Abstract
+\end_layout
+
+\begin_layout Standard
+Muscle strengh testing by the MRC scale is routine in clinical practice.
+ Here we provide an aid to the intrepration and communication of those results.
+ MuscleViz is a free, open-source application that allows for visualizing
+ muscle strength testing.
+ Its use in clinical settings streamlines the communiction of findings between
+ proivders.
+ The tool is also useful for reporting of patients in case reports or case
+ series.
+ A push towards open-source software has been of great benefit elsewhere
+ in science; we believe a similar effort for clinical tools is worth pursuing.
 \end_layout
 
 \begin_layout Section
@@ -81,8 +105,10 @@ Introduction
 \begin_layout Standard
 Muscle strength testing is central to the neuromuscular examination.
  Recording the results of the examination, however, is not standardized.
- Communicating results in an intuitive, easy to read visual format could
- decrease confusion during patient presentations.
+ Common practice involves the use of the Medical Research Council (MRC)
+ strength scale and recording results in a table.
+ Communicating results in an intuitive, visual format could decrease confusion
+ during patient presentations.
  Here we present a free, open-source software application for generating
  plots of muscle weakness.
  The plots provide an alternative or supplement to written tables of weakness.
@@ -106,7 +132,7 @@ Here we present a tool for clincal use.
 \end_layout
 
 \begin_layout Section
-Methods:
+Methods
 \end_layout
 
 \begin_layout Subsection
@@ -115,40 +141,51 @@ Clinical rationale
 
 \begin_layout Subsection
 Software
-\begin_inset Formula $\text{}$
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figs/muscleViz-screenshot.jpeg
+	lyxscale 25
+	width 50page%
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout Section
-Results:
-\end_layout
+\begin_layout Plain Layout
+\begin_inset Caption Standard
 
-\begin_layout Standard
-Give use cases, convince the audience that distributions are simple to appreciat
-e.
-\end_layout
-
-\begin_layout Standard
-We want cases that broadly represent neurology and clear weakness differential
- diagnoses.
- Also I would like a mix of pediatric and adult conditions, if possible.
- As it turns out, finding data from published case reports is essentially
- impossible.
- We will move forward with simulated cases.
- Will include:
-\end_layout
-
-\begin_layout Standard
-stroke patient examples -- can do time series showing weakness that improves
- over time disease with proximal > distal weakness disease with distal >
- proximal weakness sma patient, because I like sma Herm says he'll do these:
-\end_layout
-
-\begin_layout Standard
-stroke (hemiparesis); polymyositis; muscular dystrophy; and guillan barre.
+\begin_layout Plain Layout
+MuscleViz Screenshot.
+ Full strengh is dark indigo while complete paralysis is gold.
+ The distribution of weakness is along the superior/inferior axis.
+ In the context of full clinical history, a diagnosis of Guillan Barre can
+ be made in this fictious patient.
  
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -195,7 +232,7 @@ The introduction of technology to patient care is not novel; indeed, clinic
 \end_layout
 
 \begin_layout Section
-References:
+References
 \end_layout
 
 \begin_layout Standard
