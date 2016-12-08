@@ -71,12 +71,14 @@
 \begin_body
 
 \begin_layout Title
-MuscleViz: free, open-source software for weakness visualization
+MuscleViz: free open-source software for weakness visualization
 \end_layout
 
 \begin_layout Standard
 \align center
-Jason Wittenbach*, Benjamin Cocanougher*, Jeremy Herrmann, A.
+Jason D.
+ Wittenbach*, Benjamin T.
+ Cocanougher*, A.
  Reghan Foley, Carsten G.
  Bonnemann
 \end_layout
@@ -86,69 +88,125 @@ Abstract
 \end_layout
 
 \begin_layout Standard
-Muscle strengh testing by the MRC scale is routine in clinical practice.
- Here we provide an aid to the intrepration and communication of those results.
- MuscleViz is a free, open-source application that allows for visualizing
- muscle strength testing.
- Its use in clinical settings streamlines the communiction of findings between
- proivders.
- The tool is also useful for reporting of patients in case reports or case
- series.
- A push towards open-source software has been of great benefit elsewhere
- in science; we believe a similar effort for clinical tools is worth pursuing.
+Muscle strengh testing is routine in clinical practice.
+ Here we provide an aid to the intrepration and communication of those results
+ – MuscleViz: a free, open-source application for visualizing the results
+ of muscle strength testing.
+ Its use in clinical settings streamlines the communiction of findings.
+ The tool is also useful for presenting patient data in case reports or
+ case series.
+ A push towards free, open-source software has benefitted other areas of
+ science; we believe a similar effort for clinical tools is worth pursuing.
 \end_layout
 
-\begin_layout Section
-Introduction
+\begin_layout Section*
+Main Text
 \end_layout
 
 \begin_layout Standard
 Muscle strength testing is central to the neuromuscular examination.
  Recording the results of the examination, however, is not standardized.
- Common practice involves the use of the Medical Research Council (MRC)
- strength scale and recording results in a table.
- Communicating results in an intuitive, visual format could decrease confusion
- during patient presentations.
- Here we present a free, open-source software application for generating
- plots of muscle weakness.
- The plots provide an alternative or supplement to written tables of weakness.
+ Common practice involves using the Medical Research Council (MRC) strength
+ scale and recording results in a table.
+ While useful for analyis and archiving, this tabular format is not as ideal
+ for presenting an intuitive picture of the pattern muscle strength/weakness.
+ This can be better acheived with a 
+\begin_inset Quotes eld
+\end_inset
+
+muscle strength plot
+\begin_inset Quotes erd
+\end_inset
+
+ – a stylized depiction of the human form and muscles, with each muscle
+ colored in correspondence with the measured strength.
+ In a clinical setting, communicating results in such an intuitive and visual
+ format could decrease confusion during patient presentations.
+ In a research setting, multiple weakness plots can highlight patterns of
+ weakness across groups of pateients or within a single patient over time.
+ Here we present a free, open-source software application – MuscleViz –
+ for generating such plots of muscle weakness.
+ These plots provide an alternative or supplement to written tables of weakness.
 \end_layout
 
 \begin_layout Standard
-Previous groups have addressed visualizing muscle weakness using software
- [2], however the lack of distribution of the tool and hidden underlying
- source code limited its usefulness for the field.
- There has been a recent push in neuroscience for open source tools [3].
- An increase in open source technology would also benefit the medical community.
+MuscleViz provides a simple and intuitive interface for recording the results
+ of muscle strength on the MRC scale (Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:screenshot"
+
+\end_inset
+
+).
+ Results are entered by tapping a button corresponding to the measured strength
+ (0 - 5), as well as an optional modifier (plus or minus).
+ As results are entered, a muscle strength plot is updated in real time.
+ A separate 
+\begin_inset Quotes eld
+\end_inset
+
+annotation
+\begin_inset Quotes erd
+\end_inset
+
+ interface allows one to enter metadata, such as patient name, diagnosis,
+ notes, etc.
+ The muscle weakness plot can be saved in a publication-ready vector graphics
+ format (SVG).
+ All of the data (MRC scores as well as metadata) can also be saved to or
+ loaded from a JSON file.
+ JSON is a text-based format that benefits from being human readable as
+ well as parsable by many popular programming languages and database programs.
+ The tool is availble as a web application (https://jwittenbach.github.io/muscle-v
+iz) or as a mobile app for phones and tablets (downloadable online at https://gi
+thub.com/jwittenbach/muscle-viz and in major app stores).
 \end_layout
 
 \begin_layout Standard
-Here we present a tool for clincal use.
- The code and tool are freely available and modular.
+The introduction of technology to patient care is not novel; indeed, clinic
+ visits have become increasingly dependent on technology.
+ We do not intend to add more clutter.
+ Effective communication requires a patient and physician connection which
+ can be negatively impacted by techonological distraction.
+ Our decision to include less detail was purposeful.
+ The tool should provide enough information to make distribution obvious,
+ but it should not include any distractions.
+ By introducing software that is simple to use, freely available, and modifiable
+, we hope to improve clinical diaganosis and communication.
+\end_layout
+
+\begin_layout Standard
+Previous groups have addressed visualizing muscle weakness using software,
+ however the lack of distribution of the tool and hidden underlying source
+ code limited its usefulness for the field.
+ There has been a recent push in neuroscience for open source tools.
+ We believe that an increase in open source technology would also benefit
+ the medical community, in particular when it comes to research.
+ The MuscleViz tool and its source code are freely available.
+ The source code can be found on GitHub (https://github.com/jwittenbach/muscle-vi
+z), a web-based code repository where users can discuess issues about the
+ tool or even contribute to its development.
  We hope the framework will be adapted for similar uses by the community
  to develop additional useful clinical tools.
- The regular use of the tool should be beneficial for communication between
- caretakers and for patient education.
-\end_layout
-
-\begin_layout Section
-Methods
-\end_layout
-
-\begin_layout Subsection
-Clinical rationale
-\end_layout
-
-\begin_layout Subsection
-Software
-\end_layout
-
-\begin_layout Section
-Results
 \end_layout
 
 \begin_layout Standard
-\align center
+The regular use of the tool should be beneficial for communication between
+ caretakers and for patient education.
+ We anticipate this tool will be useful in the clinic and in case reports.
+ Ideally, the use of this tool by medical students and residents will allow
+ for more clear patient presentations.
+ The onus will no longer be on the reciever to generate a mental image of
+ weakness.
+ The image can be generated by the presenter and shown to the reciever;
+ this should decrease confusion and aid in diagnosis.
+ This tool also provides a useful platform for figure generation for publication
+s.
+ By displaying weakness in a uniform structure, the range of weaknesses
+ among cases and progression over time can be easily appreciated.
+ Furthermore, we hope the release of source code will inspire others to
+ join us in open source medical tool development.
 \begin_inset Float figure
 wide false
 sideways false
@@ -157,9 +215,9 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figs/muscleViz-screenshot.jpeg
-	lyxscale 25
-	width 50page%
+	filename screenshot.png
+	lyxscale 30
+	scale 30
 
 \end_inset
 
@@ -175,8 +233,9 @@ MuscleViz Screenshot.
  The distribution of weakness is along the superior/inferior axis.
  In the context of full clinical history, a diagnosis of Guillan Barre can
  be made in this fictious patient.
- 
-\end_layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:screenshot"
 
 \end_inset
 
@@ -188,142 +247,54 @@ MuscleViz Screenshot.
 
 \end_layout
 
-\begin_layout Section
-Discussion
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename battlecry.jpg
+	lyxscale 40
+	scale 20
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sample figure created from exported images.
+ [DESCRIPTION HERE]
+\begin_inset CommandInset label
+LatexCommand label
+name "case-study"
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Standard
-Here we present free, open-source software for visualizing the distribution
- of muscle weakness.
- The software is built (Jason enter a brief description here).
- The software is simple and intuitive.
- The plots produced provide enough information for the viewer to appreciate
- the distribution of weakness; the inclusion of distracting information
- has been avoided.
+\end_inset
+
+
 \end_layout
 
-\begin_layout Standard
-We anticipate this tool will be useful in the clinic and in case reports.
- Ideally, the use of this tool by medical students and residents will allow
- for more clear patient presentations.
- The onus will no longer be on the reciever to generate a mental image of
- weakness.
- The image can be generated by the presenter and shown to the reciever;
- this should decrease confusion and aid in diagnosis.
- This tool also provides a useful platform for figure generation for publication
-s.
- By displaying weakness in a uniform structure, the range of weaknesses
- among cases and progression over time can be easily appreciated.
+\end_inset
+
+
 \end_layout
 
-\begin_layout Standard
-The introduction of technology to patient care is not novel; indeed, clinic
- visits have become increasingly dependent on technology [4].
- We do not intend to add more clutter.
- Effective communication requires a patient and physician connection which
- can be negatively impacted by techonological distraction.
- Our decision to include less detail was purposeful.
- The tool should provide enough information to make distribution obvious,
- but it should not include any distractions.
- By introducing software that is simple to use, freely available and modifiable,
- we hope to improve clinical diaganosis and communication.
- Furthermore, we hope the release of source code will inspire others to
- join us in open source medical tool development.
-\end_layout
-
-\begin_layout Section
+\begin_layout Section*
 References
 \end_layout
 
 \begin_layout Standard
-[1] Saguil, A.
- "Evaluation of the patient with muscle weakness." American family physician
- 71.7 (2005): 1327-1336.
- This article is a nice general overview of weakness from a primary care
- perspective
-\end_layout
-
-\begin_layout Standard
-[2] Pieterse, A.
- J., Voermans, N.
- C., Tuinenga, H.
- S., & Van Engelen, B.
- G.
- (2008).
- Computer-aided visualization of muscle weakness distribution.
- Journal of neurology, 255(11), 1670-1678.
- This article is quite similar to our idea -- notably I had the idea for
- this tool before finding this article.
- While they solve the same problem we seek to solve, there are many areas
- where we improve and expand their work.
-\end_layout
-
-\begin_layout Standard
-[3] Freeman, Jeremy.
- "Open source tools for large-scale neuroscience." Current opinion in neurobiolog
-y 32 (2015): 156-163.
-\end_layout
-
-\begin_layout Standard
-[4] Arnold Relman.
- 2014.
- "On Breaking One's Neck." The New York Review of Books.
- Feb 6, 2015.
- Relevant paragraph from article: "What did this experience teach me about
- the current state of medical care in the US? Quite a lot, as it turns out.
- I always knew that the treatment of the critically ill in our best teaching
- hospitals was excellent.
- That was certainly confirmed by the life-saving treatment I received in
- the Massachusetts General emergency room.
- Physicians there simply refused to let me die (try as hard as I might).
- But what I hadn’t appreciated was the extent to which, when there is no
- emergency, new technologies and electronic record-keeping affect how doctors
- do their work.
- Attention to the masses of data generated by laboratory and imaging studies
- has shifted their focus away from the patient.
- Doctors now spend more time with their computers than at the bedside.
- That seemed true at both the ICU and Spaulding.
- Reading the physicians’ notes in the MGH and Spaulding records, I found
- only a few brief descriptions of how I felt or looked, but there were copious
- reports of the data from tests and monitoring devices.
- Conversations with my physicians were infrequent, brief, and hardly ever
- reported." (emphaisis added)
-\end_layout
-
-\begin_layout Standard
-Paternostro-Sluga, T., Grim-Stieger, M., Posch, M., Schuhfried, O., Vacariu,
- G., Mittermaier, C., ...
- & Fialka-Moser, V.
- (2008).
- Reliability and validity of the Medical Research Council (MRC) scale and
- a modified scale for testing muscle strength in patients with radial palsy.
- Journal of rehabilitation medicine, 40(8), 665-671.
- An article describing and validating the MRC weakness scale
-\end_layout
-
-\begin_layout Standard
-Medical Research Council.
- Aids to examination of the peripheral nervous system.
- Memorandum no.
- 45.
- London: Her Majesty’s Stationary Office; 1976.
- This is the MRC scale reference.
- But the link is to a book review of the actual work.
-\end_layout
-
-\begin_layout Standard
-Hough, C.
- L., Lieu, B.
- K., & Caldwell, E.
- S.
- (2011).
- Manual muscle strength testing of critically ill patients: feasibility
- and interobserver agreement.
- Crit Care, 15(1), R43.
- This article uses a modifited sum-score.
- Jason, perhaps this could be useful to look at to develop (or use their
- method) to get a summary statistic for weakness.
- It would be nice to have a metric that tells proximal-ness and distal-ness.
+[REFERENCES HERE]
 \end_layout
 
 \end_body
