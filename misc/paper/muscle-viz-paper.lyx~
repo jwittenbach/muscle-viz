@@ -5,6 +5,9 @@
 \save_transient_properties true
 \origin unavailable
 \textclass article
+\begin_preamble
+\date{}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -27,6 +30,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -107,9 +111,10 @@ Main Text
 Muscle strength testing is central to the neuromuscular examination.
  Recording the results of the examination, however, is not standardized.
  Common practice involves using the Medical Research Council (MRC) strength
- scale and recording results in a table.
- While useful for analyis and archiving, this tabular format is not as ideal
- for presenting an intuitive picture of the pattern muscle strength/weakness.
+ scale and recording the results in a table.
+ While useful for analysis and archiving, this tabular format is not as
+ ideal for presenting an intuitive picture of the pattern muscle strength/weakne
+ss.
  This can be better acheived with a 
 \begin_inset Quotes eld
 \end_inset
@@ -125,13 +130,13 @@ muscle strength plot
  In a research setting, multiple weakness plots can highlight patterns of
  weakness across groups of pateients or within a single patient over time.
  Here we present a free, open-source software application – MuscleViz –
- for generating such plots of muscle weakness.
+ for generating such muscle strength plots.
  These plots provide an alternative or supplement to written tables of weakness.
 \end_layout
 
 \begin_layout Standard
-MuscleViz provides a simple and intuitive interface for recording the results
- of muscle strength on the MRC scale (Figure 
+MuscleViz provides a simple and intuitive interface for recording muscle
+ strengths as measured on the MRC scale (Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:screenshot"
@@ -139,8 +144,9 @@ reference "fig:screenshot"
 \end_inset
 
 ).
- Results are entered by tapping a button corresponding to the measured strength
- (0 - 5), as well as an optional modifier (plus or minus).
+ For each muscle, results are entered by tapping a button corresponding
+ to the measured strength (0 - 5), as well as an optional modifier (plus
+ or minus).
  As results are entered, a muscle strength plot is updated in real time.
  A separate 
 \begin_inset Quotes eld
@@ -152,9 +158,9 @@ annotation
 
  interface allows one to enter metadata, such as patient name, diagnosis,
  notes, etc.
- The muscle weakness plot can be saved in a publication-ready vector graphics
+ The muscle strength plot can be saved in a publication-ready vector graphics
  format (SVG).
- All of the data (MRC scores as well as metadata) can also be saved to or
+ All of the data (MRC scores as well as metadata) can also be saved to and
  loaded from a JSON file.
  JSON is a text-based format that benefits from being human readable as
  well as parsable by many popular programming languages and database programs.
@@ -170,23 +176,23 @@ The introduction of technology to patient care is not novel; indeed, clinic
  Effective communication requires a patient and physician connection which
  can be negatively impacted by techonological distraction.
  Our decision to include less detail was purposeful.
- The tool should provide enough information to make distribution obvious,
- but it should not include any distractions.
+ The tool should provide enough information to make weakness distribution
+ obvious, but it should not include any distractions.
  By introducing software that is simple to use, freely available, and modifiable
 , we hope to improve clinical diaganosis and communication.
 \end_layout
 
 \begin_layout Standard
-Previous groups have addressed visualizing muscle weakness using software,
- however the lack of distribution of the tool and hidden underlying source
- code limited its usefulness for the field.
- There has been a recent push in neuroscience for open source tools.
- We believe that an increase in open source technology would also benefit
+Previous groups have addressed visualizing muscle strength using software,
+ however the lack of availiblity of the tool and the underlying source code
+ limited its usefulness for the field.
+ There has been a recent push in neuroscience for free, open-source tools.
+ We believe that an increase in open-source technology would also benefit
  the medical community, in particular when it comes to research.
  The MuscleViz tool and its source code are freely available.
  The source code can be found on GitHub (https://github.com/jwittenbach/muscle-vi
 z), a web-based code repository where users can discuess issues about the
- tool or even contribute to its development.
+ tool and even contribute to its development.
  We hope the framework will be adapted for similar uses by the community
  to develop additional useful clinical tools.
 \end_layout
@@ -215,9 +221,8 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename screenshot.png
-	lyxscale 30
-	scale 30
+	filename screenshot.eps
+	scale 60
 
 \end_inset
 
@@ -228,7 +233,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-MuscleViz Screenshot.
+MuscleViz screenshot.
  Full strengh is dark indigo while complete paralysis is gold.
  The distribution of weakness is along the superior/inferior axis.
  In the context of full clinical history, a diagnosis of Guillan Barre can
@@ -268,8 +273,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Sample figure created from exported images.
- [DESCRIPTION HERE]
+[DESCRIPTION HERE]
 \begin_inset CommandInset label
 LatexCommand label
 name "case-study"
