@@ -216,7 +216,9 @@ function download(data, defaultName) {
 	document.body.appendChild(log);
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
-    console.log('file system open: ' + fs.name);
+    //console.log('file system open: ' + fs.name);
+	 text = document.createTextNode('file system open: ' + fs.name);
+	 log.appendChild(text);
     fs.root.getFile("newPersistentFile.txt", { create: true, exclusive: false }, function (fileEntry) {
 
         console.log("fileEntry is file?" + fileEntry.isFile.toString());
