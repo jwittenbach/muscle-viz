@@ -99,7 +99,6 @@ function setParamsFromSVG(svg) {
 		order.push(parseInt(num)-1); //labeling in SVG is 1-based
 		muscleElements.left[i].id = name;
 	}
-	console.log(order);
 	["left", "right"].map(function (side) {
 		var ordered = [];
 		for (i=0; i<muscles.length; i++) {

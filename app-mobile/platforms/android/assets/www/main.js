@@ -89,6 +89,25 @@ function setParamsFromSVG(svg) {
 	}
 	muscleElements.right = muscleElements.right.reverse();
 
+	// sort and rename muscle elements
+	var order = [];
+	for (i=0; i<muscles.length; i++) {
+		var fullName = muscleElements.left[i].id;
+		var idx = fullName.indexOf('_');
+		var num = fullName.slice(1, idx);
+		var name = fullName.slice(idx+1);
+		order.push(parseInt(num)-1); //labeling in SVG is 1-based
+		muscleElements.left[i].id = name;
+	}
+	["left", "right"].map(function (side) {
+		var ordered = [];
+		for (i=0; i<muscles.length; i++) {
+			var idx = order.indexOf(i);
+			ordered.push(muscleElements[side][idx]);
+		}
+		muscleElements[side] = ordered;
+	});
+
 	// levels + colors map
 	var rects = svg.getElementById("cmap").children;
 	params.nLevels = rects.length;
@@ -191,7 +210,20 @@ function setFromState(newState) {
 }
 
 function download(data, defaultName) {
-	// get filename
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+
+    console.log('file system open: ' + fs.name);
+    fs.root.getFile("newPersistentFile.txt", { create: true, exclusive: false }, function (fileEntry) {
+
+        console.log("fileEntry is file?" + fileEntry.isFile.toString());
+        // fileEntry.name == 'someFile.txt'
+        // fileEntry.fullPath == '/someFile.txt'
+        writeFile(fileEntry, null);
+
+    }, onErrorCreateFile);
+
+	}, onErrorLoadFs);
+	/*// get filename
 	var filename = prompt("filename:", defaultName);
 	if (filename === null) {
 		return;
@@ -205,6 +237,7 @@ function download(data, defaultName) {
 	document.body.appendChild(element);
 	element.click();
 	document.body.removeChild(element);
+	*/
 }
 
 function saveData() {
