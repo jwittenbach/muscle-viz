@@ -215,9 +215,10 @@ s.
  Furthermore, we hope the release of source code will inspire others to
  join us in open source medical tool development.
 \begin_inset Float figure
+placement p
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -257,9 +258,10 @@ name "fig:screenshot"
 
 
 \begin_inset Float figure
+placement p
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -298,16 +300,6 @@ name "case-study"
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-
-\backslash
-mbox{} 
-\backslash
-thispagestyle{empty} 
-\backslash
-newpage
 \end_layout
 
 \begin_layout Bibliography
