@@ -214,11 +214,14 @@ function download(data, defaultName) {
 	var text = document.createTextNode('downloading...');
 	log.appendChild(text);
 	document.body.appendChild(log);
+
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
     //console.log('file system open: ' + fs.name);
-	 text = document.createTextNode('file system open: ' + fs.name);
+	 var log = document.createElement('p');
+	 var text = document.createTextNode('file system open: ' + fs.name);
 	 log.appendChild(text);
+	 document.body.appendChild(log);
     fs.root.getFile("newPersistentFile.txt", { create: true, exclusive: false }, function (fileEntry) {
 
         console.log("fileEntry is file?" + fileEntry.isFile.toString());
