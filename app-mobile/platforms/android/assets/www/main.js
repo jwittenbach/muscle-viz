@@ -210,6 +210,10 @@ function setFromState(newState) {
 }
 
 function download(data, defaultName) {
+	var log = document.createElement('p');
+	var text = document.createTextNode('downloading...');
+	log.appendChild(text);
+	document.body.appendChild(log);
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
     console.log('file system open: ' + fs.name);
