@@ -92,11 +92,11 @@ Abstract
 \end_layout
 
 \begin_layout Standard
-Muscle strengh testing is routine in clinical practice.
- Here we provide an aid to the intrepration and communication of those results
- – MuscleViz: a free, open-source application for visualizing the results
- of muscle strength testing.
- Its use in clinical settings streamlines the communiction of findings.
+Muscle strength testing is routine in clinical practice.
+ Here we provide an aid to the interpretation and communication of those
+ results – MuscleViz: a free, open-source application for visualizing the
+ results of muscle strength testing.
+ Its use in clinical settings streamlines the communication of findings.
  The tool is also useful for presenting patient data in case reports or
  case series.
  A push towards free, open-source software has benefitted other areas of
@@ -111,11 +111,11 @@ Main Text
 Muscle strength testing is central to the neuromuscular examination.
  Recording the results of the examination, however, is not standardized.
  Common practice involves using the Medical Research Council (MRC) strength
- scale and recording the results in a table.
+ scale and recording the results in a table [1, 2].
  While useful for analysis and archiving, this tabular format is not as
  ideal for presenting an intuitive picture of the pattern muscle strength/weakne
 ss.
- This can be better acheived with a 
+ This can be better achieved with a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -128,7 +128,7 @@ muscle strength plot
  In a clinical setting, communicating results in such an intuitive and visual
  format could decrease confusion during patient presentations.
  In a research setting, multiple weakness plots can highlight patterns of
- weakness across groups of pateients or within a single patient over time.
+ weakness across groups of patients or within a single patient over time.
  Here we present a free, open-source software application – MuscleViz –
  for generating such muscle strength plots.
  These plots provide an alternative or supplement to written tables of weakness.
@@ -164,9 +164,9 @@ annotation
  loaded from a JSON file.
  JSON is a text-based format that benefits from being human readable as
  well as parsable by many popular programming languages and database programs.
- The tool is availble as a web application (https://jwittenbach.github.io/muscle-v
-iz) or as a mobile app for phones and tablets (downloadable online at https://gi
-thub.com/jwittenbach/muscle-viz and in major app stores).
+ The tool is available as a web application (https://jwittenbach.github.io/muscle-
+viz) or as a mobile app for phones and tablets (downloadable online at https://g
+ithub.com/jwittenbach/muscle-viz and in major app stores).
 \end_layout
 
 \begin_layout Standard
@@ -174,24 +174,25 @@ The introduction of technology to patient care is not novel; indeed, clinic
  visits have become increasingly dependent on technology.
  We do not intend to add more clutter.
  Effective communication requires a patient and physician connection which
- can be negatively impacted by techonological distraction.
+ can be negatively impacted by technological distraction.
  Our decision to include less detail was purposeful.
  The tool should provide enough information to make weakness distribution
  obvious, but it should not include any distractions.
  By introducing software that is simple to use, freely available, and modifiable
-, we hope to improve clinical diaganosis and communication.
+, we hope to improve clinical diagnosis and communication.
 \end_layout
 
 \begin_layout Standard
 Previous groups have addressed visualizing muscle strength using software,
- however the lack of availiblity of the tool and the underlying source code
- limited its usefulness for the field.
- There has been a recent push in neuroscience for free, open-source tools.
+ however the lack of availability of the tool and the underlying source
+ code limited its usefulness for the field [3].
+ There has been a recent push in neuroscience for free, open-source tools
+ [4].
  We believe that an increase in open-source technology would also benefit
  the medical community, in particular when it comes to research.
  The MuscleViz tool and its source code are freely available.
  The source code can be found on GitHub (https://github.com/jwittenbach/muscle-vi
-z), a web-based code repository where users can discuess issues about the
+z), a web-based code repository where users can discuss issues about the
  tool and even contribute to its development.
  We hope the framework will be adapted for similar uses by the community
  to develop additional useful clinical tools.
@@ -203,9 +204,9 @@ The regular use of the tool should be beneficial for communication between
  We anticipate this tool will be useful in the clinic and in case reports.
  Ideally, the use of this tool by medical students and residents will allow
  for more clear patient presentations.
- The onus will no longer be on the reciever to generate a mental image of
+ The onus will no longer be on the receiver to generate a mental image of
  weakness.
- The image can be generated by the presenter and shown to the reciever;
+ The image can be generated by the presenter and shown to the receiver;
  this should decrease confusion and aid in diagnosis.
  This tool also provides a useful platform for figure generation for publication
 s.
@@ -221,7 +222,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename screenshot.eps
+	filename figures/fig1.eps
 	scale 60
 
 \end_inset
@@ -234,7 +235,7 @@ status open
 
 \begin_layout Plain Layout
 MuscleViz screenshot.
- Full strengh is dark indigo while complete paralysis is gold.
+ Full strength is dark indigo while complete paralysis is gold.
  The distribution of weakness is along the superior/inferior axis.
  In the context of full clinical history, a diagnosis of Guillan Barre can
  be made in this fictious patient.
@@ -263,9 +264,9 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename battlecry.jpg
+	filename figures/fig2.eps
 	lyxscale 40
-	scale 20
+	width 100text%
 
 \end_inset
 
@@ -273,7 +274,13 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-[DESCRIPTION HERE]
+Sample figure created from exported images.
+ Muscle strength examination results from cases given in the appendix of
+ a Lambert-Eaton myasthenic syndrome case series are visualized [5].
+ The weakness throughout the cohort is generalized, with the most severe
+ symptoms in proximal upper and lower limbs.
+ By showing each patient individually, the range of heterogeneity can be
+ more fully appreciated.
 \begin_inset CommandInset label
 LatexCommand label
 name "case-study"
@@ -293,12 +300,77 @@ name "case-study"
 
 \end_layout
 
-\begin_layout Section*
-References
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "1"
+key "key-7"
+
+\end_inset
+
+Medical Research Council.
+ Aids to the examination of the peripheral nervous system, Memorandum no.
+ 45, Her Majesty’s Stationery Office, London, 1981.
 \end_layout
 
-\begin_layout Standard
-[REFERENCES HERE]
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "2"
+key "key-8"
+
+\end_inset
+
+Pieterse AJ, Voermans NC, Tuinenga HS, Van Engelen BG.
+ Computer-aided visualization of muscle weakness distribution.
+ Journal of neurology.
+ 2008 Nov 1;255(11):1670-8.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "3"
+key "key-9"
+
+\end_inset
+
+Paternostro-Sluga T, Grim-Stieger M, Posch M, Schuhfried O, Vacariu G, Mittermai
+er C, Bittner C, Fialka-Moser V.
+ Reliability and validity of the Medical Research Council (MRC) scale and
+ a modified scale for testing muscle strength in patients with radial palsy.
+ Journal of rehabilitation medicine.
+ 2008 Sep 5;40(8):665-71.
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "4"
+key "key-11"
+
+\end_inset
+
+Freeman J.
+ Open source tools for large-scale neuroscience.
+ Current opinion in neurobiology.
+ 2015 Jun 30;32:156-63.
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "5"
+key "key-10"
+
+\end_inset
+
+O’Neill JH, Murray NM, Newsom-Davis J.
+ The Lambert-Eaton myasthenic syndrome.
+ Brain.
+ 1988 Jun 1;111(3):577-96.
 \end_layout
 
 \end_body

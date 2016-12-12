@@ -300,6 +300,16 @@ name "case-study"
 
 \end_layout
 
+\begin_layout Standard
+
+\backslash
+mbox{} 
+\backslash
+thispagestyle{empty} 
+\backslash
+newpage
+\end_layout
+
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
