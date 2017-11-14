@@ -80,18 +80,18 @@
 			C107.257,111.625,108.106,103.422,109.096,95.361z"/>
 	</g>
 	<g id="left">
-		<path id="n14_Gastrocnemius_x2F_soleus_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M181.91,571.48h-40.022
+		<path id="n11_Gastrocnemius_x2F_soleus_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M181.91,571.48h-40.022
 			c0.989,48.51,2.12,96.879,3.11,145.391c5.375,0.424,10.604,0.707,15.84,1.131C167.909,669.066,174.839,620.273,181.91,571.48z"/>
-		<path id="n13_Tibialis_anterior_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M151.927,581.664h17.963
+		<path id="n10_Tibialis_anterior_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M151.927,581.664h17.963
 			c-4.103,45.258-8.346,90.373-12.445,135.629c-2.118,0.283-4.104,0.426-6.224,0.707
 			C151.503,672.602,151.786,627.062,151.927,581.664z"/>
-		<path id="n9_Hip_flexors_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M142.169,353.823
+		<path id="n8_Hip_flexors_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M142.169,353.823
 			c22.347,21.355,28.428,39.601,29.699,52.47c1.694,17.537-4.667,31.68,6.082,44.975c6.081,7.496,16.265,13.016,14.708,18.951
 			c-0.707,2.547-3.396,4.242-5.519,5.232c-9.478-6.646-26.165-20.365-37.479-43.137
 			C132.127,396.959,139.483,364.005,142.169,353.823z"/>
 		<polygon id="n12_Hamstrings_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" points="192.8,455.086 138.352,455.086 
 			148.393,552.953 178.091,552.953 		"/>
-		<path id="n11_Quadraceps_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M157.867,418.172
+		<path id="n9_Quadraceps_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M157.867,418.172
 			c7.775,23.193,15.558,46.248,23.336,69.439c-5.095,20.646-10.186,41.152-15.137,61.807c-7.773-27.861-15.559-55.863-23.335-83.727
 			C147.686,449.711,152.778,433.871,157.867,418.172z"/>
 		<path id="n7_Wrist_extensors_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M240.037,294.846
