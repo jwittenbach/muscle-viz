@@ -182,6 +182,19 @@ function setMusclePM(side, row, pm) {
 	}
 }
 
+function setMuscleDisplay(row, flag) {
+	if (flag) {
+		muscleElements.left[row].style.display = "block";
+		muscleElements.right[row].style.display = "block";
+		buttons.show[row].style.background = "#999999";	
+	}
+	else {
+		buttons.show[row].style.background = "white";
+		muscleElements.left[row].style.display = "none";
+		muscleElements.right[row].style.display = "none";
+	}
+}
+
 function setFullStrength() {
 	["left", "right"].map(function(side) {
 		for (i=0; i<params.nMuscles; i++) {
@@ -208,6 +221,9 @@ function setFromState(newState) {
 			setMusclePM(side, i, newState.muscles.pm[side][i]);
 		}
 	});
+	for (i=0; i<params.nMuscles; i++) {
+		setMuscleDisplay(i, newState.muscles.show[i]);
+	}
 	for (name in newState.metadata) {
 		var el = document.getElementById(name);
 		el.value = newState.metadata[name];
@@ -307,18 +323,9 @@ function makeOnClickNum(side, row, level) {
 
 function makeOnClickSelect(row) {
 	return function() {
-		var currentState = state.muscles.show[row];
-		if (state.muscles.show[row]) {
-			buttons.show[row].style.background = "white";
-			muscleElements.left[row].style.display = "none";
-			muscleElements.right[row].style.display = "none";
-		}
-		else {
-			muscleElements.left[row].style.display = "block";
-			muscleElements.right[row].style.display = "block";
-			buttons.show[row].style.background = "#999999";
-		}
-		state.muscles.show[row] = !currentState
+		var newState = !state.muscles.show[row];
+		setMuscleDisplay(row, newState)
+		state.muscles.show[row] = newState
 	}
 }
 
