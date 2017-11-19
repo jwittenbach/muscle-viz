@@ -12,7 +12,7 @@
             <p class="sideLabel">Patient's Right</p>
             <div id="leftButtonBank" class="buttonBank"></div>
             <div id="miscLeft" class="misc">
-               <div id="menu">
+               <div id="menu">         
                   <div>
                      <button id="save" class="menuButton" onclick="saveData()">save</button>
                      <button id="load" class="menuButton" onclick="loadData()">load</button>
@@ -20,6 +20,9 @@
                   <div>
                      <button id="annotate" class="menuButton" onclick="toAnnotation()">annotate</button>
                      <button id="export" class="menuButton" onclick="saveSVG()">export</button>
+                  </div>
+                  <div>
+                     <button id="select" class="menuButton" onclick="toConfig()">config</button>
                   </div>
                </div>
             </div>
@@ -85,6 +88,22 @@
             <button id="confirmAnnotation" class="menuButton" onclick="setMetadata()">
                confirm
             </button>
+         </div>
+
+      </div>
+
+      <div id="configView" style="display:none;">
+         
+         <div id="leftPanel" class="mainPanel sidePanel">
+            
+            <p class="sideLabel">Muscle Selection</p>
+            <div id="selectPanel" class="buttonBank"></div>
+
+            <div id="configButtons" class="misc">
+               <button id="confirmConfig" class="menuButton" onclick="setConfig()">
+                  confirm
+               </button>
+            </div>
          </div>
 
       </div>

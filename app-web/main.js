@@ -13,7 +13,8 @@ var buttons = {
 	pm: {
 		left: [],
 		right: []
-	}
+	},
+	show: []
 };
 
 var state = {
@@ -25,7 +26,8 @@ var state = {
 		pm: {
 			left: [],
 			right: []
-		}
+		},
+		show: [] // no left/right, both muscles in a pair are on/off together
 
 	},
 	metadata: {
@@ -51,6 +53,7 @@ xhr.onload = function(e) {
 	setParamsFromSVG(svg);
 	makeButtonBanks(svg);
 	makeMisc();
+	makeConfig();
 }
 
 // translate name from SVG to human-readable form
@@ -127,6 +130,9 @@ function setParamsFromSVG(svg) {
 			muscleElements[side][i].setAttribute("fill", params.baseColor);
 		}
 	});
+	for (i=0; i<muscles.length; i++) {
+		state.muscles.show.push(true)
+	}
 }
 
 // actions
@@ -176,6 +182,19 @@ function setMusclePM(side, row, pm) {
 	}
 }
 
+function setMuscleDisplay(row, flag) {
+	if (flag) {
+		muscleElements.left[row].style.display = "block";
+		muscleElements.right[row].style.display = "block";
+		buttons.show[row].style.background = "#999999";	
+	}
+	else {
+		buttons.show[row].style.background = "white";
+		muscleElements.left[row].style.display = "none";
+		muscleElements.right[row].style.display = "none";
+	}
+}
+
 function setFullStrength() {
 	["left", "right"].map(function(side) {
 		for (i=0; i<params.nMuscles; i++) {
@@ -202,6 +221,9 @@ function setFromState(newState) {
 			setMusclePM(side, i, newState.muscles.pm[side][i]);
 		}
 	});
+	for (i=0; i<params.nMuscles; i++) {
+		setMuscleDisplay(i, newState.muscles.show[i]);
+	}
 	for (name in newState.metadata) {
 		var el = document.getElementById(name);
 		el.value = newState.metadata[name];
@@ -260,16 +282,29 @@ function toAnnotation() {
 	el.style.display = "";
 }
 
+function toConfig() {
+	var el = document.getElementById("mainView");
+	el.style.display = "none";
+	el = document.getElementById("configView");
+	el.style.display = "";
+}
+
 function setMetadata() {
 	var els = document.getElementsByTagName("textarea");
 	for (i=0; i<els.length; i++) {
 		state.metadata[els[i].id] = els[i].value;
 	}
-	console.log('changing views');
 	var el = document.getElementById("annotationView");
 	el.style.display = "none";
 	el = document.getElementById("mainView");
 	el.style.display = "";
+}
+
+function setConfig() {
+	var el = document.getElementById("configView");
+	el.style.display = "none";
+	el = document.getElementById("mainView");
+	el.style.display = ""
 }
 
 // helper functions to create event listeners
@@ -283,6 +318,14 @@ function makeOnClickNum(side, row, level) {
 		else {
 			setMuscle(side, row, level);
 		}
+	}
+}
+
+function makeOnClickSelect(row) {
+	return function() {
+		var newState = !state.muscles.show[row];
+		setMuscleDisplay(row, newState)
+		state.muscles.show[row] = newState
 	}
 }
 
@@ -408,4 +451,25 @@ function makeMisc() {
 		c.style.background = params.colors[i];
 		cmap.appendChild(c);
 	}
+}
+
+function makeConfig() {
+	var panel = document.getElementById("selectPanel")
+	for (row=0; row<params.nMuscles; row++) {
+		
+		var panelRow = document.createElement("div");
+		panelRow.className = "panelRow";
+		panel.appendChild(panelRow);
+
+		var button = document.createElement("button")
+		button.className = "selectButton";
+		button.onclick = makeOnClickSelect(row);
+		panelRow.appendChild(button);
+		buttons.show.push(button);
+
+		var name = document.createElement("text");
+		name.innerHTML = parseName(muscleElements.left[row].id);
+		panelRow.append(name);
+	}
+
 }
