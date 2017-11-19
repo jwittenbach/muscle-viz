@@ -78,6 +78,18 @@ button:focus {
    border-radius: 20px;
 }
 
+.selectButton {
+   border: 5px solid grey;
+   width: 25px;
+   height: 25px;
+   background: #999999;
+   margin-right: 10px;
+}
+
+.selectButton:hover {
+   background: grey;
+}
+
 .menuButton {
    border: 2px solid #999999;
    width: 110px;
@@ -138,6 +150,10 @@ button:focus {
   width: 1000px;
   flex-flow: column nowrap;
   justify-content: flex-start;
+}
+
+#configButtons {
+  margin-top: 20px;
 }
 
 .row {
