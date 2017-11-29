@@ -115,6 +115,11 @@ button:focus {
    flex-grow: 1;
 }
 
+#scaleTitle {
+  font-size: 20px;
+  margin: 0px;
+}
+
 #rightButtons {
    justify-content: space-around;
    width: 100%;
