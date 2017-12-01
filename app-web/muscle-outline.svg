@@ -62,7 +62,7 @@
 			"/>
 		<polygon id="Hamstrings_R" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" points="73.456,454.448 127.905,454.448 
 			117.864,552.316 88.165,552.316 		"/>
-		<path id="Quadraceps_R" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M108.389,417.535
+		<path id="Quadriceps_R" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M108.389,417.535
 			c-7.778,23.188-15.559,46.247-23.336,69.438c5.092,20.648,10.183,41.155,15.134,61.811c7.775-27.862,15.561-55.864,23.335-83.729
 			C118.571,449.073,113.479,433.233,108.389,417.535z"/>
 		<path id="Wrist_extensors_R" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M26.219,294.209
@@ -103,7 +103,7 @@
 			C132.127,396.959,139.483,364.005,142.169,353.823z"/>
 		<polygon id="n12_Hamstrings_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" points="192.8,455.086 138.352,455.086 
 			148.393,552.953 178.091,552.953 		"/>
-		<path id="n11_Quadraceps_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M157.867,418.172
+		<path id="n11_Quadriceps_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M157.867,418.172
 			c7.775,23.193,15.558,46.248,23.336,69.439c-5.095,20.646-10.186,41.152-15.137,61.807c-7.773-27.861-15.559-55.863-23.335-83.727
 			C147.686,449.711,152.778,433.871,157.867,418.172z"/>
 		<path id="n7_Wrist_extensors_L" fill="#EBEBEB" stroke="#000000" stroke-miterlimit="10" d="M240.037,294.846
