@@ -1,15 +1,16 @@
 ##List of Contributers:
 HHMI Janelia:
-* Jason Wittenbach
+* Jason Wittenbach, PhD
 * Benjamin Cocanougher
 
 NIH: 
-* Reghan Foley
-* Carsten Bonnemann
+* Pomi Yun 
+* Reghan Foley, MD
+* Carsten Bonnemann, MD
 
 Univesity of Rochester School of Medicine and Dentistry:
-* Jeremy Herrmann
+* Jeremy Herrmann, MD
 
 Legal:
-* Matthew Cocanougher
+* Matthew Cocanougher, JD
 
