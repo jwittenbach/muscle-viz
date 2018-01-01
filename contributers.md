@@ -1,4 +1,4 @@
-##List of Contributers:
+## List of Contributers:
 HHMI Janelia:
 * Jason Wittenbach, PhD
 * Benjamin Cocanougher
