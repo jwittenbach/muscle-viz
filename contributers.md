@@ -8,7 +8,7 @@ NIH:
 * Reghan Foley, MD
 * Carsten Bonnemann, MD
 
-Univesity of Rochester School of Medicine and Dentistry:
+University of Rochester School of Medicine and Dentistry and Northwestern University Feinberg School of Medicine:
 * Jeremy Herrmann, MD
 
 Legal:
