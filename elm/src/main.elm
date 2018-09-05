@@ -24,35 +24,42 @@ config =
   , numRows = 3
   }
 
+type Side = Left | Right
+
 type alias SideSelections = Array (Maybe Int)
 
 type alias Selections = 
-  { left : SideSelections
-  , right: SideSelections
+  { left : SideSelections 
+  , right: SideSelections 
   }
 
-setSelection
-setSelection row selection selections =
-  
+setSideSelections : SideSelections -> Side -> Selections -> Selections
+setSideSelections newSideSelections side selections =
+  case side of
+    Left -> { selections | left = newSideSelections }
+    Right -> { selections | right = newSideSelections }
 
-
---setLeftSelections : SideSelections -> Selections -> Selections
---setLeftSelections left selections =
---  { selections | left = left }
---
---setRightSelections : SideSelection -> Selections -> Selections
---setRightSelections left selections =
---  { selections | left = left }
+asSideSelectionsIn : Selections -> Side -> SideSelections -> Selections
+asSideSelectionsIn selections side newSideSelections =
+  setSideSelections newSideSelections side selections
 
 type alias Model = 
   { selections : Selections 
   }
 
+setSelections : Selections -> Model -> Model
+setSelections newSelections model =
+  { model | selections = newSelections }
+
+asSelectionsIn : Model -> Selections -> Model
+asSelectionsIn model newSelections =
+  setSelections newSelections model
+
 init : () -> (Model, Cmd Msg)
 init _ = 
   ( { selections = 
       { left = Array.repeat config.numRows Nothing
-      , right = Array.repeat config.numRows Nothin
+      , right = Array.repeat config.numRows Nothing
       }
     }
   , Cmd.none 
@@ -60,31 +67,29 @@ init _ =
 
 -- update
 
-type Side = Left | Right
-
 type Msg = Select Side Int Int
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   let
     newModel = case msg of
-      Select side row selection -> updateWithSelect side row selection model
+      Select side row selection -> selectUpdate side row selection model
   in
     (newModel, Cmd.none)
 
-updateWithSelect : Side -> Int -> Int -> Model -> Model
-updateWithSelect side row selection model =
+selectUpdate : Side -> Int -> Int -> Model -> Model
+selectUpdate side row selection model =
   case side of
     Left -> 
-      { model
-      | model.selections.left = updateSide side row model.selections.left
-      }
+      updateSide row selection model.selections.left
+      |> asSideSelectionsIn model.selections Left
+      |> asSelectionsIn model
     Right -> 
-      { model
-      | model.selections.right = updateSide side row model.selections.right
-      }
+      updateSide row selection model.selections.right
+      |> asSideSelectionsIn model.selections Right 
+      |> asSelectionsIn model
 
-updateSide Int -> Int -> SideSelections -> SideSelections 
+updateSide : Int -> Int -> SideSelections -> SideSelections 
 updateSide row newSelection selections =
   case Array.get row selections of
     Nothing -> selections -- should be unreachable
@@ -110,7 +115,8 @@ viewUnstyled model =
 
 view : Model -> Html Msg
 view model =
-  span []
+  span 
+    [ css [ displayFlex, flexFlow2 row noWrap ] ]
     [ ButtonPanel.view 
         { buttonsPerRow = config.buttonsPerRow
         , selectionMessage = Select Left
@@ -120,5 +126,5 @@ view model =
         { buttonsPerRow = config.buttonsPerRow
         , selectionMessage = Select Right 
         }
-        { selections = model.selections.left }
+        { selections = model.selections.right }
     ]
