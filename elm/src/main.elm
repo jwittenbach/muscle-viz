@@ -9,6 +9,9 @@ import Css exposing (..)
 import StatefulButton 
 import ButtonRow 
 import ButtonPanel
+import Body 
+import Muscles
+import Types exposing (..) -- TODO: remove namespace pollution
 
 main = Browser.element
   { init = init
@@ -21,27 +24,8 @@ main = Browser.element
 
 config = 
   { buttonsPerRow = 5
-  , numRows = 3
+  , numRows = 5 
   }
-
-type Side = Left | Right
-
-type alias SideSelections = Array (Maybe Int)
-
-type alias Selections = 
-  { left : SideSelections 
-  , right: SideSelections 
-  }
-
-setSideSelections : SideSelections -> Side -> Selections -> Selections
-setSideSelections newSideSelections side selections =
-  case side of
-    Left -> { selections | left = newSideSelections }
-    Right -> { selections | right = newSideSelections }
-
-asSideSelectionsIn : Selections -> Side -> SideSelections -> Selections
-asSideSelectionsIn selections side newSideSelections =
-  setSideSelections newSideSelections side selections
 
 type alias Model = 
   { selections : Selections 
@@ -122,9 +106,11 @@ view model =
         , selectionMessage = Select Left
         }
         { selections = model.selections.left }
+    , Body.view { selections = model.selections } 
     , ButtonPanel.view 
         { buttonsPerRow = config.buttonsPerRow
         , selectionMessage = Select Right 
         }
         { selections = model.selections.right }
+    --, div [] (List.map (\s -> text (Maybe.map String.fromInt s |> Maybe.withDefault "nothing" ) ) (Array.toList model.selections.left) )
     ]
