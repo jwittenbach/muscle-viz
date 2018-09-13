@@ -21,7 +21,7 @@ type alias Context =
 lineStyle =
   [ stroke "#000000"
   , fill "#FFFFFF"
-  , strokeWidth "2px"
+  , strokeWidth "1.5px"
   ]
   
 colorMap : Array String
@@ -66,5 +66,5 @@ view context =
     muscles = colorMuscles Muscles.names Muscles.muscles context.selections
   in
     svg
-      [ width "300", height "1000" ]
+      [ width "250", height "700", viewBox "-15 0 300 800", Svg.Styled.Attributes.style "outline: 0.5px solid #0000FF" ]
       ( bodyElement ++ muscles )
