@@ -24,7 +24,7 @@ main = Browser.element
 
 config = 
   { buttonsPerRow = 5
-  , numRows = 5 
+  , numRows =  List.length Muscles.names
   }
 
 type alias Model = 
