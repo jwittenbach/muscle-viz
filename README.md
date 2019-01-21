@@ -17,6 +17,8 @@ weakness.
 
 Checkout out the current [prototype](https://jwittenbach.github.io/muscle-viz).
 
+Now available to download for free on app stores for [iOS](https://itunes.apple.com/us/app/muscleviz/id1449848702) and [android](https://play.google.com/store/apps/details?id=io.jwittenbach.medviz)!
+
 -----
 This project is under development by Jason Wittenbach 
 (wittenbachj@janelia.hhmi.org) and Benjamin Cocanougher
