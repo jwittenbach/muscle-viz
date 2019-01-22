@@ -4,7 +4,7 @@ HHMI Janelia:
 * Benjamin Cocanougher
 
 NIH: 
-* Pomi Yun 
+* Pomi Yun, MPH
 * Reghan Foley, MD
 * Carsten Bonnemann, MD
 
