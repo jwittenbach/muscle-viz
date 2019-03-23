@@ -5,112 +5,136 @@
     <link rel="stylesheet" href="base.css" />
   </head>
 
-   <body>
-      <div id="mainView">
+  <body>
+    <!-- main view -->
+    <div id=mainView>
 
-         <div id="leftPanel" class="mainPanel sidePanel">
-            <p class="sideLabel">Patient's Right</p>
-            <div id="leftButtonBank" class="buttonBank"></div>
-            <div id="miscLeft" class="misc">
-               <div id="menu">         
-                  <div>
-                     <button id="save" class="menuButton" onclick="saveData()">save</button>
-                     <button id="load" class="menuButton" onclick="loadData()">load</button>
-                  </div>
-                  <div>
-                     <button id="annotate" class="menuButton" onclick="toAnnotation()">annotate</button>
-                     <button id="export" class="menuButton" onclick="saveSVG()">export</button>
-                  </div>
-                  <div>
-                     <button id="select" class="menuButton" onclick="toConfig()">config</button>
-                  </div>
-               </div>
-            </div>
-         </div>
+      <!-- left panel -->
+      <div id=leftPanel class=column>
 
-         <div id="centerPanel" class="mainPanel"></div>
+        <!-- left button bank -->
+        <p class=heading>Patient's Right</p>
+        <div id=leftButtonBank class="column buttonBank"></div>
 
-         <div id="rightPanel" class="mainPanel sidePanel">
-            <p class="sideLabel">Patient's Left</p>
-            <div id="rightButtonBank" class="buttonBank"></div>
-            <div id="miscRight" class="misc">
-               <p id="scaleTitle">MRC Scale</p>
-               <div id="colorBar"></div>
-               <div id="rightButtons">
-                  <button id="fullStrength" class="menuButton" onclick="setFullStrength()">
-                     full strength
-                  </button>
-                  <button id="clearAll" class="menuButton" onclick="setNoStrength()">
-                     clear all
-                  </button>
-                </div>
-            </div>
-         </div>
-
-      </div>
-
-      <div id="annotationView" style="display:none;">
-
-
-         <div class="row">
-            <div class="metadata">
-               Name:
-               <textarea id="name" rows=1 style="width:400px"></textarea>
-            </div>
-            <div class="metadata">
-               Age:
-               <textarea id="age" rows=1 style="width:100px"></textarea>
-            </div>
-            <div class="metadata">
-               Sex:
-               <textarea id="sex" rows=1 style="width:100px"></textarea>
-            </div>
-         </div>
-
-         <div class="row">
-            <div class="metadata">
-               Date:
-               <textarea id="date" rows=1 style="width:200px"></textarea>
-            </div>
-            <div class="metadata">
-               Diagnosis (if known):
-               <textarea id="diagnosis" rows=1 style="width:420px"></textarea>
-            </div>
-         </div>
-
-         <div class="row">
-            <div class="metadata">
-               Notes:
-               <textarea id="notes" class="fullBox" style="width:640px;height:300px"></textarea>
-            </div>
-         </div>
-
-         <div id="annotationButtons">
-            <button id="confirmAnnotation" class="menuButton" onclick="setMetadata()">
-               confirm
+        <!-- left menu -->
+        <div class="column menu">
+          <div class=leftMenuRow>
+            <button id=save class="menuButton leftMenuButton" onclick="saveData()">
+              save
             </button>
-         </div>
+            <button id=load class="menuButton leftMenuButton" onclick="loadData()">
+              load
+            </button>
+          </div>
+          <div class=leftMenuRow>
+            <button id=annotate class="menuButton leftMenuButton" onclick="toAnnotation()">
+              annotate
+            </button>
+            <button id=export class="menuButton leftMenuButton" onclick="saveSVG()">
+              export
+            </button>
+          </div>
+          <div class=leftMenuRow>
+            <button id=select class="menuButton leftMenuButton" onclick="toConfig()">
+              config
+            </button>
+          </div>
+        </div>
 
       </div>
 
-      <div id="configView" style="display:none;">
-         
-         <div id="leftPanel" class="mainPanel sidePanel">
-            
-            <p class="sideLabel">Muscle Selection</p>
-            <div id="selectPanel" class="buttonBank"></div>
+      <!-- center panel -->
+      <div id=centerPanel></div>
 
-            <div id="configButtons" class="misc">
-               <button id="confirmConfig" class="menuButton" onclick="setConfig()">
-                  confirm
-               </button>
+      <!-- right panel -->
+      <div id=rightPanel class=column>
+
+        <!-- right button bank -->
+        <p class=heading>Patient's Left</p>
+        <div id=rightButtonBank class="column buttonBank"></div>
+
+        <!-- right menu -->
+        <div class="column menu">
+
+          <div class=column>
+            <!-- defualt settings buttons -->
+            <div class=rightMenuRow>
+              <button id=fullStrength class=menuButton onclick="setFullStrength()">
+                full strength
+              </button>
+              <button id=clearAll class=menuButton onclick="setNoStrength()">
+                clear all
+              </button>
             </div>
-         </div>
+
+            <!-- color scale -->
+            <p class="heading">MRC Scale</p>
+            <div id=colorBar></div>
+          </div>
+
+        </div>
 
       </div>
 
       <a id="downloadAnchorElem" style="display:none"></a>
       <script src="main.js"></script>
-   </body>
 
-</html>
+    </div>
+
+    <div id=annotationView style="display:none;">
+      <div class="row">
+         <div class="metadata">
+            Name:
+            <textarea id="name" rows=1 style="width:400px"></textarea>
+         </div>
+         <div class="metadata">
+            Age:
+            <textarea id="age" rows=1 style="width:100px"></textarea>
+         </div>
+         <div class="metadata">
+            Sex:
+            <textarea id="sex" rows=1 style="width:100px"></textarea>
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="metadata">
+            Date:
+            <textarea id="date" rows=1 style="width:200px"></textarea>
+         </div>
+         <div class="metadata">
+            Diagnosis (if known):
+            <textarea id="diagnosis" rows=1 style="width:420px"></textarea>
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="metadata">
+            Notes:
+            <textarea id="notes" class="fullBox" style="width:640px;height:300px"></textarea>
+         </div>
+      </div>
+
+      <div id="annotationButtons">
+         <button id="confirmAnnotation" class="menuButton" onclick="setMetadata()">
+            confirm
+         </button>
+      </div>
+    </div>
+
+    <div id=configView style="display:none;">
+
+      <div class=column>
+
+         <p class=heading>Muscle Selection</p>
+         <div id=selectPanel class=column></div>
+
+        <button id="confirmConfig" class="menuButton" onclick="setConfig()">
+           confirm
+        </button>
+
+      </div>
+
+    </div>
+
+  </body>

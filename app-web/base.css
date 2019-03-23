@@ -1,67 +1,56 @@
+/* general element styles */
 div {
-   display: flex;
-   flex-flow: row nowrap;
-}
-
-#mainView {
-   height: 700px;
-   width: 1200px;
-}
-
-.sidePanel {
-   flex-flow: column nowrap;
-}
-
-.sideLabel {
-   text-align: center;
-   font-size: 20px;
-   margin: 0px;
-   margin-bottom: 20px;
-}
-
-.buttonBank {
-   flex-flow: column nowrap;
-   flex-grow: 0;
-}
-
-.panelRow {
-   justify-content: space-between;
-   align-items: baseline;
-   padding-bottom: 10px;
-}
-
-.buttonRow {
-   align-items: center;
-}
-
-.leftButtonRow {
-   margin-right: 10px;
-}
-
-.rightButtonRow {
-   margin-left: 10px;
-}
-
-.rightName {
-   order: -1;
+  display: flex;
 }
 
 button:focus {
    outline: none
 }
 
-.panelButton {
-   border: 2px solid #999999;
-   color: black;
-   background: white;
-   width: 25px;
-   height: 25px;
-   font-size: 15px;
-   font-family: monospace;
+/* style for divs that should organize elements vertically */
+.column {
+  flex-direction: column;
 }
 
-.number {
-   margin-left: -2px;
+/* style for center panel */
+#centerPanel {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+/* style for heading text */
+.heading {
+  text-align: center;
+  font-size: 20px;
+  margin: 0px;
+}
+
+/* styles for the button banks */
+.buttonBank {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.bankRow {
+  justify-content: space-between;
+  padding-bottom: 5px;
+}
+
+.buttonRow {
+  white-space: nowrap;
+  align-items: center;
+}
+
+.leftButtonRow {
+  margin-right: 20px;
+}
+
+.rightButtonRow {
+  margin-left: 20px;
+}
+
+.name {
+  font-size: 18px;
 }
 
 .numberRow {
@@ -70,59 +59,50 @@ button:focus {
    margin-right: 5px;
 }
 
-.plusMinus {
-   width: 20px;
-   height: 20px;
-   padding: 0px;
-   font-size: 15px;
-   border-radius: 20px;
-}
-
-.selectButton {
-   border: 5px solid grey;
-   width: 25px;
-   height: 25px;
-   background: #999999;
-   margin-right: 10px;
-}
-
-.selectButton:hover {
-   background: grey;
-}
-
-.menuButton {
+/* all bank buttons: numbers and plus/minus */
+.bankButton {
    border: 2px solid #999999;
-   width: 110px;
-   height: 40px;
+   color: black;
    background: white;
    font-size: 15px;
-   text-align: center;
+   font-family: monospace;
 }
 
-.menuButton:hover {
-   background: #999999;
-   color: white;
+/* extra styles for the number buttons */
+.number {
+  width: 25px;
+  height: 22px;
+  margin-left: -2px;
 }
 
-.menuButton:active {
-   background: grey;
+/* extra styles for the plus/minus buttons */
+.plusMinus {
+   width: 18px;
+   height: 18px;
+   padding: 0px;
+   font-size: 15px;
+   border-radius: 18px;
 }
 
-.misc {
-   flex-flow: column nowrap;
-   justify-content: space-around;
-   align-items: center;
-   flex-grow: 1;
+/* styles for menus */
+.menu {
+  align-items: center;
 }
 
-#scaleTitle {
-  font-size: 20px;
-  margin: 0px;
+.leftMenuRow {
+    margin-top: -2px;
+    padding-left: 2px;
 }
 
-#rightButtons {
-   justify-content: space-around;
-   width: 100%;
+.leftMenuButton {
+  margin-left: -2px;
+}
+
+/* styles for right menu */
+.rightMenuRow {
+  margin-bottom: 20px;
+  justify-content: space-between;
+
 }
 
 #colorBar {
@@ -137,28 +117,32 @@ button:focus {
    color: white;
 }
 
-#menu {
-   flex-flow: column nowrap;
+/* styles for menu buttons */
+.menuButton {
+   border: 2px solid #999999;
+   width: 120px;
+   height: 40px;
+   background: white;
+   font-size: 18px;
+   text-align: center;
+   white-space: nowrap;
 }
 
-#menu .menuButton {
-   margin-left: -2px;
-   margin-top: -2px;
+.menuButton:hover {
+   background: #999999;
+   color: white;
 }
 
-#miscLeft {
-   padding-left: 2px;
+.menuButton:active {
+   background: grey;
 }
 
+/* annotation view styles */
 #annotationView {
   height: 700px;
   width: 1000px;
   flex-flow: column nowrap;
   justify-content: flex-start;
-}
-
-#configButtons {
-  margin-top: 20px;
 }
 
 .row {
@@ -193,4 +177,22 @@ textarea:focus {
 
 .fullBox:focus {
    border: solid 2px #969696;
+}
+
+/* config view styles */
+#selectPanel {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.selectButton {
+   border: 5px solid grey;
+   width: 25px;
+   height: 25px;
+   background: #999999;
+   margin-right: 10px;
+}
+
+.selectButton:hover {
+   background: grey;
 }

@@ -48,8 +48,7 @@ xhr.send();
 xhr.onload = function(e) {
 	svg = document.getElementById("centerPanel").appendChild(xhr.responseXML.documentElement);
 	svg.id = "body";
-	svg.setAttribute("height", "100%");
-	svg.setAttribute("width", "100%");
+	svg.setAttribute("height", "700px");
 	setParamsFromSVG(svg);
 	makeButtonBanks(svg);
 	makeMisc();
@@ -186,7 +185,7 @@ function setMuscleDisplay(row, flag) {
 	if (flag) {
 		muscleElements.left[row].style.display = "block";
 		muscleElements.right[row].style.display = "block";
-		buttons.show[row].style.background = "#999999";	
+		buttons.show[row].style.background = "#999999";
 	}
 	else {
 		buttons.show[row].style.background = "white";
@@ -391,16 +390,15 @@ function makeButtonBanks(svg) {
 
 	["left", "right"].map(function(side) {
 		for (row=0; row<params.nMuscles; row++) {
-			var panelRow = document.createElement("div");
-			panelRow.className = "panelRow";
-			panels[side].appendChild(panelRow);
+			var bankRow = document.createElement("div");
+			bankRow.className = "bankRow";
+			panels[side].appendChild(bankRow);
 
 			var buttonRow = document.createElement("div");
 			buttonRow.className = "buttonRow " + side + "ButtonRow"; //e.g. class="buttonRow leftButtonRow"
-			panelRow.appendChild(buttonRow);
 
 			var minus = document.createElement("button");
-			minus.className = "plusMinus minus panelButton";
+			minus.className = "plusMinus bankButton";
 			minus.innerHTML = "-";
 			minus.onclick = makeOnClickPM(side, row, 0);
 			minus.onmouseover = makeMouseOverPM(side, row, 0);
@@ -414,7 +412,7 @@ function makeButtonBanks(svg) {
 			buttons.main[side].push([])
 			for (level=0; level<params.nLevels; level++) {
 				var button = document.createElement("button");
-				button.className = "number panelButton";
+				button.className = "number bankButton";
 				button.innerHTML = level;
 				button.onclick = makeOnClickNum(side, row, level);
 				button.onmouseover = makeMouseOverNum(side, row, level);
@@ -424,7 +422,7 @@ function makeButtonBanks(svg) {
 			}
 
 			var plus = document.createElement("button");
-			plus.className = "plusMinus plus panelButton";
+			plus.className = "plusMinus bankButton";
 			plus.innerHTML = "+";
 			plus.onclick = makeOnClickPM(side, row, 1)
 			plus.onmouseover = makeMouseOverPM(side, row, 1);
@@ -433,9 +431,17 @@ function makeButtonBanks(svg) {
 			buttons.pm[side].push([minus, plus]);
 
 			var name = document.createElement("text");
-			name.className = "name " + side + "Name";	//e.g. class="name leftName"
+			name.className = "name";
 			name.innerHTML = parseName(muscleElements[side][row].id);
-			panelRow.appendChild(name);
+
+			if (side === "left") {
+				bankRow.appendChild(buttonRow);
+				bankRow.appendChild(name);
+			}
+			else {
+				bankRow.appendChild(name);
+				bankRow.appendChild(buttonRow);
+			}
 		}
 	});
 }
@@ -456,20 +462,21 @@ function makeMisc() {
 function makeConfig() {
 	var panel = document.getElementById("selectPanel")
 	for (row=0; row<params.nMuscles; row++) {
-		
-		var panelRow = document.createElement("div");
-		panelRow.className = "panelRow";
-		panel.appendChild(panelRow);
+
+		var bankRow = document.createElement("div");
+		bankRow.className = "bankRow";
+		panel.appendChild(bankRow);
 
 		var button = document.createElement("button")
 		button.className = "selectButton";
 		button.onclick = makeOnClickSelect(row);
-		panelRow.appendChild(button);
+		bankRow.appendChild(button);
 		buttons.show.push(button);
 
 		var name = document.createElement("text");
+		console.log(name);
 		name.innerHTML = parseName(muscleElements.left[row].id);
-		panelRow.append(name);
+		bankRow.append(name);
 	}
 
 }
