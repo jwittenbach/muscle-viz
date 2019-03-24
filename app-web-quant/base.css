@@ -1,0 +1,178 @@
+/* general element styles */
+div {
+  display: flex;
+}
+
+button:focus {
+   outline: none
+}
+
+/* style for divs that should organize elements vertically */
+.column {
+  flex-direction: column;
+}
+
+/* style for center panel */
+#centerPanel {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+/* style for heading text */
+.heading {
+  text-align: center;
+  font-size: 20px;
+  margin: 0px;
+}
+
+/* styles for the button banks */
+.buttonBank {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.bankRow {
+  justify-content: space-between;
+  padding-bottom: 5px;
+}
+
+.inputField {
+  width: 30px;
+  border: none;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.5s;
+  outline: none;
+  font-size: 16px;
+  text-align: center;
+
+}
+
+.inputField:focus {
+   border-bottom: solid 2px #969696;
+}
+
+.leftInputField {
+  margin-right: 20px;
+}
+
+.rightInputField {
+  margin-left: 20px;
+}
+
+.name {
+  font-size: 18px;
+}
+
+/* styles for menus */
+.menu {
+  align-items: center;
+}
+
+.leftMenuRow {
+    margin-top: -2px;
+    padding-left: 2px;
+}
+
+.leftMenuButton {
+  margin-left: -2px;
+}
+
+/* styles for right menu */
+.rightMenuRow {
+  margin-bottom: 20px;
+  justify-content: space-between;
+
+}
+
+#colorBar {
+   width: 100%;
+   height: 30px;
+}
+
+.colorBox {
+   flex-flow: column nowrap;
+   justify-content: space-around;
+   width: 45px;
+   height: 45px;
+   color: white;
+}
+
+/* styles for menu buttons */
+.menuButton {
+   border: 2px solid #999999;
+   width: 120px;
+   height: 40px;
+   background: white;
+   font-size: 18px;
+   text-align: center;
+   white-space: nowrap;
+}
+
+.menuButton:hover {
+   background: #999999;
+   color: white;
+}
+
+.menuButton:active {
+   background: grey;
+}
+
+/* annotation view styles */
+#annotationView {
+  height: 700px;
+  width: 1000px;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+}
+
+.row {
+  margin-bottom: 30px;
+}
+
+.metadata {
+  flex-flow: column nowrap;
+  color: #4286f4;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+
+textarea {
+   font-size: 18px;
+   border: none;
+   border-bottom: solid 2px #c9c9c9;
+   transition: border 0.3s;
+   margin-top: 10px;
+   resize: none;
+   outline: none;
+}
+
+textarea:focus {
+   border-bottom: solid 2px #969696;
+}
+
+.fullBox {
+   border: solid 2px #c9c9c9;
+}
+
+.fullBox:focus {
+   border: solid 2px #969696;
+}
+
+/* config view styles */
+#selectPanel {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.selectButton {
+   border: 5px solid grey;
+   width: 25px;
+   height: 25px;
+   background: #999999;
+   margin-right: 10px;
+}
+
+.selectButton:hover {
+   background: grey;
+}

@@ -1,0 +1,138 @@
+<html>
+
+  <head>
+    <title>Muscle Weakness Visualization</title>
+    <link rel="stylesheet" href="base.css" />
+  </head>
+
+  <body>
+    <!-- main view -->
+    <div id=mainView>
+
+      <!-- left panel -->
+      <div id=leftPanel class=column>
+
+        <!-- left button bank -->
+        <p class=heading>Patient's Right</p>
+        <div id=leftButtonBank class="column buttonBank"></div>
+
+        <!-- left menu -->
+        <div class="column menu">
+          <div class=leftMenuRow>
+            <button id=save class="menuButton leftMenuButton" onclick="saveData()">
+              save
+            </button>
+            <button id=load class="menuButton leftMenuButton" onclick="loadData()">
+              load
+            </button>
+          </div>
+          <div class=leftMenuRow>
+            <button id=annotate class="menuButton leftMenuButton" onclick="toAnnotation()">
+              annotate
+            </button>
+            <button id=export class="menuButton leftMenuButton" onclick="saveSVG()">
+              export
+            </button>
+          </div>
+          <div class=leftMenuRow>
+            <button id=select class="menuButton leftMenuButton" onclick="toConfig()">
+              config
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- center panel -->
+      <div id=centerPanel></div>
+
+      <!-- right panel -->
+      <div id=rightPanel class=column>
+
+        <!-- right button bank -->
+        <p class=heading>Patient's Left</p>
+        <div id=rightButtonBank class="column buttonBank"></div>
+
+        <!-- right menu -->
+        <div class="column menu">
+
+          <!-- defualt settings buttons -->
+          <div class=rightMenuRow>
+            <button id=fullStrength class=menuButton onclick="setFullStrength()">
+              full strength
+            </button>
+            <button id=clearAll class=menuButton onclick="setNoStrength()">
+              clear all
+            </button>
+          </div>
+
+          <!-- color scale -->
+          <p class="heading">strength scale</p>
+          <div id=colorBar></div>
+
+        </div>
+
+      </div>
+
+      <a id="downloadAnchorElem" style="display:none"></a>
+      <script src="main.js"></script>
+
+    </div>
+
+    <div id=annotationView style="display:none;">
+      <div class="row">
+         <div class="metadata">
+            Name:
+            <textarea id="name" rows=1 style="width:400px"></textarea>
+         </div>
+         <div class="metadata">
+            Age:
+            <textarea id="age" rows=1 style="width:100px"></textarea>
+         </div>
+         <div class="metadata">
+            Sex:
+            <textarea id="sex" rows=1 style="width:100px"></textarea>
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="metadata">
+            Date:
+            <textarea id="date" rows=1 style="width:200px"></textarea>
+         </div>
+         <div class="metadata">
+            Diagnosis (if known):
+            <textarea id="diagnosis" rows=1 style="width:420px"></textarea>
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="metadata">
+            Notes:
+            <textarea id="notes" class="fullBox" style="width:640px;height:300px"></textarea>
+         </div>
+      </div>
+
+      <div id="annotationButtons">
+         <button id="confirmAnnotation" class="menuButton" onclick="setMetadata()">
+            confirm
+         </button>
+      </div>
+    </div>
+
+    <div id=configView style="display:none;">
+
+      <div class=column>
+
+         <p class=heading>Muscle Selection</p>
+         <div id=selectPanel class=column></div>
+
+        <button id="confirmConfig" class="menuButton" onclick="setConfig()">
+           confirm
+        </button>
+
+      </div>
+
+    </div>
+
+  </body>
